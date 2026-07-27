@@ -3,9 +3,24 @@
   "title": {
     "en": "Access denied"
   },
-  "hint": {
-    "en": "Triggers when BioStar 2 refuses access at a reader, usually because the person has no permission for that door or is outside their access schedule. The user tags are filled in when BioStar 2 recognised the person, and read 'N/A' when it did not."
+  "titleFormatted": {
+    "en": "Access denied at [[device]]"
   },
+  "hint": {
+    "en": "Triggers when BioStar 2 refuses access at a reader, usually because the person has no permission for that door or is outside their access schedule. Pick a reader to trigger only for that one, or leave it on 'Any reader'. The user tags are filled in when BioStar 2 recognised the person, and read 'N/A' when it did not."
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "autocomplete",
+      "title": {
+        "en": "Reader"
+      },
+      "placeholder": {
+        "en": "Any reader"
+      }
+    }
+  ],
   "tokens": [
     {
       "name": "user",

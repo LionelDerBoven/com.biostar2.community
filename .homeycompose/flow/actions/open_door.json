@@ -1,0 +1,24 @@
+{
+  "id": "open_door",
+  "title": {
+    "en": "Open door"
+  },
+  "titleFormatted": {
+    "en": "Open door [[door]]"
+  },
+  "hint": {
+    "en": "Momentarily releases a door in BioStar 2, the same as pressing Open Door in the BioStar 2 console. The account configured in this app needs the Door control permission in BioStar 2, otherwise the card fails with a permission error."
+  },
+  "args": [
+    {
+      "name": "door",
+      "type": "autocomplete",
+      "title": {
+        "en": "Door"
+      },
+      "placeholder": {
+        "en": "Select a door"
+      }
+    }
+  ]
+}

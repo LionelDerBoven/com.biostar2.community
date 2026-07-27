@@ -3,9 +3,24 @@
   "title": {
     "en": "Identification failed"
   },
-  "hint": {
-    "en": "Triggers when a reader could not identify the person at all, for example an unknown fingerprint, an unrecognised card or an unknown face. BioStar 2 has no user to report, so only the device, event name and timestamp are available as tags."
+  "titleFormatted": {
+    "en": "Identification failed at [[device]]"
   },
+  "hint": {
+    "en": "Triggers when a reader could not identify the person at all, for example an unknown fingerprint, an unrecognised card or an unknown face. Pick a reader to trigger only for that one, or leave it on 'Any reader'. BioStar 2 has no user to report, so only the device, event name and timestamp are available as tags."
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "autocomplete",
+      "title": {
+        "en": "Reader"
+      },
+      "placeholder": {
+        "en": "Any reader"
+      }
+    }
+  ],
   "tokens": [
     {
       "name": "device",

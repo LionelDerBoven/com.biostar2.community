@@ -3,9 +3,24 @@
   "title": {
     "en": "Authentication succeeded"
   },
-  "hint": {
-    "en": "Triggers when a person is successfully identified or verified at a BioStar 2 reader and access is granted. Events without an identified user are discarded for security, so the user tags are always filled in."
+  "titleFormatted": {
+    "en": "Authentication succeeded at [[device]]"
   },
+  "hint": {
+    "en": "Triggers when a person is successfully identified or verified at a BioStar 2 reader and access is granted. Pick a reader to trigger only for that one, or leave it on 'Any reader' for all of them. Events without an identified user are discarded for security, so the user tags are always filled in."
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "autocomplete",
+      "title": {
+        "en": "Reader"
+      },
+      "placeholder": {
+        "en": "Any reader"
+      }
+    }
+  ],
   "tokens": [
     {
       "name": "user",

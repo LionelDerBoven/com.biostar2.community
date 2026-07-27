@@ -3,9 +3,24 @@
   "title": {
     "en": "BioStar 2 event received"
   },
-  "hint": {
-    "en": "Triggers on every BioStar 2 event this app forwards, whatever the outcome. Use the Event Type tag to tell them apart: 'success' (identified and granted access), 'access_denied' (refused at the reader) or 'identification_fail' (person not recognised). Background events such as door lock and unlock are filtered out and never trigger this card."
+  "titleFormatted": {
+    "en": "BioStar 2 event received at [[device]]"
   },
+  "hint": {
+    "en": "Triggers on every BioStar 2 event this app forwards, whatever the outcome. Use the Event Type tag to tell them apart: 'success' (identified and granted access), 'access_denied' (refused at the reader) or 'identification_fail' (person not recognised). Pick a reader to trigger only for that one, or leave it on 'Any reader'. Background events such as door lock and unlock are filtered out and never trigger this card."
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "autocomplete",
+      "title": {
+        "en": "Reader"
+      },
+      "placeholder": {
+        "en": "Any reader"
+      }
+    }
+  ],
   "tokens": [
     {
       "name": "event_type",
@@ -27,7 +42,7 @@
       "name": "device",
       "type": "string",
       "title": {
-        "en": "Device Name"
+        "en": "Device / Door Name"
       },
       "example": "Main Entrance"
     },
@@ -86,6 +101,22 @@
         "en": "Login ID"
       },
       "example": "johndoe"
+    },
+    {
+      "name": "event_name",
+      "type": "string",
+      "title": {
+        "en": "Event Name"
+      },
+      "example": "BS2_EVENT_IDENTIFY_SUCCESS_FINGER"
+    },
+    {
+      "name": "timestamp",
+      "type": "string",
+      "title": {
+        "en": "Timestamp"
+      },
+      "example": "2026-01-01T12:00:00+00:00"
     }
   ]
 }

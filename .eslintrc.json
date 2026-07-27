@@ -1,3 +1,19 @@
 {
-  "extends": "athom/homey-app"
+  "extends": "athom/homey-app",
+  "overrides": [
+    {
+      "files": ["settings/**/*.js"],
+      "env": {
+        "browser": true
+      },
+      "globals": {
+        "Homey": "readonly"
+      },
+      "rules": {
+        "homey-app/global-timers": "off",
+        "no-unused-vars": "off",
+        "@typescript-eslint/no-unused-vars": "off"
+      }
+    }
+  ]
 }

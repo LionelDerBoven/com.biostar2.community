@@ -51,12 +51,26 @@
       font-weight: 600;
       margin-bottom: 5px;
     }
-    input[type="text"], input[type="password"] {
+    input[type="text"], input[type="password"], input[type="number"], textarea {
       width: 100%;
       padding: 8px;
       border: 1px solid #ccc;
       border-radius: 4px;
       box-sizing: border-box;
+      font-family: inherit;
+      font-size: 14px;
+    }
+    textarea {
+      min-height: 70px;
+      resize: vertical;
+      font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 12px;
+    }
+    .hint {
+      font-weight: normal;
+      font-size: 12px;
+      color: #777;
+      margin-top: 4px;
     }
     .checkbox-label {
       font-weight: normal;
@@ -70,6 +84,7 @@
       gap: 10px;
       align-items: center;
       margin-top: 15px;
+      flex-wrap: wrap;
     }
     .btn-save {
       background-color: #1A2980;
@@ -106,6 +121,32 @@
     }
     .status-value {
       font-weight: bold;
+    }
+    .status-value.ok    { color: #2b8a3e; }
+    .status-value.bad   { color: #c92a2a; }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 8px 16px;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid #e0e0e0;
+      font-size: 12px;
+      color: #555;
+    }
+    .stats-grid b {
+      display: block;
+      font-size: 15px;
+      color: #222;
+    }
+    .warn-banner {
+      background: #fff8e1;
+      border-left: 4px solid #f0a30a;
+      padding: 10px 15px;
+      margin-bottom: 20px;
+      border-radius: 4px;
+      font-size: 13px;
+      display: none;
     }
     #test-result {
       margin-top: 12px;
@@ -160,6 +201,7 @@
   <!-- Navigation Tab Bar -->
   <div class="tab-bar">
     <button type="button" class="tab-btn active" data-tab="pane-settings">Settings</button>
+    <button type="button" class="tab-btn" data-tab="pane-advanced">Advanced</button>
     <button type="button" class="tab-btn" data-tab="pane-logs">Live Logs</button>
   </div>
 
@@ -168,6 +210,20 @@
     <div class="status-card">
       <span>Connection Status: </span>
       <span id="connection-status" class="status-value">UNKNOWN</span>
+      <div class="stats-grid">
+        <div><b id="stat-forwarded">0</b>Events forwarded</div>
+        <div><b id="stat-ignored">0</b>Events filtered</div>
+        <div><b id="stat-reconnects">0</b>Reconnects</div>
+        <div><b id="stat-cached">0</b>Cached users</div>
+        <div><b id="stat-uptime">–</b>Connected for</div>
+        <div><b id="stat-last">–</b>Last event</div>
+      </div>
+    </div>
+
+    <div id="perm-warning" class="warn-banner">
+      <b>Limited permissions.</b> This account cannot read user profiles in BioStar 2, so the
+      group, email, department, telephone and login ID tags fall back to the raw event data.
+      Grant the account the <i>Users</i> read permission in BioStar 2 to enable them.
     </div>
 
     <form id="settings-form">
@@ -179,6 +235,7 @@
       <div class="field">
         <label for="biostar_ws_uri">WebSocket URI</label>
         <input type="text" id="biostar_ws_uri" placeholder="wss://biostar.example.com/wsapi" />
+        <div class="hint">Leave empty to derive it automatically from the host URL.</div>
       </div>
 
       <div class="field">
@@ -189,6 +246,7 @@
       <div class="field">
         <label for="biostar_password">API Password</label>
         <input type="password" id="biostar_password" placeholder="Enter API password" />
+        <div class="hint" id="password-hint">Leave unchanged to keep the stored password.</div>
       </div>
 
       <div class="field">
@@ -201,16 +259,54 @@
       <div class="button-group">
         <button type="button" id="save-button" class="btn-save">Save Settings</button>
         <button type="button" id="test-button" class="btn-test">Test Connection</button>
+        <button type="button" id="reconnect-button" class="btn-test">Force Reconnect</button>
       </div>
 
       <div id="test-result"></div>
     </form>
   </div>
 
-  <!-- Tab 2: Live Logs Pane -->
+  <!-- Tab 2: Advanced Pane -->
+  <div id="pane-advanced" class="tab-pane">
+    <div class="field">
+      <label for="biostar_ignore_events">Ignored event names (exact match)</label>
+      <textarea id="biostar_ignore_events" placeholder="LOCKED&#10;UNLOCKED&#10;TIME_SET"></textarea>
+      <div class="hint">One per line, or comma separated. These background events are dropped before any
+        processing, which keeps the app idle when nothing relevant happens. Leave empty to use the defaults.</div>
+    </div>
+
+    <div class="field">
+      <label for="biostar_ignore_substrings">Ignored event names (contains)</label>
+      <textarea id="biostar_ignore_substrings" placeholder="DOOR_&#10;_ALERT"></textarea>
+      <div class="hint">One per line. Any event whose name contains one of these fragments is dropped.</div>
+    </div>
+
+    <div class="field">
+      <label for="biostar_heartbeat_s">Heartbeat interval (seconds)</label>
+      <input type="number" id="biostar_heartbeat_s" min="5" max="300" placeholder="30" />
+      <div class="hint">How often the app pings BioStar 2. The connection is considered dead after twice this long without a reply.</div>
+    </div>
+
+    <div class="field">
+      <label for="biostar_reconnect_min_s">Reconnect delay, first attempt (seconds)</label>
+      <input type="number" id="biostar_reconnect_min_s" min="1" max="60" placeholder="2" />
+    </div>
+
+    <div class="field">
+      <label for="biostar_reconnect_max_s">Reconnect delay, maximum (seconds)</label>
+      <input type="number" id="biostar_reconnect_max_s" min="5" max="900" placeholder="60" />
+      <div class="hint">The delay grows by 50% after each failed attempt, up to this ceiling.</div>
+    </div>
+
+    <div class="button-group">
+      <button type="button" id="save-advanced-button" class="btn-save">Save Advanced Settings</button>
+    </div>
+  </div>
+
+  <!-- Tab 3: Live Logs Pane -->
   <div id="pane-logs" class="tab-pane">
     <div class="log-controls">
-      <span>Real-Time BioStar & App Activity Log:</span>
+      <span>Real-Time BioStar &amp; App Activity Log:</span>
       <div style="display: flex; gap: 8px;">
         <button type="button" id="refresh-logs-button" class="btn-sm">Refresh Logs</button>
         <button type="button" id="clear-logs-button" class="btn-sm btn-danger">Clear Logs</button>

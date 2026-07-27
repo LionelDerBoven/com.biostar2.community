@@ -1,7 +1,7 @@
 {
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "com.biostar2.community",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "compatibility": ">=12.4.0",
   "sdk": 3,
   "runtime": "nodejs",
@@ -40,6 +40,14 @@
     "clearLogs": {
       "method": "post",
       "path": "/clear-logs"
+    },
+    "getStatus": {
+      "method": "get",
+      "path": "/status"
+    },
+    "reconnect": {
+      "method": "post",
+      "path": "/reconnect"
     }
   },
   "flow": {
@@ -49,9 +57,24 @@
         "title": {
           "en": "Access denied"
         },
-        "hint": {
-          "en": "Triggers when BioStar 2 refuses access at a reader, usually because the person has no permission for that door or is outside their access schedule. The user tags are filled in when BioStar 2 recognised the person, and read 'N/A' when it did not."
+        "titleFormatted": {
+          "en": "Access denied at [[device]]"
         },
+        "hint": {
+          "en": "Triggers when BioStar 2 refuses access at a reader, usually because the person has no permission for that door or is outside their access schedule. Pick a reader to trigger only for that one, or leave it on 'Any reader'. The user tags are filled in when BioStar 2 recognised the person, and read 'N/A' when it did not."
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "autocomplete",
+            "title": {
+              "en": "Reader"
+            },
+            "placeholder": {
+              "en": "Any reader"
+            }
+          }
+        ],
         "tokens": [
           {
             "name": "user",
@@ -148,9 +171,24 @@
         "title": {
           "en": "Authentication succeeded"
         },
-        "hint": {
-          "en": "Triggers when a person is successfully identified or verified at a BioStar 2 reader and access is granted. Events without an identified user are discarded for security, so the user tags are always filled in."
+        "titleFormatted": {
+          "en": "Authentication succeeded at [[device]]"
         },
+        "hint": {
+          "en": "Triggers when a person is successfully identified or verified at a BioStar 2 reader and access is granted. Pick a reader to trigger only for that one, or leave it on 'Any reader' for all of them. Events without an identified user are discarded for security, so the user tags are always filled in."
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "autocomplete",
+            "title": {
+              "en": "Reader"
+            },
+            "placeholder": {
+              "en": "Any reader"
+            }
+          }
+        ],
         "tokens": [
           {
             "name": "user",
@@ -247,9 +285,24 @@
         "title": {
           "en": "BioStar 2 event received"
         },
-        "hint": {
-          "en": "Triggers on every BioStar 2 event this app forwards, whatever the outcome. Use the Event Type tag to tell them apart: 'success' (identified and granted access), 'access_denied' (refused at the reader) or 'identification_fail' (person not recognised). Background events such as door lock and unlock are filtered out and never trigger this card."
+        "titleFormatted": {
+          "en": "BioStar 2 event received at [[device]]"
         },
+        "hint": {
+          "en": "Triggers on every BioStar 2 event this app forwards, whatever the outcome. Use the Event Type tag to tell them apart: 'success' (identified and granted access), 'access_denied' (refused at the reader) or 'identification_fail' (person not recognised). Pick a reader to trigger only for that one, or leave it on 'Any reader'. Background events such as door lock and unlock are filtered out and never trigger this card."
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "autocomplete",
+            "title": {
+              "en": "Reader"
+            },
+            "placeholder": {
+              "en": "Any reader"
+            }
+          }
+        ],
         "tokens": [
           {
             "name": "event_type",
@@ -271,7 +324,7 @@
             "name": "device",
             "type": "string",
             "title": {
-              "en": "Device Name"
+              "en": "Device / Door Name"
             },
             "example": "Main Entrance"
           },
@@ -330,6 +383,22 @@
               "en": "Login ID"
             },
             "example": "johndoe"
+          },
+          {
+            "name": "event_name",
+            "type": "string",
+            "title": {
+              "en": "Event Name"
+            },
+            "example": "BS2_EVENT_IDENTIFY_SUCCESS_FINGER"
+          },
+          {
+            "name": "timestamp",
+            "type": "string",
+            "title": {
+              "en": "Timestamp"
+            },
+            "example": "2026-01-01T12:00:00+00:00"
           }
         ]
       },
@@ -338,9 +407,24 @@
         "title": {
           "en": "Identification failed"
         },
-        "hint": {
-          "en": "Triggers when a reader could not identify the person at all, for example an unknown fingerprint, an unrecognised card or an unknown face. BioStar 2 has no user to report, so only the device, event name and timestamp are available as tags."
+        "titleFormatted": {
+          "en": "Identification failed at [[device]]"
         },
+        "hint": {
+          "en": "Triggers when a reader could not identify the person at all, for example an unknown fingerprint, an unrecognised card or an unknown face. Pick a reader to trigger only for that one, or leave it on 'Any reader'. BioStar 2 has no user to report, so only the device, event name and timestamp are available as tags."
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "autocomplete",
+            "title": {
+              "en": "Reader"
+            },
+            "placeholder": {
+              "en": "Any reader"
+            }
+          }
+        ],
         "tokens": [
           {
             "name": "device",
@@ -465,6 +549,30 @@
       }
     ],
     "actions": [
+      {
+        "id": "open_door",
+        "title": {
+          "en": "Open door"
+        },
+        "titleFormatted": {
+          "en": "Open door [[door]]"
+        },
+        "hint": {
+          "en": "Momentarily releases a door in BioStar 2, the same as pressing Open Door in the BioStar 2 console. The account configured in this app needs the Door control permission in BioStar 2, otherwise the card fails with a permission error."
+        },
+        "args": [
+          {
+            "name": "door",
+            "type": "autocomplete",
+            "title": {
+              "en": "Door"
+            },
+            "placeholder": {
+              "en": "Select a door"
+            }
+          }
+        ]
+      },
       {
         "id": "reconnect",
         "title": {

@@ -1,147 +1,288 @@
-/* global Homey */
 'use strict';
+
+// Placeholder shown instead of the stored password, so the real secret is
+// never sent to the settings page. Saving only overwrites it when changed.
+const PASSWORD_MASK = '••••••••••';
+const LOG_POLL_MS = 3000;
 
 function onHomeyReady(Homey) {
   Homey.ready();
 
-  // Elements
-  const hostInput = document.getElementById('biostar_host');
-  const wsInput = document.getElementById('biostar_ws_uri');
-  const userInput = document.getElementById('biostar_user');
-  const passwordInput = document.getElementById('biostar_password');
-  const sslCheckbox = document.getElementById('biostar_reject_unauthorized');
-  const saveBtn = document.getElementById('save-button');
-  const testBtn = document.getElementById('test-button');
-  const testResult = document.getElementById('test-result');
-  const statusEl = document.getElementById('connection-status');
-  const logWindow = document.getElementById('log-window');
-  const refreshLogsBtn = document.getElementById('refresh-logs-button');
-  const clearLogsBtn = document.getElementById('clear-logs-button');
-  const tabButtons = document.querySelectorAll('.tab-btn');
-  const tabPanes = document.querySelectorAll('.tab-pane');
+  const $ = (id) => document.getElementById(id);
 
-  // Tab switching logic
-  tabButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const targetPaneId = btn.getAttribute('data-tab');
+  const els = {
+    host: $('biostar_host'),
+    ws: $('biostar_ws_uri'),
+    user: $('biostar_user'),
+    password: $('biostar_password'),
+    ssl: $('biostar_reject_unauthorized'),
+    ignoreEvents: $('biostar_ignore_events'),
+    ignoreSubstrings: $('biostar_ignore_substrings'),
+    heartbeat: $('biostar_heartbeat_s'),
+    reconnectMin: $('biostar_reconnect_min_s'),
+    reconnectMax: $('biostar_reconnect_max_s'),
+    status: $('connection-status'),
+    permWarning: $('perm-warning'),
+    testResult: $('test-result'),
+    logWindow: $('log-window'),
+  };
 
-      tabButtons.forEach(b => b.classList.remove('active'));
-      tabPanes.forEach(p => p.classList.remove('active'));
+  let logPollTimer = null;
+  let logsSeen = 0;
+  let logLines = [];
+  let passwordTouched = false;
 
-      btn.classList.add('active');
-      document.getElementById(targetPaneId).classList.add('active');
+  // ---------------------------------------------------------------------------
+  // Helpers
+  // ---------------------------------------------------------------------------
 
-      if (targetPaneId === 'pane-logs') {
-        fetchLogs();
-      }
-    });
-  });
-
-  // Load saved settings (or leave empty on start)
-  Homey.get('biostar_host', (err, val) => {
-    if (!err && val) hostInput.value = val;
-    else hostInput.value = '';
-  });
-
-  Homey.get('biostar_ws_uri', (err, val) => {
-    if (!err && val) wsInput.value = val;
-    else wsInput.value = '';
-  });
-
-  Homey.get('biostar_user', (err, val) => {
-    if (!err && val) userInput.value = val;
-    else userInput.value = '';
-  });
-
-  Homey.get('biostar_password', (err, val) => {
-    if (!err && val) passwordInput.value = val;
-    else passwordInput.value = '';
-  });
-
-  Homey.get('biostar_reject_unauthorized', (err, val) => {
-    if (!err && typeof val === 'boolean') sslCheckbox.checked = val;
-    else sslCheckbox.checked = false; // default: allow self-signed certs
-  });
-
-  Homey.get('connection_status', (err, val) => {
-    if (!err && val) statusEl.textContent = val;
-  });
-
-  // Listen for live status updates
-  Homey.on('settings.set', (key) => {
-    if (key === 'connection_status') {
-      Homey.get('connection_status', (err, val) => {
-        if (!err && val) statusEl.textContent = val;
-      });
-    }
-  });
-
-  // Function to fetch and display live logs from app
-  function fetchLogs() {
-    Homey.api('GET', '/logs', (err, logs) => {
-      if (!err && Array.isArray(logs)) {
-        if (logs.length === 0) {
-          logWindow.textContent = 'No logs available yet.';
-        } else {
-          const isScrolledToBottom = logWindow.scrollHeight - logWindow.clientHeight <= logWindow.scrollTop + 30;
-          logWindow.textContent = logs.join('\n');
-          if (isScrolledToBottom) {
-            logWindow.scrollTop = logWindow.scrollHeight;
-          }
-        }
-      }
+  function getSetting(key, fallback = '') {
+    return new Promise((resolve) => {
+      Homey.get(key, (err, val) => resolve(err || val === undefined || val === null ? fallback : val));
     });
   }
 
-  // Initial log fetch & auto-refresh every 3 seconds
-  fetchLogs();
-  setInterval(fetchLogs, 3000);
+  function formatDuration(ms) {
+    if (!ms || ms < 1000) return '–';
+    const s = Math.floor(ms / 1000);
+    if (s < 60) return `${s}s`;
+    if (s < 3600) return `${Math.floor(s / 60)}m`;
+    if (s < 86400) return `${Math.floor(s / 3600)}h ${Math.floor((s % 3600) / 60)}m`;
+    return `${Math.floor(s / 86400)}d ${Math.floor((s % 86400) / 3600)}h`;
+  }
 
-  refreshLogsBtn.addEventListener('click', fetchLogs);
+  function formatAgo(timestamp) {
+    if (!timestamp) return '–';
+    return `${formatDuration(Date.now() - timestamp)} ago`;
+  }
 
-  clearLogsBtn.addEventListener('click', () => {
+  const STATUS_CLASS = { CONNECTED: 'ok', DISCONNECTED: 'bad' };
+
+  function renderStatus(status) {
+    els.status.textContent = status || 'UNKNOWN';
+    els.status.className = `status-value ${STATUS_CLASS[status] || ''}`;
+  }
+
+  function renderStats(stats) {
+    if (!stats) return;
+    renderStatus(stats.status);
+    $('stat-forwarded').textContent = stats.eventsForwarded ?? 0;
+    $('stat-ignored').textContent = stats.eventsIgnored ?? 0;
+    $('stat-reconnects').textContent = stats.reconnects ?? 0;
+    $('stat-cached').textContent = stats.cachedUsers ?? 0;
+    $('stat-uptime').textContent = formatDuration(stats.connectedForMs);
+    $('stat-last').textContent = formatAgo(stats.lastEventAt);
+    els.permWarning.style.display = stats.profileLookupDisabled ? 'block' : 'none';
+  }
+
+  function refreshStatus() {
+    Homey.api('GET', '/status', (err, stats) => {
+      if (!err) renderStats(stats);
+    });
+  }
+
+  // ---------------------------------------------------------------------------
+  // Logs — incremental fetch, only new lines cross the API
+  // ---------------------------------------------------------------------------
+
+  function fetchLogs(reset = false) {
+    if (reset) {
+      logsSeen = 0; logLines = [];
+    }
+    Homey.api('GET', `/logs?since=${logsSeen}`, (err, res) => {
+      if (err || !res) return;
+
+      // The buffer was cleared or rotated behind us — start over.
+      if (res.total < logsSeen) {
+        logsSeen = 0; logLines = [];
+      }
+
+      if (Array.isArray(res.lines) && res.lines.length) {
+        logLines = logLines.concat(res.lines).slice(-200);
+        logsSeen = res.total;
+
+        const atBottom = els.logWindow.scrollHeight - els.logWindow.clientHeight
+          <= els.logWindow.scrollTop + 30;
+        els.logWindow.textContent = logLines.join('\n');
+        if (atBottom) els.logWindow.scrollTop = els.logWindow.scrollHeight;
+      } else if (!logLines.length) {
+        els.logWindow.textContent = 'No logs available yet.';
+      }
+
+      renderStats(res.stats);
+    });
+  }
+
+  // ---------------------------------------------------------------------------
+  // Tabs — logs are polled only while their pane is visible
+  // ---------------------------------------------------------------------------
+
+  function startLogPolling() {
+    if (logPollTimer) return;
+    fetchLogs();
+    logPollTimer = setInterval(fetchLogs, LOG_POLL_MS);
+  }
+
+  function stopLogPolling() {
+    if (!logPollTimer) return;
+    clearInterval(logPollTimer);
+    logPollTimer = null;
+  }
+
+  els.password.addEventListener('input', () => {
+    passwordTouched = true;
+  });
+
+  async function loadSettings() {
+    els.host.value = await getSetting('biostar_host');
+    els.ws.value = await getSetting('biostar_ws_uri');
+    els.user.value = await getSetting('biostar_user');
+    els.ssl.checked = (await getSetting('biostar_reject_unauthorized', false)) === true;
+
+    const storedPassword = await getSetting('biostar_password');
+    els.password.value = storedPassword ? PASSWORD_MASK : '';
+    $('password-hint').textContent = storedPassword
+      ? 'A password is stored. Leave unchanged to keep it.'
+      : 'No password stored yet.';
+
+    const toText = (v) => (Array.isArray(v) ? v.join('\n') : (v || ''));
+    els.ignoreEvents.value = toText(await getSetting('biostar_ignore_events'));
+    els.ignoreSubstrings.value = toText(await getSetting('biostar_ignore_substrings'));
+    els.heartbeat.value = await getSetting('biostar_heartbeat_s');
+    els.reconnectMin.value = await getSetting('biostar_reconnect_min_s');
+    els.reconnectMax.value = await getSetting('biostar_reconnect_max_s');
+
+    refreshStatus();
+  }
+
+  function bindTabs() {
+    document.querySelectorAll('.tab-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const targetPaneId = btn.getAttribute('data-tab');
+
+        document.querySelectorAll('.tab-btn').forEach((b) => b.classList.remove('active'));
+        document.querySelectorAll('.tab-pane').forEach((p) => p.classList.remove('active'));
+
+        btn.classList.add('active');
+        $(targetPaneId).classList.add('active');
+
+        if (targetPaneId === 'pane-logs') startLogPolling();
+        else stopLogPolling();
+      });
+    });
+
+    // Stop polling when the page is hidden, resume when it comes back.
+    document.addEventListener('visibilitychange', () => {
+      const logsVisible = $('pane-logs').classList.contains('active');
+      if (document.hidden) stopLogPolling();
+      else if (logsVisible) startLogPolling();
+    });
+  }
+
+  // Live status pushed by the app instead of polled.
+  Homey.on('status', (payload) => {
+    if (!payload) return;
+    renderStatus(payload.status);
+    renderStats(payload.stats);
+  });
+
+  $('refresh-logs-button').addEventListener('click', () => fetchLogs(true));
+
+  $('clear-logs-button').addEventListener('click', () => {
     Homey.api('POST', '/clear-logs', {}, (err) => {
-      if (!err) fetchLogs();
+      if (!err) fetchLogs(true);
     });
   });
 
-  // Test connection button event handler
-  testBtn.addEventListener('click', () => {
-    testResult.textContent = 'Testing connection to BioStar 2...';
-    testResult.style.color = '#555';
+  // ---------------------------------------------------------------------------
+  // Actions
+  // ---------------------------------------------------------------------------
+
+  function currentPassword() {
+    return passwordTouched && els.password.value !== PASSWORD_MASK ? els.password.value : undefined;
+  }
+
+  $('test-button').addEventListener('click', () => {
+    els.testResult.textContent = 'Testing connection to BioStar 2...';
+    els.testResult.style.color = '#555';
 
     const payload = {
-      biostarHost: hostInput.value.trim(),
-      wsUri: wsInput.value.trim(),
-      loginUser: userInput.value.trim(),
-      password: passwordInput.value,
-      rejectUnauthorized: sslCheckbox.checked
+      biostarHost: els.host.value.trim(),
+      wsUri: els.ws.value.trim(),
+      loginUser: els.user.value.trim(),
+      rejectUnauthorized: els.ssl.checked,
     };
+    const pw = currentPassword();
+    if (pw !== undefined) payload.password = pw;
 
     Homey.api('POST', '/test', payload, (err, res) => {
       if (err) {
-        testResult.textContent = '✖ Error testing connection: ' + (err.message || err);
-        testResult.style.color = '#d9534f';
+        els.testResult.textContent = `✖ Error testing connection: ${err.message || err}`;
+        els.testResult.style.color = '#d9534f';
       } else if (res && res.success) {
-        testResult.textContent = '✓ ' + res.message;
-        testResult.style.color = '#5cb85c';
+        els.testResult.textContent = `✓ ${res.message}`;
+        els.testResult.style.color = '#5cb85c';
       } else {
-        testResult.textContent = '✖ ' + (res?.message || 'Connection failed.');
-        testResult.style.color = '#d9534f';
+        els.testResult.textContent = `✖ ${(res && res.message) || 'Connection failed.'}`;
+        els.testResult.style.color = '#d9534f';
       }
-      fetchLogs();
+      refreshStatus();
     });
   });
 
-  // Save button click event
-  saveBtn.addEventListener('click', () => {
-    Homey.set('biostar_host', hostInput.value.trim());
-    Homey.set('biostar_ws_uri', wsInput.value.trim());
-    Homey.set('biostar_user', userInput.value.trim());
-    Homey.set('biostar_password', passwordInput.value);
-    Homey.set('biostar_reject_unauthorized', sslCheckbox.checked);
+  $('reconnect-button').addEventListener('click', () => {
+    els.testResult.textContent = 'Reconnecting to BioStar 2...';
+    els.testResult.style.color = '#555';
+    Homey.api('POST', '/reconnect', {}, (err) => {
+      els.testResult.textContent = err
+        ? `✖ Reconnect failed: ${err.message || err}`
+        : '✓ Reconnect requested.';
+      els.testResult.style.color = err ? '#d9534f' : '#5cb85c';
+      setTimeout(refreshStatus, 1500);
+    });
+  });
 
-    Homey.alert('BioStar 2 Settings saved successfully!');
-    setTimeout(fetchLogs, 1000);
+  $('save-button').addEventListener('click', () => {
+    Homey.set('biostar_host', els.host.value.trim());
+    Homey.set('biostar_ws_uri', els.ws.value.trim());
+    Homey.set('biostar_user', els.user.value.trim());
+    Homey.set('biostar_reject_unauthorized', els.ssl.checked);
+
+    const pw = currentPassword();
+    if (pw !== undefined) {
+      Homey.set('biostar_password', pw);
+      passwordTouched = false;
+      els.password.value = pw ? PASSWORD_MASK : '';
+    }
+
+    Homey.alert('BioStar 2 settings saved successfully!');
+    setTimeout(refreshStatus, 1500);
+  });
+
+  $('save-advanced-button').addEventListener('click', () => {
+    const toList = (text) => text.split(/[\n,]+/).map((s) => s.trim()).filter(Boolean);
+    const toNumber = (input) => {
+      const n = Number(input.value);
+      return Number.isFinite(n) && n > 0 ? n : '';
+    };
+
+    Homey.set('biostar_ignore_events', toList(els.ignoreEvents.value));
+    Homey.set('biostar_ignore_substrings', toList(els.ignoreSubstrings.value));
+    Homey.set('biostar_heartbeat_s', toNumber(els.heartbeat));
+    Homey.set('biostar_reconnect_min_s', toNumber(els.reconnectMin));
+    Homey.set('biostar_reconnect_max_s', toNumber(els.reconnectMax));
+
+    Homey.alert('Advanced settings saved. Reconnecting with the new configuration.');
+    setTimeout(refreshStatus, 2000);
+  });
+
+  // ---------------------------------------------------------------------------
+  // Start up
+  // ---------------------------------------------------------------------------
+
+  bindTabs();
+  loadSettings().catch(() => {
+    els.testResult.textContent = '✖ Could not load the stored settings.';
+    els.testResult.style.color = '#d9534f';
   });
 }
