@@ -7,6 +7,7 @@ const EventMapper = require('./lib/EventMapper');
 const LOG_LIMIT = 100;
 const RESTART_DEBOUNCE_MS = 500;
 const DISCONNECT_ALERT_MS = 120000;
+const LIST_CACHE_TTL_MS = 60000;
 
 /**
  * BioStar 2 Community Homey App
@@ -21,6 +22,7 @@ class BioStarApp extends Homey.App {
     this.restartDebounceTimer = null;
     this.disconnectAlertTimer = null;
     this.connectionStatus = 'UNKNOWN';
+    this.listCache = {};
     this.startedAt = Date.now();
 
     this.addLog('Initializing BioStar 2 Community Homey App...', 'INFO');
@@ -124,31 +126,57 @@ class BioStarApp extends Homey.App {
     return BioStarApp.looseMatch(selected.name, state?.device);
   }
 
+  /**
+   * Homey calls autocomplete listeners on every keystroke. Without this cache
+   * each character typed in the Flow editor would fire a request at BioStar 2,
+   * so the list is fetched once and reused, and concurrent calls share one
+   * in-flight request.
+   */
+  async cachedList(kind, loader) {
+    const entry = this.listCache[kind];
+    const now = Date.now();
+
+    if (entry && entry.value && now - entry.at < LIST_CACHE_TTL_MS) return entry.value;
+    if (entry && entry.pending) return entry.pending;
+
+    const pending = loader()
+      .then((value) => {
+        this.listCache[kind] = { value, at: Date.now() };
+        return value;
+      })
+      .catch((err) => {
+        this.listCache[kind] = null;
+        throw err;
+      });
+
+    this.listCache[kind] = { pending, at: now };
+    return pending;
+  }
+
+  static filterByName(items, query) {
+    if (!query) return items;
+    const q = query.toLowerCase();
+    return items.filter((d) => d.name.toLowerCase().includes(q));
+  }
+
   async autocompleteDevices(query) {
-    const anyEntry = { id: '*', name: 'Any reader' };
     let devices = [];
     try {
-      devices = await this.client.listDevices();
+      devices = await this.cachedList('devices', () => this.client.listDevices());
     } catch (err) {
       this.addLog(`Could not load reader list: ${err.message}`, 'WARN');
     }
-    const results = [anyEntry, ...devices];
-    if (!query) return results;
-    const q = query.toLowerCase();
-    return results.filter((d) => d.name.toLowerCase().includes(q));
+    return BioStarApp.filterByName([{ id: '*', name: 'Any reader' }, ...devices], query);
   }
 
   async autocompleteDoors(query) {
-    let doors = [];
     try {
-      doors = await this.client.listDoors();
+      const doors = await this.cachedList('doors', () => this.client.listDoors());
+      return BioStarApp.filterByName(doors, query);
     } catch (err) {
       this.addLog(`Could not load door list: ${err.message}`, 'WARN');
       throw err; // surfaced in the Flow editor so the cause is visible
     }
-    if (!query) return doors;
-    const q = query.toLowerCase();
-    return doors.filter((d) => d.name.toLowerCase().includes(q));
   }
 
   // ---------------------------------------------------------------------------
@@ -159,6 +187,7 @@ class BioStarApp extends Homey.App {
    * Single place where a BiostarClient is built and wired up.
    */
   createClient() {
+    this.listCache = {}; // reader/door lists belong to the previous connection
     const client = new BiostarClient({
       ...this.getBiostarConfig(),
       log: (...args) => {
