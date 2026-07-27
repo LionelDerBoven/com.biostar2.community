@@ -21,6 +21,7 @@ function onHomeyReady(Homey) {
     heartbeat: $('biostar_heartbeat_s'),
     reconnectMin: $('biostar_reconnect_min_s'),
     reconnectMax: $('biostar_reconnect_max_s'),
+    logUserNames: $('biostar_log_usernames'),
     status: $('connection-status'),
     permWarning: $('perm-warning'),
     testResult: $('test-result'),
@@ -151,6 +152,7 @@ function onHomeyReady(Homey) {
     els.heartbeat.value = await getSetting('biostar_heartbeat_s');
     els.reconnectMin.value = await getSetting('biostar_reconnect_min_s');
     els.reconnectMax.value = await getSetting('biostar_reconnect_max_s');
+    els.logUserNames.checked = (await getSetting('biostar_log_usernames', true)) !== false;
 
     refreshStatus();
   }
@@ -271,6 +273,7 @@ function onHomeyReady(Homey) {
     Homey.set('biostar_heartbeat_s', toNumber(els.heartbeat));
     Homey.set('biostar_reconnect_min_s', toNumber(els.reconnectMin));
     Homey.set('biostar_reconnect_max_s', toNumber(els.reconnectMax));
+    Homey.set('biostar_log_usernames', els.logUserNames.checked);
 
     Homey.alert('Advanced settings saved. Reconnecting with the new configuration.');
     setTimeout(refreshStatus, 2000);

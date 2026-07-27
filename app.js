@@ -286,6 +286,7 @@ class BioStarApp extends Homey.App {
       heartbeatMs: BioStarApp.toMs(this.homey.settings.get('biostar_heartbeat_s'), 30, 5, 300),
       reconnectMinMs: BioStarApp.toMs(this.homey.settings.get('biostar_reconnect_min_s'), 2, 1, 60),
       reconnectMaxMs: BioStarApp.toMs(this.homey.settings.get('biostar_reconnect_max_s'), 60, 5, 900),
+      logUserNames: this.homey.settings.get('biostar_log_usernames') !== false,
       userCacheMax: 200,
       userCacheTtlMs: 3600000,
     };
@@ -425,10 +426,12 @@ class BioStarApp extends Homey.App {
    * Handles processed events from BiostarClient and triggers native Homey Flows.
    */
   handleBioStarEvent(evt) {
-    this.addLog(
-      `[Flow Dispatch] ${evt.type} | User: '${evt.user || 'N/A'}' (ID: ${evt.userId || 'N/A'}) | Device: '${evt.device}'`,
-      'EVENT',
-    );
+    // Flow tokens always carry the real identity; only the on-screen log is masked.
+    const logUsers = this.homey.settings.get('biostar_log_usernames') !== false;
+    const who = logUsers
+      ? `User: '${evt.user || 'N/A'}' (ID: ${evt.userId || 'N/A'})`
+      : 'User: <hidden>';
+    this.addLog(`[Flow Dispatch] ${evt.type} | ${who} | Device: '${evt.device}'`, 'EVENT');
 
     const state = {
       user: evt.user,

@@ -24,8 +24,8 @@
     "xlarge": "assets/images/xlarge.png"
   },
   "author": {
-    "name": "Community Developer",
-    "email": "developer@example.com"
+    "name": "LDB Technology",
+    "email": "homey@ldbtechnology.be"
   },
   "api": {
     "testConnection": {

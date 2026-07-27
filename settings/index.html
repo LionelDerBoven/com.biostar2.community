@@ -282,6 +282,17 @@
     </div>
 
     <div class="field">
+      <label class="checkbox-label">
+        <input type="checkbox" id="biostar_log_usernames" />
+        Show user names in the activity log
+      </label>
+      <div class="hint">On by default, because names are what make the log useful when a Flow
+        misbehaves. Turn it off to keep identifiable access data out of the log view — entries then
+        read <code>User: &lt;hidden&gt;</code>. This only affects the log; Flow tags always carry the
+        real user, and the log is in-memory only and cleared when the app restarts.</div>
+    </div>
+
+    <div class="field">
       <label for="biostar_heartbeat_s">Heartbeat interval (seconds)</label>
       <input type="number" id="biostar_heartbeat_s" min="5" max="300" placeholder="30" />
       <div class="hint">How often the app pings BioStar 2. The connection is considered dead after twice this long without a reply.</div>
