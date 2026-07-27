@@ -10,6 +10,9 @@ module.exports = {
   async clearLogs({ homey }) {
     return homey.app.clearLogs();
   },
+  async getEventTypes({ homey }) {
+    return homey.app.getEventTypes();
+  },
   async getStatus({ homey }) {
     return homey.app.getStats();
   },

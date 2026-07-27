@@ -16,7 +16,6 @@ function onHomeyReady(Homey) {
     user: $('biostar_user'),
     password: $('biostar_password'),
     ssl: $('biostar_reject_unauthorized'),
-    ignoreEvents: $('biostar_ignore_events'),
     ignoreSubstrings: $('biostar_ignore_substrings'),
     heartbeat: $('biostar_heartbeat_s'),
     reconnectMin: $('biostar_reconnect_min_s'),
@@ -32,6 +31,7 @@ function onHomeyReady(Homey) {
   let logsSeen = 0;
   let logLines = [];
   let passwordTouched = false;
+  let ignoreSet = new Set(); // exact-match ignores, driven by the table
 
   // ---------------------------------------------------------------------------
   // Helpers
@@ -74,6 +74,62 @@ function onHomeyReady(Homey) {
     $('stat-uptime').textContent = formatDuration(stats.connectedForMs);
     $('stat-last').textContent = formatAgo(stats.lastEventAt);
     els.permWarning.style.display = stats.profileLookupDisabled ? 'block' : 'none';
+  }
+
+  function renderEventTypes(rows) {
+    const body = $('event-types-body');
+    body.textContent = '';
+
+    if (!rows || !rows.length) {
+      const tr = document.createElement('tr');
+      const td = document.createElement('td');
+      td.colSpan = 4; td.className = 'muted';
+      td.textContent = 'No events seen yet. They appear here as BioStar 2 sends them.';
+      tr.appendChild(td); body.appendChild(tr);
+      return;
+    }
+
+    rows.forEach((row) => {
+      const tr = document.createElement('tr');
+      if (ignoreSet.has(row.name)) tr.className = 'is-ignored';
+
+      const name = document.createElement('td');
+      name.textContent = row.name; // textContent, never innerHTML
+      tr.appendChild(name);
+
+      const count = document.createElement('td');
+      count.className = 'num';
+      count.textContent = row.count ? String(row.count) : '–';
+      tr.appendChild(count);
+
+      const last = document.createElement('td');
+      last.className = 'num';
+      last.textContent = row.lastAt ? formatAgo(row.lastAt) : '–';
+      tr.appendChild(last);
+
+      const cell = document.createElement('td');
+      cell.className = 'num';
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.checked = ignoreSet.has(row.name);
+      cb.addEventListener('change', () => {
+        if (cb.checked) ignoreSet.add(row.name);
+        else ignoreSet.delete(row.name);
+        tr.className = cb.checked ? 'is-ignored' : '';
+      });
+      cell.appendChild(cb);
+      tr.appendChild(cell);
+
+      body.appendChild(tr);
+    });
+  }
+
+  function loadEventTypes() {
+    Homey.api('GET', '/event-types', (err, rows) => {
+      if (err) return;
+      ignoreSet = new Set((rows || []).filter((r) => r.ignored).map((r) => r.name));
+      renderEventTypes(rows);
+    });
   }
 
   function refreshStatus() {
@@ -134,6 +190,14 @@ function onHomeyReady(Homey) {
     passwordTouched = true;
   });
 
+  $('manual-ignore-add').addEventListener('click', () => {
+    const name = $('manual-ignore-input').value.trim();
+    if (!name) return;
+    ignoreSet.add(name);
+    $('manual-ignore-input').value = '';
+    loadEventTypes();
+  });
+
   async function loadSettings() {
     els.host.value = await getSetting('biostar_host');
     els.ws.value = await getSetting('biostar_ws_uri');
@@ -147,7 +211,6 @@ function onHomeyReady(Homey) {
       : 'No password stored yet.';
 
     const toText = (v) => (Array.isArray(v) ? v.join('\n') : (v || ''));
-    els.ignoreEvents.value = toText(await getSetting('biostar_ignore_events'));
     els.ignoreSubstrings.value = toText(await getSetting('biostar_ignore_substrings'));
     els.heartbeat.value = await getSetting('biostar_heartbeat_s');
     els.reconnectMin.value = await getSetting('biostar_reconnect_min_s');
@@ -170,6 +233,8 @@ function onHomeyReady(Homey) {
 
         if (targetPaneId === 'pane-logs') startLogPolling();
         else stopLogPolling();
+
+        if (targetPaneId === 'pane-advanced') loadEventTypes();
       });
     });
 
@@ -268,7 +333,7 @@ function onHomeyReady(Homey) {
       return Number.isFinite(n) && n > 0 ? n : '';
     };
 
-    Homey.set('biostar_ignore_events', toList(els.ignoreEvents.value));
+    Homey.set('biostar_ignore_events', [...ignoreSet]);
     Homey.set('biostar_ignore_substrings', toList(els.ignoreSubstrings.value));
     Homey.set('biostar_heartbeat_s', toNumber(els.heartbeat));
     Homey.set('biostar_reconnect_min_s', toNumber(els.reconnectMin));
@@ -284,6 +349,7 @@ function onHomeyReady(Homey) {
   // ---------------------------------------------------------------------------
 
   bindTabs();
+  loadEventTypes();
   loadSettings().catch(() => {
     els.testResult.textContent = '✖ Could not load the stored settings.';
     els.testResult.style.color = '#d9534f';

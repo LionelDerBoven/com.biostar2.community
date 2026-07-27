@@ -188,6 +188,9 @@ class BioStarApp extends Homey.App {
    */
   createClient() {
     this.listCache = {}; // reader/door lists belong to the previous connection
+    // The discovered-event registry outlives the client, otherwise saving a
+    // setting (which rebuilds the client) would wipe the list you just used.
+    const carried = this.client ? this.client.eventTypes : null;
     const client = new BiostarClient({
       ...this.getBiostarConfig(),
       log: (...args) => {
@@ -201,6 +204,8 @@ class BioStarApp extends Homey.App {
         this.addLog(msg, 'ERROR');
       },
     });
+
+    if (carried && carried.size) client.eventTypes = carried;
 
     client.on('event', (evt) => this.handleBioStarEvent(evt));
     client.on('status', (status) => this.handleStatusChange(status));
@@ -307,6 +312,26 @@ class BioStarApp extends Homey.App {
     const n = Number(value);
     const seconds = Number.isFinite(n) && n > 0 ? n : defaultSeconds;
     return Math.min(Math.max(seconds, minSeconds), maxSeconds) * 1000;
+  }
+
+  /**
+   * Event names for the settings page: everything seen, plus anything already
+   * ignored (so a rule for an event that has not occurred yet is still visible
+   * and can be switched off again).
+   */
+  getEventTypes() {
+    const ignored = new Set(BioStarApp.toList(
+      this.homey.settings.get('biostar_ignore_events'),
+      EventMapper.DEFAULT_IGNORE_EVENTS,
+    ));
+    const rows = this.client ? this.client.getEventTypes() : [];
+    const seen = new Set(rows.map((r) => r.name));
+
+    for (const name of ignored) {
+      if (!seen.has(name)) rows.push({ name, count: 0, lastAt: null });
+    }
+
+    return rows.map((r) => ({ ...r, ignored: ignored.has(r.name) }));
   }
 
   getStats() {

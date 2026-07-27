@@ -48,6 +48,10 @@
     "reconnect": {
       "method": "post",
       "path": "/reconnect"
+    },
+    "getEventTypes": {
+      "method": "get",
+      "path": "/event-types"
     }
   },
   "flow": {

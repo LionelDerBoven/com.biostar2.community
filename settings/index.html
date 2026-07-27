@@ -181,6 +181,51 @@
     .btn-danger:hover {
       background-color: #ffe3e3;
     }
+    /* Discovered event types table */
+    #event-types-wrap {
+      max-height: 260px;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    #event-types {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    #event-types th {
+      position: sticky;
+      top: 0;
+      background: #f4f6f9;
+      text-align: left;
+      padding: 8px;
+      border-bottom: 1px solid #ddd;
+      font-weight: 600;
+    }
+    #event-types td {
+      padding: 7px 8px;
+      border-bottom: 1px solid #f0f0f0;
+      font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+      word-break: break-all;
+    }
+    #event-types th.num, #event-types td.num {
+      text-align: right;
+      white-space: nowrap;
+      font-family: inherit;
+    }
+    #event-types tr.is-ignored td {
+      color: #999;
+    }
+    #event-types td.muted {
+      color: #888;
+      font-family: inherit;
+      text-align: center;
+      padding: 16px;
+    }
+    #manual-ignore-input {
+      flex: 1;
+    }
+
     #log-window {
       background: #1e1e1e;
       color: #00ff66;
@@ -269,10 +314,24 @@
   <!-- Tab 2: Advanced Pane -->
   <div id="pane-advanced" class="tab-pane">
     <div class="field">
-      <label for="biostar_ignore_events">Ignored event names (exact match)</label>
-      <textarea id="biostar_ignore_events" placeholder="LOCKED&#10;UNLOCKED&#10;TIME_SET"></textarea>
-      <div class="hint">One per line, or comma separated. These background events are dropped before any
-        processing, which keeps the app idle when nothing relevant happens. Leave empty to use the defaults.</div>
+      <label>Event types seen</label>
+      <div class="hint" style="margin-bottom:8px;">Every event name BioStar 2 has sent since the app
+        started, most frequent first. Tick one to drop it before any processing — that is what keeps the
+        app idle when nothing relevant is happening. Ticked rows never reach your Flows.</div>
+      <div id="event-types-wrap">
+        <table id="event-types">
+          <thead>
+            <tr><th>Event name</th><th class="num">Count</th><th class="num">Last seen</th><th class="num">Ignore</th></tr>
+          </thead>
+          <tbody id="event-types-body">
+            <tr><td colspan="4" class="muted">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="display:flex; gap:8px; margin-top:8px;">
+        <input type="text" id="manual-ignore-input" placeholder="Add an event name not listed yet" />
+        <button type="button" id="manual-ignore-add" class="btn-sm">Add</button>
+      </div>
     </div>
 
     <div class="field">
