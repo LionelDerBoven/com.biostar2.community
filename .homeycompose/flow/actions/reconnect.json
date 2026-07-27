@@ -1,0 +1,9 @@
+{
+  "id": "reconnect",
+  "title": {
+    "en": "Force reconnect to BioStar 2"
+  },
+  "hint": {
+    "en": "Drops the current BioStar 2 session and reconnects: the app logs in again, reopens the connection and re-subscribes to the event stream. Handy after a BioStar 2 server restart, although the app already reconnects on its own."
+  }
+}

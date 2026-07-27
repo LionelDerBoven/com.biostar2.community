@@ -1,0 +1,99 @@
+{
+  "id": "auth_succeeded",
+  "title": {
+    "en": "Authentication succeeded"
+  },
+  "hint": {
+    "en": "Triggers when a person is successfully identified or verified at a BioStar 2 reader and access is granted. Events without an identified user are discarded for security, so the user tags are always filled in."
+  },
+  "tokens": [
+    {
+      "name": "user",
+      "type": "string",
+      "title": {
+        "en": "User Name"
+      },
+      "example": "John Doe"
+    },
+    {
+      "name": "device",
+      "type": "string",
+      "title": {
+        "en": "Device / Door Name"
+      },
+      "example": "Main Entrance"
+    },
+    {
+      "name": "user_id",
+      "type": "string",
+      "title": {
+        "en": "User ID"
+      },
+      "example": "101"
+    },
+    {
+      "name": "user_group",
+      "type": "string",
+      "title": {
+        "en": "User Group"
+      },
+      "example": "All Users"
+    },
+    {
+      "name": "email",
+      "type": "string",
+      "title": {
+        "en": "Email"
+      },
+      "example": "user@example.com"
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "title": {
+        "en": "Title"
+      },
+      "example": "Staff"
+    },
+    {
+      "name": "department",
+      "type": "string",
+      "title": {
+        "en": "Department"
+      },
+      "example": "Management"
+    },
+    {
+      "name": "telephone",
+      "type": "string",
+      "title": {
+        "en": "Telephone"
+      },
+      "example": "+1234567890"
+    },
+    {
+      "name": "login_id",
+      "type": "string",
+      "title": {
+        "en": "Login ID"
+      },
+      "example": "johndoe"
+    },
+    {
+      "name": "event_name",
+      "type": "string",
+      "title": {
+        "en": "Event Name"
+      },
+      "example": "BS2_EVENT_IDENTIFY_SUCCESS_FINGER"
+    },
+    {
+      "name": "timestamp",
+      "type": "string",
+      "title": {
+        "en": "Timestamp"
+      },
+      "example": "2026-01-01T12:00:00+00:00"
+    }
+  ]
+}

@@ -1,0 +1,479 @@
+{
+  "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
+  "id": "com.biostar2.community",
+  "version": "1.0.0",
+  "compatibility": ">=12.4.0",
+  "sdk": 3,
+  "runtime": "nodejs",
+  "platforms": [
+    "local"
+  ],
+  "name": {
+    "en": "Biostar 2 Community"
+  },
+  "description": {
+    "en": "Connects Suprema BioStar 2 access control events to Homey Pro."
+  },
+  "brandColor": "#FF5722",
+  "category": [
+    "security"
+  ],
+  "permissions": [],
+  "images": {
+    "small": "assets/images/small.png",
+    "large": "assets/images/large.png",
+    "xlarge": "assets/images/xlarge.png"
+  },
+  "author": {
+    "name": "Community Developer",
+    "email": "developer@example.com"
+  },
+  "api": {
+    "testConnection": {
+      "method": "post",
+      "path": "/test"
+    },
+    "getLogs": {
+      "method": "get",
+      "path": "/logs"
+    },
+    "clearLogs": {
+      "method": "post",
+      "path": "/clear-logs"
+    }
+  },
+  "flow": {
+    "triggers": [
+      {
+        "id": "access_denied",
+        "title": {
+          "en": "Access denied"
+        },
+        "hint": {
+          "en": "Triggers when BioStar 2 refuses access at a reader, usually because the person has no permission for that door or is outside their access schedule. The user tags are filled in when BioStar 2 recognised the person, and read 'N/A' when it did not."
+        },
+        "tokens": [
+          {
+            "name": "user",
+            "type": "string",
+            "title": {
+              "en": "User Name"
+            },
+            "example": "John Doe"
+          },
+          {
+            "name": "device",
+            "type": "string",
+            "title": {
+              "en": "Device / Door Name"
+            },
+            "example": "Main Entrance"
+          },
+          {
+            "name": "user_id",
+            "type": "string",
+            "title": {
+              "en": "User ID"
+            },
+            "example": "101"
+          },
+          {
+            "name": "user_group",
+            "type": "string",
+            "title": {
+              "en": "User Group"
+            },
+            "example": "All Users"
+          },
+          {
+            "name": "email",
+            "type": "string",
+            "title": {
+              "en": "Email"
+            },
+            "example": "user@example.com"
+          },
+          {
+            "name": "title",
+            "type": "string",
+            "title": {
+              "en": "Title"
+            },
+            "example": "Staff"
+          },
+          {
+            "name": "department",
+            "type": "string",
+            "title": {
+              "en": "Department"
+            },
+            "example": "Management"
+          },
+          {
+            "name": "telephone",
+            "type": "string",
+            "title": {
+              "en": "Telephone"
+            },
+            "example": "+1234567890"
+          },
+          {
+            "name": "login_id",
+            "type": "string",
+            "title": {
+              "en": "Login ID"
+            },
+            "example": "johndoe"
+          },
+          {
+            "name": "event_name",
+            "type": "string",
+            "title": {
+              "en": "Event Name"
+            },
+            "example": "BS2_EVENT_ACCESS_DENIED"
+          },
+          {
+            "name": "timestamp",
+            "type": "string",
+            "title": {
+              "en": "Timestamp"
+            },
+            "example": "2026-01-01T12:00:00+00:00"
+          }
+        ]
+      },
+      {
+        "id": "auth_succeeded",
+        "title": {
+          "en": "Authentication succeeded"
+        },
+        "hint": {
+          "en": "Triggers when a person is successfully identified or verified at a BioStar 2 reader and access is granted. Events without an identified user are discarded for security, so the user tags are always filled in."
+        },
+        "tokens": [
+          {
+            "name": "user",
+            "type": "string",
+            "title": {
+              "en": "User Name"
+            },
+            "example": "John Doe"
+          },
+          {
+            "name": "device",
+            "type": "string",
+            "title": {
+              "en": "Device / Door Name"
+            },
+            "example": "Main Entrance"
+          },
+          {
+            "name": "user_id",
+            "type": "string",
+            "title": {
+              "en": "User ID"
+            },
+            "example": "101"
+          },
+          {
+            "name": "user_group",
+            "type": "string",
+            "title": {
+              "en": "User Group"
+            },
+            "example": "All Users"
+          },
+          {
+            "name": "email",
+            "type": "string",
+            "title": {
+              "en": "Email"
+            },
+            "example": "user@example.com"
+          },
+          {
+            "name": "title",
+            "type": "string",
+            "title": {
+              "en": "Title"
+            },
+            "example": "Staff"
+          },
+          {
+            "name": "department",
+            "type": "string",
+            "title": {
+              "en": "Department"
+            },
+            "example": "Management"
+          },
+          {
+            "name": "telephone",
+            "type": "string",
+            "title": {
+              "en": "Telephone"
+            },
+            "example": "+1234567890"
+          },
+          {
+            "name": "login_id",
+            "type": "string",
+            "title": {
+              "en": "Login ID"
+            },
+            "example": "johndoe"
+          },
+          {
+            "name": "event_name",
+            "type": "string",
+            "title": {
+              "en": "Event Name"
+            },
+            "example": "BS2_EVENT_IDENTIFY_SUCCESS_FINGER"
+          },
+          {
+            "name": "timestamp",
+            "type": "string",
+            "title": {
+              "en": "Timestamp"
+            },
+            "example": "2026-01-01T12:00:00+00:00"
+          }
+        ]
+      },
+      {
+        "id": "event_received",
+        "title": {
+          "en": "BioStar 2 event received"
+        },
+        "hint": {
+          "en": "Triggers on every BioStar 2 event this app forwards, whatever the outcome. Use the Event Type tag to tell them apart: 'success' (identified and granted access), 'access_denied' (refused at the reader) or 'identification_fail' (person not recognised). Background events such as door lock and unlock are filtered out and never trigger this card."
+        },
+        "tokens": [
+          {
+            "name": "event_type",
+            "type": "string",
+            "title": {
+              "en": "Event Type"
+            },
+            "example": "success"
+          },
+          {
+            "name": "user",
+            "type": "string",
+            "title": {
+              "en": "User Name"
+            },
+            "example": "John Doe"
+          },
+          {
+            "name": "device",
+            "type": "string",
+            "title": {
+              "en": "Device Name"
+            },
+            "example": "Main Entrance"
+          },
+          {
+            "name": "user_id",
+            "type": "string",
+            "title": {
+              "en": "User ID"
+            },
+            "example": "101"
+          },
+          {
+            "name": "user_group",
+            "type": "string",
+            "title": {
+              "en": "User Group"
+            },
+            "example": "All Users"
+          },
+          {
+            "name": "email",
+            "type": "string",
+            "title": {
+              "en": "Email"
+            },
+            "example": "user@example.com"
+          },
+          {
+            "name": "title",
+            "type": "string",
+            "title": {
+              "en": "Title"
+            },
+            "example": "Staff"
+          },
+          {
+            "name": "department",
+            "type": "string",
+            "title": {
+              "en": "Department"
+            },
+            "example": "Management"
+          },
+          {
+            "name": "telephone",
+            "type": "string",
+            "title": {
+              "en": "Telephone"
+            },
+            "example": "+1234567890"
+          },
+          {
+            "name": "login_id",
+            "type": "string",
+            "title": {
+              "en": "Login ID"
+            },
+            "example": "johndoe"
+          }
+        ]
+      },
+      {
+        "id": "identification_failed",
+        "title": {
+          "en": "Identification failed"
+        },
+        "hint": {
+          "en": "Triggers when a reader could not identify the person at all, for example an unknown fingerprint, an unrecognised card or an unknown face. BioStar 2 has no user to report, so only the device, event name and timestamp are available as tags."
+        },
+        "tokens": [
+          {
+            "name": "device",
+            "type": "string",
+            "title": {
+              "en": "Device / Door Name"
+            },
+            "example": "Main Entrance"
+          },
+          {
+            "name": "event_name",
+            "type": "string",
+            "title": {
+              "en": "Event Name"
+            },
+            "example": "BS2_EVENT_IDENTIFY_FAIL_FINGER"
+          },
+          {
+            "name": "timestamp",
+            "type": "string",
+            "title": {
+              "en": "Timestamp"
+            },
+            "example": "2026-01-01T12:00:00+00:00"
+          }
+        ]
+      }
+    ],
+    "conditions": [
+      {
+        "id": "department_is",
+        "title": {
+          "en": "User belongs to department !{{[department]}}"
+        },
+        "titleFormatted": {
+          "en": "User belongs to department [[department]]"
+        },
+        "hint": {
+          "en": "Checks the department of the person in the event that started this Flow, as set on their BioStar 2 user profile. Matching ignores upper and lower case and accepts a part of the department name. Only works in Flows started by a BioStar 2 trigger card that carries user information; elsewhere it is always false."
+        },
+        "args": [
+          {
+            "name": "department",
+            "type": "text",
+            "placeholder": {
+              "en": "IT, Management, Cleaning..."
+            }
+          }
+        ]
+      },
+      {
+        "id": "device_is",
+        "title": {
+          "en": "Device is !{{[device]}}"
+        },
+        "titleFormatted": {
+          "en": "Device is [[device]]"
+        },
+        "hint": {
+          "en": "Checks which reader or door the event that started this Flow came from. Matching ignores upper and lower case and accepts a part of the name, so 'entrance' also matches 'Main Entrance'. Only works in Flows started by a BioStar 2 trigger card; elsewhere it is always false."
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "text",
+            "placeholder": {
+              "en": "Main Entrance, Side Door..."
+            }
+          }
+        ]
+      },
+      {
+        "id": "is_connected",
+        "title": {
+          "en": "BioStar 2 connection is online"
+        },
+        "hint": {
+          "en": "Checks whether the app currently has a live connection to the BioStar 2 server and is receiving events. Use it to guard Flows that depend on live access events, or to be warned when the connection drops."
+        }
+      },
+      {
+        "id": "user_group_is",
+        "title": {
+          "en": "User belongs to group !{{[user_group]}}"
+        },
+        "titleFormatted": {
+          "en": "User belongs to group [[user_group]]"
+        },
+        "hint": {
+          "en": "Checks the BioStar 2 user group of the person in the event that started this Flow. Matching ignores upper and lower case and accepts a part of the group name. Only works in Flows started by a BioStar 2 trigger card that carries user information; elsewhere it is always false."
+        },
+        "args": [
+          {
+            "name": "user_group",
+            "type": "text",
+            "placeholder": {
+              "en": "All Users, Administrators..."
+            }
+          }
+        ]
+      },
+      {
+        "id": "user_is",
+        "title": {
+          "en": "User is !{{[user]}}"
+        },
+        "titleFormatted": {
+          "en": "User is [[user]]"
+        },
+        "hint": {
+          "en": "Checks the name of the person in the BioStar 2 event that started this Flow. Matching ignores upper and lower case and accepts a part of the name, so 'john' also matches 'John Doe'. Only works in Flows started by a BioStar 2 trigger card; elsewhere it is always false."
+        },
+        "args": [
+          {
+            "name": "user",
+            "type": "text",
+            "placeholder": {
+              "en": "John Doe"
+            }
+          }
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "reconnect",
+        "title": {
+          "en": "Force reconnect to BioStar 2"
+        },
+        "hint": {
+          "en": "Drops the current BioStar 2 session and reconnects: the app logs in again, reopens the connection and re-subscribes to the event stream. Handy after a BioStar 2 server restart, although the app already reconnects on its own."
+        }
+      }
+    ]
+  }
+}

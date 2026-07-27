@@ -1,0 +1,21 @@
+{
+  "id": "department_is",
+  "title": {
+    "en": "User belongs to department !{{[department]}}"
+  },
+  "titleFormatted": {
+    "en": "User belongs to department [[department]]"
+  },
+  "hint": {
+    "en": "Checks the department of the person in the event that started this Flow, as set on their BioStar 2 user profile. Matching ignores upper and lower case and accepts a part of the department name. Only works in Flows started by a BioStar 2 trigger card that carries user information; elsewhere it is always false."
+  },
+  "args": [
+    {
+      "name": "department",
+      "type": "text",
+      "placeholder": {
+        "en": "IT, Management, Cleaning..."
+      }
+    }
+  ]
+}

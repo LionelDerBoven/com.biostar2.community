@@ -1,0 +1,91 @@
+{
+  "id": "event_received",
+  "title": {
+    "en": "BioStar 2 event received"
+  },
+  "hint": {
+    "en": "Triggers on every BioStar 2 event this app forwards, whatever the outcome. Use the Event Type tag to tell them apart: 'success' (identified and granted access), 'access_denied' (refused at the reader) or 'identification_fail' (person not recognised). Background events such as door lock and unlock are filtered out and never trigger this card."
+  },
+  "tokens": [
+    {
+      "name": "event_type",
+      "type": "string",
+      "title": {
+        "en": "Event Type"
+      },
+      "example": "success"
+    },
+    {
+      "name": "user",
+      "type": "string",
+      "title": {
+        "en": "User Name"
+      },
+      "example": "John Doe"
+    },
+    {
+      "name": "device",
+      "type": "string",
+      "title": {
+        "en": "Device Name"
+      },
+      "example": "Main Entrance"
+    },
+    {
+      "name": "user_id",
+      "type": "string",
+      "title": {
+        "en": "User ID"
+      },
+      "example": "101"
+    },
+    {
+      "name": "user_group",
+      "type": "string",
+      "title": {
+        "en": "User Group"
+      },
+      "example": "All Users"
+    },
+    {
+      "name": "email",
+      "type": "string",
+      "title": {
+        "en": "Email"
+      },
+      "example": "user@example.com"
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "title": {
+        "en": "Title"
+      },
+      "example": "Staff"
+    },
+    {
+      "name": "department",
+      "type": "string",
+      "title": {
+        "en": "Department"
+      },
+      "example": "Management"
+    },
+    {
+      "name": "telephone",
+      "type": "string",
+      "title": {
+        "en": "Telephone"
+      },
+      "example": "+1234567890"
+    },
+    {
+      "name": "login_id",
+      "type": "string",
+      "title": {
+        "en": "Login ID"
+      },
+      "example": "johndoe"
+    }
+  ]
+}

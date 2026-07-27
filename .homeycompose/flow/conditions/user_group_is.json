@@ -1,0 +1,21 @@
+{
+  "id": "user_group_is",
+  "title": {
+    "en": "User belongs to group !{{[user_group]}}"
+  },
+  "titleFormatted": {
+    "en": "User belongs to group [[user_group]]"
+  },
+  "hint": {
+    "en": "Checks the BioStar 2 user group of the person in the event that started this Flow. Matching ignores upper and lower case and accepts a part of the group name. Only works in Flows started by a BioStar 2 trigger card that carries user information; elsewhere it is always false."
+  },
+  "args": [
+    {
+      "name": "user_group",
+      "type": "text",
+      "placeholder": {
+        "en": "All Users, Administrators..."
+      }
+    }
+  ]
+}

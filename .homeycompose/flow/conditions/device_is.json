@@ -1,0 +1,21 @@
+{
+  "id": "device_is",
+  "title": {
+    "en": "Device is !{{[device]}}"
+  },
+  "titleFormatted": {
+    "en": "Device is [[device]]"
+  },
+  "hint": {
+    "en": "Checks which reader or door the event that started this Flow came from. Matching ignores upper and lower case and accepts a part of the name, so 'entrance' also matches 'Main Entrance'. Only works in Flows started by a BioStar 2 trigger card; elsewhere it is always false."
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "text",
+      "placeholder": {
+        "en": "Main Entrance, Side Door..."
+      }
+    }
+  ]
+}

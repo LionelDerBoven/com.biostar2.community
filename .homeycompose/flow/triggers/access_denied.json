@@ -1,0 +1,99 @@
+{
+  "id": "access_denied",
+  "title": {
+    "en": "Access denied"
+  },
+  "hint": {
+    "en": "Triggers when BioStar 2 refuses access at a reader, usually because the person has no permission for that door or is outside their access schedule. The user tags are filled in when BioStar 2 recognised the person, and read 'N/A' when it did not."
+  },
+  "tokens": [
+    {
+      "name": "user",
+      "type": "string",
+      "title": {
+        "en": "User Name"
+      },
+      "example": "John Doe"
+    },
+    {
+      "name": "device",
+      "type": "string",
+      "title": {
+        "en": "Device / Door Name"
+      },
+      "example": "Main Entrance"
+    },
+    {
+      "name": "user_id",
+      "type": "string",
+      "title": {
+        "en": "User ID"
+      },
+      "example": "101"
+    },
+    {
+      "name": "user_group",
+      "type": "string",
+      "title": {
+        "en": "User Group"
+      },
+      "example": "All Users"
+    },
+    {
+      "name": "email",
+      "type": "string",
+      "title": {
+        "en": "Email"
+      },
+      "example": "user@example.com"
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "title": {
+        "en": "Title"
+      },
+      "example": "Staff"
+    },
+    {
+      "name": "department",
+      "type": "string",
+      "title": {
+        "en": "Department"
+      },
+      "example": "Management"
+    },
+    {
+      "name": "telephone",
+      "type": "string",
+      "title": {
+        "en": "Telephone"
+      },
+      "example": "+1234567890"
+    },
+    {
+      "name": "login_id",
+      "type": "string",
+      "title": {
+        "en": "Login ID"
+      },
+      "example": "johndoe"
+    },
+    {
+      "name": "event_name",
+      "type": "string",
+      "title": {
+        "en": "Event Name"
+      },
+      "example": "BS2_EVENT_ACCESS_DENIED"
+    },
+    {
+      "name": "timestamp",
+      "type": "string",
+      "title": {
+        "en": "Timestamp"
+      },
+      "example": "2026-01-01T12:00:00+00:00"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "is_connected",
+  "title": {
+    "en": "BioStar 2 connection is online"
+  },
+  "hint": {
+    "en": "Checks whether the app currently has a live connection to the BioStar 2 server and is receiving events. Use it to guard Flows that depend on live access events, or to be warned when the connection drops."
+  }
+}

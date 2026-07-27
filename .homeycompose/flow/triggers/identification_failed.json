@@ -1,0 +1,35 @@
+{
+  "id": "identification_failed",
+  "title": {
+    "en": "Identification failed"
+  },
+  "hint": {
+    "en": "Triggers when a reader could not identify the person at all, for example an unknown fingerprint, an unrecognised card or an unknown face. BioStar 2 has no user to report, so only the device, event name and timestamp are available as tags."
+  },
+  "tokens": [
+    {
+      "name": "device",
+      "type": "string",
+      "title": {
+        "en": "Device / Door Name"
+      },
+      "example": "Main Entrance"
+    },
+    {
+      "name": "event_name",
+      "type": "string",
+      "title": {
+        "en": "Event Name"
+      },
+      "example": "BS2_EVENT_IDENTIFY_FAIL_FINGER"
+    },
+    {
+      "name": "timestamp",
+      "type": "string",
+      "title": {
+        "en": "Timestamp"
+      },
+      "example": "2026-01-01T12:00:00+00:00"
+    }
+  ]
+}

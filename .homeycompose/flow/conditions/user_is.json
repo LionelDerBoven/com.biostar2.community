@@ -1,0 +1,21 @@
+{
+  "id": "user_is",
+  "title": {
+    "en": "User is !{{[user]}}"
+  },
+  "titleFormatted": {
+    "en": "User is [[user]]"
+  },
+  "hint": {
+    "en": "Checks the name of the person in the BioStar 2 event that started this Flow. Matching ignores upper and lower case and accepts a part of the name, so 'john' also matches 'John Doe'. Only works in Flows started by a BioStar 2 trigger card; elsewhere it is always false."
+  },
+  "args": [
+    {
+      "name": "user",
+      "type": "text",
+      "placeholder": {
+        "en": "John Doe"
+      }
+    }
+  ]
+}
