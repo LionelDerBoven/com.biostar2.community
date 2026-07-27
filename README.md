@@ -19,7 +19,7 @@ bridge machine in between.
 ## Requirements
 
 - Homey Pro, firmware **12.4.0** or newer
-- A BioStar 2 server reachable from Homey on the local network
+- BioStar 2 **2.9.12.31** or newer, reachable from Homey on the local network
 - A BioStar 2 account for the app to log in with
 
 The account needs **Monitoring** permission to receive events. If you want to use
