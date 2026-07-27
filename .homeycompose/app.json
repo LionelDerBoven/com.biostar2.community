@@ -11,9 +11,9 @@
     "en": "Biostar 2 Community"
   },
   "description": {
-    "en": "Connects Suprema BioStar 2 access control events to Homey Pro."
+    "en": "Connects Suprema BioStar 2 access control events to Homey Pro. Unofficial community app, not affiliated with or endorsed by Suprema Inc."
   },
-  "brandColor": "#FF5722",
+  "brandColor": "#0E74BE",
   "category": [
     "security"
   ],
