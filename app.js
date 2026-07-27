@@ -9,6 +9,9 @@ const RESTART_DEBOUNCE_MS = 500;
 const DISCONNECT_ALERT_MS = 120000;
 const LIST_CACHE_TTL_MS = 60000;
 
+// Settings that only change what is displayed, never how we talk to BioStar 2.
+const COSMETIC_SETTINGS = new Set(['biostar_log_usernames']);
+
 /**
  * BioStar 2 Community Homey App
  */
@@ -23,6 +26,7 @@ class BioStarApp extends Homey.App {
     this.disconnectAlertTimer = null;
     this.connectionStatus = 'UNKNOWN';
     this.listCache = {};
+    this.logUserNames = this.homey.settings.get('biostar_log_usernames') !== false;
     this.startedAt = Date.now();
 
     this.addLog('Initializing BioStar 2 Community Homey App...', 'INFO');
@@ -34,6 +38,14 @@ class BioStarApp extends Homey.App {
     // Watch for App Settings changes from the Homey Mobile / Web App UI (debounced).
     this.homey.settings.on('set', (key) => {
       if (!key.startsWith('biostar_')) return;
+
+      // Display-only settings are applied in place. Reconnecting for them would
+      // drop the event stream for a change that affects nothing on the wire.
+      if (COSMETIC_SETTINGS.has(key)) {
+        this.applyCosmeticSettings();
+        return;
+      }
+
       if (this.restartDebounceTimer) clearTimeout(this.restartDebounceTimer);
       this.restartDebounceTimer = setTimeout(() => {
         this.restartDebounceTimer = null;
@@ -182,6 +194,15 @@ class BioStarApp extends Homey.App {
   // ---------------------------------------------------------------------------
   // Client lifecycle
   // ---------------------------------------------------------------------------
+
+  /**
+   * Applies display-only settings to the running client without reconnecting.
+   */
+  applyCosmeticSettings() {
+    this.logUserNames = this.homey.settings.get('biostar_log_usernames') !== false;
+    if (this.client) this.client.options.logUserNames = this.logUserNames;
+    this.addLog(`Activity log user names ${this.logUserNames ? 'shown' : 'hidden'}.`, 'INFO');
+  }
 
   /**
    * Single place where a BiostarClient is built and wired up.
@@ -452,8 +473,7 @@ class BioStarApp extends Homey.App {
    */
   handleBioStarEvent(evt) {
     // Flow tokens always carry the real identity; only the on-screen log is masked.
-    const logUsers = this.homey.settings.get('biostar_log_usernames') !== false;
-    const who = logUsers
+    const who = this.logUserNames
       ? `User: '${evt.user || 'N/A'}' (ID: ${evt.userId || 'N/A'})`
       : 'User: <hidden>';
     this.addLog(`[Flow Dispatch] ${evt.type} | ${who} | Device: '${evt.device}'`, 'EVENT');
