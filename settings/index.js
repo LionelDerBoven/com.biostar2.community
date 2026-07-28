@@ -24,11 +24,11 @@ function onHomeyReady(Homey) {
    * markup is readable on its own and survives a missing locale file.
    */
   function applyTranslations() {
-    document.querySelectorAll('[data-i18n]').forEach((el) => {
-      el.textContent = t(el.getAttribute('data-i18n'), el.textContent.trim());
+    document.querySelectorAll('[data-t]').forEach((el) => {
+      el.textContent = t(el.getAttribute('data-t'), el.textContent.trim());
     });
-    document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
-      el.placeholder = t(el.getAttribute('data-i18n-placeholder'), el.placeholder);
+    document.querySelectorAll('[data-t-placeholder]').forEach((el) => {
+      el.placeholder = t(el.getAttribute('data-t-placeholder'), el.placeholder);
     });
   }
 

@@ -9,5 +9,10 @@
     "en": "The app now speaks Dutch and French as well as English: Flow cards, their hints and tags, the settings screen and the notifications all follow Homey's language setting. Privacy fix: the settings page no longer receives your stored BioStar 2 password, only whether one is set. The contributing guidelines and code of conduct now point at this project instead of Athom.",
     "nl": "De app spreekt nu ook Nederlands en Frans naast Engels: Flow-kaarten, hun hints en tags, het instellingenscherm en de meldingen volgen allemaal de taalinstelling van Homey. Privacyverbetering: de instellingenpagina ontvangt uw opgeslagen BioStar 2-wachtwoord niet langer, alleen of er een is ingesteld. De richtlijnen voor bijdragen en de gedragscode verwijzen nu naar dit project in plaats van naar Athom.",
     "fr": "L'application parle désormais néerlandais et français en plus de l'anglais : les cartes de Flow, leurs indications et étiquettes, l'écran des paramètres et les notifications suivent tous la langue de Homey. Correctif de confidentialité : la page des paramètres ne reçoit plus votre mot de passe BioStar 2 enregistré, seulement l'information qu'un mot de passe existe. Les règles de contribution et le code de conduite renvoient maintenant à ce projet plutôt qu'à Athom."
+  },
+  "1.2.1": {
+    "en": "Fixes two display problems in the translated settings screen: the buttons on the Live Logs tab are no longer pushed out of view by longer translated labels, and the words \"<hidden>\" now appear correctly in the activity log hint instead of being swallowed.",
+    "nl": "Lost twee weergaveproblemen op in het vertaalde instellingenscherm: de knoppen op het tabblad Live logboek worden niet langer uit beeld geduwd door langere vertaalde labels, en de tekst \"<hidden>\" verschijnt nu correct in de uitleg bij het activiteitenlogboek.",
+    "fr": "Corrige deux problèmes d'affichage dans l'écran des paramètres traduit : les boutons de l'onglet Journal en direct ne sont plus poussés hors de l'écran par des libellés traduits plus longs, et le texte « <hidden> » s'affiche désormais correctement dans l'explication du journal d'activité."
   }
 }
