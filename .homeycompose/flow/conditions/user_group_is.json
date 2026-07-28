@@ -1,20 +1,28 @@
 {
   "id": "user_group_is",
   "title": {
-    "en": "User belongs to group !{{[user_group]}}"
+    "en": "User belongs to group !{{[user_group]}}",
+    "nl": "Gebruiker behoort tot groep !{{[user_group]}}",
+    "fr": "L'utilisateur appartient au groupe !{{[user_group]}}"
   },
   "titleFormatted": {
-    "en": "User belongs to group [[user_group]]"
+    "en": "User belongs to group [[user_group]]",
+    "nl": "Gebruiker behoort tot groep [[user_group]]",
+    "fr": "L'utilisateur appartient au groupe [[user_group]]"
   },
   "hint": {
-    "en": "Checks the BioStar 2 user group of the person in the event that started this Flow. Matching ignores upper and lower case and accepts a part of the group name. Only works in Flows started by a BioStar 2 trigger card that carries user information; elsewhere it is always false."
+    "en": "Checks the BioStar 2 user group of the person in the event that started this Flow. Matching ignores upper and lower case and accepts a part of the group name. Only works in Flows started by a BioStar 2 trigger card that carries user information; elsewhere it is always false.",
+    "nl": "Controleert de BioStar 2-gebruikersgroep van de persoon in de gebeurtenis die deze Flow startte. Bij het vergelijken worden hoofd- en kleine letters genegeerd en volstaat een deel van de groepsnaam. Werkt alleen in Flows die zijn gestart door een BioStar 2-triggerkaart met gebruikersinformatie; elders is dit altijd onwaar.",
+    "fr": "Vérifie le groupe d'utilisateurs BioStar 2 de la personne dans l'événement qui a démarré ce Flow. La comparaison ignore la casse et accepte une partie du nom du groupe. Ne fonctionne que dans les Flows démarrés par une carte de déclenchement BioStar 2 portant des informations utilisateur ; ailleurs, le résultat est toujours faux."
   },
   "args": [
     {
       "name": "user_group",
       "type": "text",
       "placeholder": {
-        "en": "All Users, Administrators..."
+        "en": "All Users, Administrators...",
+        "nl": "Alle gebruikers, Beheerders...",
+        "fr": "Tous les utilisateurs, Administrateurs..."
       }
     }
   ]

@@ -1,0 +1,98 @@
+{
+  "errors": {
+    "noDoorSelected": "Aucune porte sélectionnée.",
+    "incompleteCredentials": "L'URL de l'hôte, le nom d'utilisateur et le mot de passe doivent tous être renseignés."
+  },
+  "notifications": {
+    "connectionLost": "BioStar 2 : connexion perdue. Les événements d'accès n'arrivent plus à Homey."
+  },
+  "settings": {
+    "tabs": {
+      "settings": "Paramètres",
+      "advanced": "Avancé",
+      "logs": "Journal en direct"
+    },
+    "status": {
+      "label": "État de la connexion :",
+      "UNKNOWN": "INCONNU",
+      "CONNECTED": "CONNECTÉ",
+      "DISCONNECTED": "DÉCONNECTÉ",
+      "CONNECTING": "CONNEXION"
+    },
+    "stats": {
+      "forwarded": "Événements transmis",
+      "filtered": "Événements filtrés",
+      "reconnects": "Reconnexions",
+      "cached": "Utilisateurs en cache",
+      "uptime": "Connecté depuis",
+      "last": "Dernier événement"
+    },
+    "permWarning": {
+      "title": "Autorisations limitées.",
+      "body": "Ce compte ne peut pas lire les profils utilisateur dans BioStar 2 : les étiquettes groupe, e-mail, département, téléphone et identifiant de connexion se rabattent donc sur les données brutes de l'événement. Accordez au compte l'autorisation de lecture Users dans BioStar 2 pour les activer."
+    },
+    "connection": {
+      "host": "URL de l'hôte BioStar 2",
+      "ws": "URI WebSocket",
+      "wsHint": "Laissez vide pour la déduire automatiquement de l'URL de l'hôte.",
+      "user": "Nom d'utilisateur de l'API",
+      "userPlaceholder": "Utilisateur API BioStar 2",
+      "password": "Mot de passe de l'API",
+      "passwordPlaceholder": "Saisissez le mot de passe de l'API",
+      "passwordStored": "Un mot de passe est enregistré. Laissez le champ inchangé pour le conserver.",
+      "passwordEmpty": "Aucun mot de passe enregistré pour l'instant.",
+      "ssl": "Vérifier le certificat SSL/TLS (décochez pour un certificat auto-signé)"
+    },
+    "buttons": {
+      "save": "Enregistrer les paramètres",
+      "test": "Tester la connexion",
+      "reconnect": "Forcer la reconnexion",
+      "saveAdvanced": "Enregistrer les paramètres avancés",
+      "add": "Ajouter",
+      "refreshLogs": "Actualiser le journal",
+      "clearLogs": "Effacer le journal"
+    },
+    "eventTypes": {
+      "label": "Types d'événements observés",
+      "hint": "Tous les noms d'événements envoyés par BioStar 2 depuis le démarrage de l'application, les plus fréquents en premier. Cochez-en un pour l'écarter avant tout traitement — c'est ce qui garde l'application au repos quand rien d'important ne se passe. Les lignes cochées n'atteignent jamais vos Flows.",
+      "colName": "Nom de l'événement",
+      "colCount": "Nombre",
+      "colLast": "Vu pour la dernière fois",
+      "colIgnore": "Ignorer",
+      "loading": "Chargement…",
+      "empty": "Aucun événement observé pour l'instant. Ils apparaîtront ici dès que BioStar 2 les enverra.",
+      "manualPlaceholder": "Ajoutez un nom d'événement absent de la liste"
+    },
+    "ignoreSubstrings": {
+      "label": "Noms d'événements ignorés (contient)",
+      "hint": "Un par ligne. Tout événement dont le nom contient l'un de ces fragments est écarté."
+    },
+    "logUserNames": {
+      "label": "Afficher les noms d'utilisateur dans le journal d'activité",
+      "hint": "Activé par défaut, car ce sont les noms qui rendent le journal utile quand un Flow se comporte mal. Désactivez-le pour garder les données d'accès identifiables hors du journal — les lignes affichent alors « User: <hidden> ». Cela n'affecte que le journal ; les étiquettes de Flow contiennent toujours l'utilisateur réel, et le journal réside uniquement en mémoire et est effacé au redémarrage de l'application."
+    },
+    "timing": {
+      "heartbeat": "Intervalle du signal de présence (secondes)",
+      "heartbeatHint": "Fréquence à laquelle l'application interroge BioStar 2. La connexion est considérée comme perdue après deux fois cette durée sans réponse.",
+      "reconnectMin": "Délai de reconnexion, première tentative (secondes)",
+      "reconnectMax": "Délai de reconnexion, maximum (secondes)",
+      "reconnectHint": "Le délai augmente de 50 % après chaque tentative échouée, jusqu'à ce plafond."
+    },
+    "logs": {
+      "title": "Journal d'activité en direct de BioStar 2 et de l'application :",
+      "loading": "Chargement du journal...",
+      "empty": "Aucune entrée de journal pour l'instant."
+    },
+    "messages": {
+      "testing": "Test de la connexion à BioStar 2...",
+      "testError": "Erreur lors du test de la connexion :",
+      "testFailed": "Échec de la connexion.",
+      "reconnecting": "Reconnexion à BioStar 2...",
+      "reconnectFailed": "Échec de la reconnexion :",
+      "reconnectRequested": "Reconnexion demandée.",
+      "saved": "Paramètres BioStar 2 enregistrés.",
+      "savedAdvanced": "Paramètres avancés enregistrés. Reconnexion avec la nouvelle configuration.",
+      "loadFailed": "Impossible de charger les paramètres enregistrés."
+    }
+  }
+}

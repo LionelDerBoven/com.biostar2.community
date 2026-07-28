@@ -10,6 +10,34 @@ function onHomeyReady(Homey) {
 
   const $ = (id) => document.getElementById(id);
 
+  /**
+   * Homey returns the key itself when a translation is missing. Falling back to
+   * the markup's own text keeps the page readable instead of showing a key.
+   */
+  function t(key, fallback = '') {
+    const translated = Homey.__(key);
+    return !translated || translated === key ? fallback : translated;
+  }
+
+  /**
+   * Translates the page in place. The English text stays in index.html so the
+   * markup is readable on its own and survives a missing locale file.
+   */
+  function applyTranslations() {
+    document.querySelectorAll('[data-i18n]').forEach((el) => {
+      el.textContent = t(el.getAttribute('data-i18n'), el.textContent.trim());
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
+      el.placeholder = t(el.getAttribute('data-i18n-placeholder'), el.placeholder);
+    });
+  }
+
+  function apiGet(path) {
+    return new Promise((resolve) => {
+      Homey.api('GET', path, (err, res) => resolve(err ? null : res));
+    });
+  }
+
   const els = {
     host: $('biostar_host'),
     ws: $('biostar_ws_uri'),
@@ -60,7 +88,8 @@ function onHomeyReady(Homey) {
   const STATUS_CLASS = { CONNECTED: 'ok', DISCONNECTED: 'bad' };
 
   function renderStatus(status) {
-    els.status.textContent = status || 'UNKNOWN';
+    const key = status || 'UNKNOWN';
+    els.status.textContent = t(`settings.status.${key}`, key);
     els.status.className = `status-value ${STATUS_CLASS[status] || ''}`;
   }
 
@@ -84,7 +113,8 @@ function onHomeyReady(Homey) {
       const tr = document.createElement('tr');
       const td = document.createElement('td');
       td.colSpan = 4; td.className = 'muted';
-      td.textContent = 'No events seen yet. They appear here as BioStar 2 sends them.';
+      td.textContent = t('settings.eventTypes.empty',
+        'No events seen yet. They appear here as BioStar 2 sends them.');
       tr.appendChild(td); body.appendChild(tr);
       return;
     }
@@ -163,7 +193,7 @@ function onHomeyReady(Homey) {
         els.logWindow.textContent = logLines.join('\n');
         if (atBottom) els.logWindow.scrollTop = els.logWindow.scrollHeight;
       } else if (!logLines.length) {
-        els.logWindow.textContent = 'No logs available yet.';
+        els.logWindow.textContent = t('settings.logs.empty', 'No logs available yet.');
       }
 
       renderStats(res.stats);
@@ -204,11 +234,14 @@ function onHomeyReady(Homey) {
     els.user.value = await getSetting('biostar_user');
     els.ssl.checked = (await getSetting('biostar_reject_unauthorized', false)) === true;
 
-    const storedPassword = await getSetting('biostar_password');
-    els.password.value = storedPassword ? PASSWORD_MASK : '';
-    $('password-hint').textContent = storedPassword
-      ? 'A password is stored. Leave unchanged to keep it.'
-      : 'No password stored yet.';
+    // Ask the app whether a password exists rather than reading the setting:
+    // the page only needs the boolean, and the secret never leaves Homey.
+    const status = await apiGet('/status');
+    const hasPassword = Boolean(status && status.hasPassword);
+    els.password.value = hasPassword ? PASSWORD_MASK : '';
+    $('password-hint').textContent = hasPassword
+      ? t('settings.connection.passwordStored', 'A password is stored. Leave unchanged to keep it.')
+      : t('settings.connection.passwordEmpty', 'No password stored yet.');
 
     const toText = (v) => (Array.isArray(v) ? v.join('\n') : (v || ''));
     els.ignoreSubstrings.value = toText(await getSetting('biostar_ignore_substrings'));
@@ -270,7 +303,7 @@ function onHomeyReady(Homey) {
   }
 
   $('test-button').addEventListener('click', () => {
-    els.testResult.textContent = 'Testing connection to BioStar 2...';
+    els.testResult.textContent = t('settings.messages.testing', 'Testing connection to BioStar 2...');
     els.testResult.style.color = '#555';
 
     const payload = {
@@ -284,13 +317,15 @@ function onHomeyReady(Homey) {
 
     Homey.api('POST', '/test', payload, (err, res) => {
       if (err) {
-        els.testResult.textContent = `✖ Error testing connection: ${err.message || err}`;
+        const label = t('settings.messages.testError', 'Error testing connection:');
+        els.testResult.textContent = `✖ ${label} ${err.message || err}`;
         els.testResult.style.color = '#d9534f';
       } else if (res && res.success) {
         els.testResult.textContent = `✓ ${res.message}`;
         els.testResult.style.color = '#5cb85c';
       } else {
-        els.testResult.textContent = `✖ ${(res && res.message) || 'Connection failed.'}`;
+        els.testResult.textContent = `✖ ${(res && res.message)
+          || t('settings.messages.testFailed', 'Connection failed.')}`;
         els.testResult.style.color = '#d9534f';
       }
       refreshStatus();
@@ -298,12 +333,12 @@ function onHomeyReady(Homey) {
   });
 
   $('reconnect-button').addEventListener('click', () => {
-    els.testResult.textContent = 'Reconnecting to BioStar 2...';
+    els.testResult.textContent = t('settings.messages.reconnecting', 'Reconnecting to BioStar 2...');
     els.testResult.style.color = '#555';
     Homey.api('POST', '/reconnect', {}, (err) => {
       els.testResult.textContent = err
-        ? `✖ Reconnect failed: ${err.message || err}`
-        : '✓ Reconnect requested.';
+        ? `✖ ${t('settings.messages.reconnectFailed', 'Reconnect failed:')} ${err.message || err}`
+        : `✓ ${t('settings.messages.reconnectRequested', 'Reconnect requested.')}`;
       els.testResult.style.color = err ? '#d9534f' : '#5cb85c';
       setTimeout(refreshStatus, 1500);
     });
@@ -322,7 +357,7 @@ function onHomeyReady(Homey) {
       els.password.value = pw ? PASSWORD_MASK : '';
     }
 
-    Homey.alert('BioStar 2 settings saved successfully!');
+    Homey.alert(t('settings.messages.saved', 'BioStar 2 settings saved successfully.'));
     setTimeout(refreshStatus, 1500);
   });
 
@@ -340,7 +375,8 @@ function onHomeyReady(Homey) {
     Homey.set('biostar_reconnect_max_s', toNumber(els.reconnectMax));
     Homey.set('biostar_log_usernames', els.logUserNames.checked);
 
-    Homey.alert('Advanced settings saved. Reconnecting with the new configuration.');
+    Homey.alert(t('settings.messages.savedAdvanced',
+      'Advanced settings saved. Reconnecting with the new configuration.'));
     setTimeout(refreshStatus, 2000);
   });
 
@@ -348,10 +384,12 @@ function onHomeyReady(Homey) {
   // Start up
   // ---------------------------------------------------------------------------
 
+  applyTranslations();
   bindTabs();
   loadEventTypes();
   loadSettings().catch(() => {
-    els.testResult.textContent = '✖ Could not load the stored settings.';
+    els.testResult.textContent = `✖ ${t('settings.messages.loadFailed',
+      'Could not load the stored settings.')}`;
     els.testResult.style.color = '#d9534f';
   });
 }

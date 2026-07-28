@@ -1,23 +1,33 @@
 {
   "id": "access_denied",
   "title": {
-    "en": "Access denied"
+    "en": "Access denied",
+    "nl": "Toegang geweigerd",
+    "fr": "Accès refusé"
   },
   "titleFormatted": {
-    "en": "Access denied at [[device]]"
+    "en": "Access denied at [[device]]",
+    "nl": "Toegang geweigerd bij [[device]]",
+    "fr": "Accès refusé à [[device]]"
   },
   "hint": {
-    "en": "Triggers when BioStar 2 refuses access at a reader, usually because the person has no permission for that door or is outside their access schedule. Pick a reader to trigger only for that one, or leave it on 'Any reader'. The user tags are filled in when BioStar 2 recognised the person, and read 'N/A' when it did not."
+    "en": "Triggers when BioStar 2 refuses access at a reader, usually because the person has no permission for that door or is outside their access schedule. Pick a reader to trigger only for that one, or leave it on 'Any reader'. The user tags are filled in when BioStar 2 recognised the person, and read 'N/A' when it did not.",
+    "nl": "Wordt geactiveerd wanneer BioStar 2 de toegang bij een lezer weigert, meestal omdat de persoon geen rechten heeft voor die deur of buiten zijn toegangsschema valt. Kies een lezer om alleen daarvoor te activeren, of laat het op 'Elke lezer' staan. De gebruikerstags worden ingevuld wanneer BioStar 2 de persoon herkende, en tonen 'N/A' wanneer dat niet zo was.",
+    "fr": "Se déclenche lorsque BioStar 2 refuse l'accès à un lecteur, généralement parce que la personne n'a pas d'autorisation pour cette porte ou se présente en dehors de sa plage horaire. Choisissez un lecteur pour ne réagir qu'à celui-ci, ou laissez « N'importe quel lecteur ». Les étiquettes utilisateur sont remplies lorsque BioStar 2 a reconnu la personne, et affichent « N/A » dans le cas contraire."
   },
   "args": [
     {
       "name": "device",
       "type": "autocomplete",
       "title": {
-        "en": "Reader"
+        "en": "Reader",
+        "nl": "Lezer",
+        "fr": "Lecteur"
       },
       "placeholder": {
-        "en": "Any reader"
+        "en": "Any reader",
+        "nl": "Elke lezer",
+        "fr": "N'importe quel lecteur"
       }
     }
   ],
@@ -26,7 +36,9 @@
       "name": "user",
       "type": "string",
       "title": {
-        "en": "User Name"
+        "en": "User Name",
+        "nl": "Gebruikersnaam",
+        "fr": "Nom d'utilisateur"
       },
       "example": "John Doe"
     },
@@ -34,7 +46,9 @@
       "name": "device",
       "type": "string",
       "title": {
-        "en": "Device / Door Name"
+        "en": "Device / Door Name",
+        "nl": "Apparaat- of deurnaam",
+        "fr": "Nom de l'appareil ou de la porte"
       },
       "example": "Main Entrance"
     },
@@ -42,7 +56,9 @@
       "name": "user_id",
       "type": "string",
       "title": {
-        "en": "User ID"
+        "en": "User ID",
+        "nl": "Gebruikers-ID",
+        "fr": "ID utilisateur"
       },
       "example": "101"
     },
@@ -50,7 +66,9 @@
       "name": "user_group",
       "type": "string",
       "title": {
-        "en": "User Group"
+        "en": "User Group",
+        "nl": "Gebruikersgroep",
+        "fr": "Groupe d'utilisateurs"
       },
       "example": "All Users"
     },
@@ -58,7 +76,9 @@
       "name": "email",
       "type": "string",
       "title": {
-        "en": "Email"
+        "en": "Email",
+        "nl": "E-mail",
+        "fr": "E-mail"
       },
       "example": "user@example.com"
     },
@@ -66,7 +86,9 @@
       "name": "title",
       "type": "string",
       "title": {
-        "en": "Title"
+        "en": "Title",
+        "nl": "Functietitel",
+        "fr": "Fonction"
       },
       "example": "Staff"
     },
@@ -74,7 +96,9 @@
       "name": "department",
       "type": "string",
       "title": {
-        "en": "Department"
+        "en": "Department",
+        "nl": "Afdeling",
+        "fr": "Département"
       },
       "example": "Management"
     },
@@ -82,7 +106,9 @@
       "name": "telephone",
       "type": "string",
       "title": {
-        "en": "Telephone"
+        "en": "Telephone",
+        "nl": "Telefoon",
+        "fr": "Téléphone"
       },
       "example": "+1234567890"
     },
@@ -90,7 +116,9 @@
       "name": "login_id",
       "type": "string",
       "title": {
-        "en": "Login ID"
+        "en": "Login ID",
+        "nl": "Login-ID",
+        "fr": "Identifiant de connexion"
       },
       "example": "johndoe"
     },
@@ -98,7 +126,9 @@
       "name": "event_name",
       "type": "string",
       "title": {
-        "en": "Event Name"
+        "en": "Event Name",
+        "nl": "Gebeurtenisnaam",
+        "fr": "Nom de l'événement"
       },
       "example": "BS2_EVENT_ACCESS_DENIED"
     },
@@ -106,7 +136,9 @@
       "name": "timestamp",
       "type": "string",
       "title": {
-        "en": "Timestamp"
+        "en": "Timestamp",
+        "nl": "Tijdstempel",
+        "fr": "Horodatage"
       },
       "example": "2026-01-01T12:00:00+00:00"
     }

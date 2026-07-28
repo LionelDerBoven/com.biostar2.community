@@ -1,23 +1,33 @@
 {
   "id": "event_received",
   "title": {
-    "en": "BioStar 2 event received"
+    "en": "BioStar 2 event received",
+    "nl": "BioStar 2-gebeurtenis ontvangen",
+    "fr": "Événement BioStar 2 reçu"
   },
   "titleFormatted": {
-    "en": "BioStar 2 event received at [[device]]"
+    "en": "BioStar 2 event received at [[device]]",
+    "nl": "BioStar 2-gebeurtenis ontvangen bij [[device]]",
+    "fr": "Événement BioStar 2 reçu à [[device]]"
   },
   "hint": {
-    "en": "Triggers on every BioStar 2 event this app forwards, whatever the outcome. Use the Event Type tag to tell them apart: 'success' (identified and granted access), 'access_denied' (refused at the reader) or 'identification_fail' (person not recognised). Pick a reader to trigger only for that one, or leave it on 'Any reader'. Background events such as door lock and unlock are filtered out and never trigger this card."
+    "en": "Triggers on every BioStar 2 event this app forwards, whatever the outcome. Use the Event Type tag to tell them apart: 'success' (identified and granted access), 'access_denied' (refused at the reader) or 'identification_fail' (person not recognised). Pick a reader to trigger only for that one, or leave it on 'Any reader'. Background events such as door lock and unlock are filtered out and never trigger this card.",
+    "nl": "Wordt geactiveerd bij elke BioStar 2-gebeurtenis die deze app doorstuurt, wat de uitkomst ook is. Gebruik de tag Gebeurtenistype om ze te onderscheiden: 'success' (geïdentificeerd en toegang verleend), 'access_denied' (geweigerd bij de lezer) of 'identification_fail' (persoon niet herkend). Kies een lezer om alleen daarvoor te activeren, of laat het op 'Elke lezer' staan. Achtergrondgebeurtenissen zoals het vergrendelen en ontgrendelen van deuren worden gefilterd en activeren deze kaart nooit.",
+    "fr": "Se déclenche à chaque événement BioStar 2 transmis par l'application, quel qu'en soit le résultat. Utilisez l'étiquette Type d'événement pour les distinguer : « success » (identifié et accès accordé), « access_denied » (refusé au lecteur) ou « identification_fail » (personne non reconnue). Choisissez un lecteur pour ne réagir qu'à celui-ci, ou laissez « N'importe quel lecteur ». Les événements d'arrière-plan comme le verrouillage et le déverrouillage des portes sont filtrés et ne déclenchent jamais cette carte."
   },
   "args": [
     {
       "name": "device",
       "type": "autocomplete",
       "title": {
-        "en": "Reader"
+        "en": "Reader",
+        "nl": "Lezer",
+        "fr": "Lecteur"
       },
       "placeholder": {
-        "en": "Any reader"
+        "en": "Any reader",
+        "nl": "Elke lezer",
+        "fr": "N'importe quel lecteur"
       }
     }
   ],
@@ -26,7 +36,9 @@
       "name": "event_type",
       "type": "string",
       "title": {
-        "en": "Event Type"
+        "en": "Event Type",
+        "nl": "Gebeurtenistype",
+        "fr": "Type d'événement"
       },
       "example": "success"
     },
@@ -34,7 +46,9 @@
       "name": "user",
       "type": "string",
       "title": {
-        "en": "User Name"
+        "en": "User Name",
+        "nl": "Gebruikersnaam",
+        "fr": "Nom d'utilisateur"
       },
       "example": "John Doe"
     },
@@ -42,7 +56,9 @@
       "name": "device",
       "type": "string",
       "title": {
-        "en": "Device / Door Name"
+        "en": "Device / Door Name",
+        "nl": "Apparaat- of deurnaam",
+        "fr": "Nom de l'appareil ou de la porte"
       },
       "example": "Main Entrance"
     },
@@ -50,7 +66,9 @@
       "name": "user_id",
       "type": "string",
       "title": {
-        "en": "User ID"
+        "en": "User ID",
+        "nl": "Gebruikers-ID",
+        "fr": "ID utilisateur"
       },
       "example": "101"
     },
@@ -58,7 +76,9 @@
       "name": "user_group",
       "type": "string",
       "title": {
-        "en": "User Group"
+        "en": "User Group",
+        "nl": "Gebruikersgroep",
+        "fr": "Groupe d'utilisateurs"
       },
       "example": "All Users"
     },
@@ -66,7 +86,9 @@
       "name": "email",
       "type": "string",
       "title": {
-        "en": "Email"
+        "en": "Email",
+        "nl": "E-mail",
+        "fr": "E-mail"
       },
       "example": "user@example.com"
     },
@@ -74,7 +96,9 @@
       "name": "title",
       "type": "string",
       "title": {
-        "en": "Title"
+        "en": "Title",
+        "nl": "Functietitel",
+        "fr": "Fonction"
       },
       "example": "Staff"
     },
@@ -82,7 +106,9 @@
       "name": "department",
       "type": "string",
       "title": {
-        "en": "Department"
+        "en": "Department",
+        "nl": "Afdeling",
+        "fr": "Département"
       },
       "example": "Management"
     },
@@ -90,7 +116,9 @@
       "name": "telephone",
       "type": "string",
       "title": {
-        "en": "Telephone"
+        "en": "Telephone",
+        "nl": "Telefoon",
+        "fr": "Téléphone"
       },
       "example": "+1234567890"
     },
@@ -98,7 +126,9 @@
       "name": "login_id",
       "type": "string",
       "title": {
-        "en": "Login ID"
+        "en": "Login ID",
+        "nl": "Login-ID",
+        "fr": "Identifiant de connexion"
       },
       "example": "johndoe"
     },
@@ -106,7 +136,9 @@
       "name": "event_name",
       "type": "string",
       "title": {
-        "en": "Event Name"
+        "en": "Event Name",
+        "nl": "Gebeurtenisnaam",
+        "fr": "Nom de l'événement"
       },
       "example": "BS2_EVENT_IDENTIFY_SUCCESS_FINGER"
     },
@@ -114,7 +146,9 @@
       "name": "timestamp",
       "type": "string",
       "title": {
-        "en": "Timestamp"
+        "en": "Timestamp",
+        "nl": "Tijdstempel",
+        "fr": "Horodatage"
       },
       "example": "2026-01-01T12:00:00+00:00"
     }

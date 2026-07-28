@@ -1,23 +1,33 @@
 {
   "id": "identification_failed",
   "title": {
-    "en": "Identification failed"
+    "en": "Identification failed",
+    "nl": "Identificatie mislukt",
+    "fr": "Échec de l'identification"
   },
   "titleFormatted": {
-    "en": "Identification failed at [[device]]"
+    "en": "Identification failed at [[device]]",
+    "nl": "Identificatie mislukt bij [[device]]",
+    "fr": "Échec de l'identification à [[device]]"
   },
   "hint": {
-    "en": "Triggers when a reader could not identify the person at all, for example an unknown fingerprint, an unrecognised card or an unknown face. Pick a reader to trigger only for that one, or leave it on 'Any reader'. BioStar 2 has no user to report, so only the device, event name and timestamp are available as tags."
+    "en": "Triggers when a reader could not identify the person at all, for example an unknown fingerprint, an unrecognised card or an unknown face. Pick a reader to trigger only for that one, or leave it on 'Any reader'. BioStar 2 has no user to report, so only the device, event name and timestamp are available as tags.",
+    "nl": "Wordt geactiveerd wanneer een lezer de persoon helemaal niet kon identificeren, bijvoorbeeld bij een onbekende vingerafdruk, een niet-herkende kaart of een onbekend gezicht. Kies een lezer om alleen daarvoor te activeren, of laat het op 'Elke lezer' staan. BioStar 2 heeft geen gebruiker om te melden, dus alleen het apparaat, de gebeurtenisnaam en het tijdstempel zijn beschikbaar als tags.",
+    "fr": "Se déclenche lorsqu'un lecteur n'a pas pu identifier la personne du tout, par exemple une empreinte inconnue, une carte non reconnue ou un visage inconnu. Choisissez un lecteur pour ne réagir qu'à celui-ci, ou laissez « N'importe quel lecteur ». BioStar 2 n'a aucun utilisateur à signaler : seuls l'appareil, le nom de l'événement et l'horodatage sont disponibles comme étiquettes."
   },
   "args": [
     {
       "name": "device",
       "type": "autocomplete",
       "title": {
-        "en": "Reader"
+        "en": "Reader",
+        "nl": "Lezer",
+        "fr": "Lecteur"
       },
       "placeholder": {
-        "en": "Any reader"
+        "en": "Any reader",
+        "nl": "Elke lezer",
+        "fr": "N'importe quel lecteur"
       }
     }
   ],
@@ -26,7 +36,9 @@
       "name": "device",
       "type": "string",
       "title": {
-        "en": "Device / Door Name"
+        "en": "Device / Door Name",
+        "nl": "Apparaat- of deurnaam",
+        "fr": "Nom de l'appareil ou de la porte"
       },
       "example": "Main Entrance"
     },
@@ -34,7 +46,9 @@
       "name": "event_name",
       "type": "string",
       "title": {
-        "en": "Event Name"
+        "en": "Event Name",
+        "nl": "Gebeurtenisnaam",
+        "fr": "Nom de l'événement"
       },
       "example": "BS2_EVENT_IDENTIFY_FAIL_FINGER"
     },
@@ -42,7 +56,9 @@
       "name": "timestamp",
       "type": "string",
       "title": {
-        "en": "Timestamp"
+        "en": "Timestamp",
+        "nl": "Tijdstempel",
+        "fr": "Horodatage"
       },
       "example": "2026-01-01T12:00:00+00:00"
     }

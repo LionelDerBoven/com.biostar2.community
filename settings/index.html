@@ -245,66 +245,67 @@
 
   <!-- Navigation Tab Bar -->
   <div class="tab-bar">
-    <button type="button" class="tab-btn active" data-tab="pane-settings">Settings</button>
-    <button type="button" class="tab-btn" data-tab="pane-advanced">Advanced</button>
-    <button type="button" class="tab-btn" data-tab="pane-logs">Live Logs</button>
+    <button type="button" class="tab-btn active" data-tab="pane-settings" data-i18n="settings.tabs.settings">Settings</button>
+    <button type="button" class="tab-btn" data-tab="pane-advanced" data-i18n="settings.tabs.advanced">Advanced</button>
+    <button type="button" class="tab-btn" data-tab="pane-logs" data-i18n="settings.tabs.logs">Live Logs</button>
   </div>
 
   <!-- Tab 1: Settings Pane -->
   <div id="pane-settings" class="tab-pane active">
     <div class="status-card">
-      <span>Connection Status: </span>
-      <span id="connection-status" class="status-value">UNKNOWN</span>
+      <span data-i18n="settings.status.label">Connection Status:</span>
+      <span id="connection-status" class="status-value">–</span>
       <div class="stats-grid">
-        <div><b id="stat-forwarded">0</b>Events forwarded</div>
-        <div><b id="stat-ignored">0</b>Events filtered</div>
-        <div><b id="stat-reconnects">0</b>Reconnects</div>
-        <div><b id="stat-cached">0</b>Cached users</div>
-        <div><b id="stat-uptime">–</b>Connected for</div>
-        <div><b id="stat-last">–</b>Last event</div>
+        <div><b id="stat-forwarded">0</b><span data-i18n="settings.stats.forwarded">Events forwarded</span></div>
+        <div><b id="stat-ignored">0</b><span data-i18n="settings.stats.filtered">Events filtered</span></div>
+        <div><b id="stat-reconnects">0</b><span data-i18n="settings.stats.reconnects">Reconnects</span></div>
+        <div><b id="stat-cached">0</b><span data-i18n="settings.stats.cached">Cached users</span></div>
+        <div><b id="stat-uptime">–</b><span data-i18n="settings.stats.uptime">Connected for</span></div>
+        <div><b id="stat-last">–</b><span data-i18n="settings.stats.last">Last event</span></div>
       </div>
     </div>
 
     <div id="perm-warning" class="warn-banner">
-      <b>Limited permissions.</b> This account cannot read user profiles in BioStar 2, so the
+      <b data-i18n="settings.permWarning.title">Limited permissions.</b>
+      <span data-i18n="settings.permWarning.body">This account cannot read user profiles in BioStar 2, so the
       group, email, department, telephone and login ID tags fall back to the raw event data.
-      Grant the account the <i>Users</i> read permission in BioStar 2 to enable them.
+      Grant the account the Users read permission in BioStar 2 to enable them.</span>
     </div>
 
     <form id="settings-form">
       <div class="field">
-        <label for="biostar_host">BioStar 2 Host URL</label>
+        <label for="biostar_host" data-i18n="settings.connection.host">BioStar 2 Host URL</label>
         <input type="text" id="biostar_host" placeholder="https://biostar.example.com" />
       </div>
 
       <div class="field">
-        <label for="biostar_ws_uri">WebSocket URI</label>
+        <label for="biostar_ws_uri" data-i18n="settings.connection.ws">WebSocket URI</label>
         <input type="text" id="biostar_ws_uri" placeholder="wss://biostar.example.com/wsapi" />
-        <div class="hint">Leave empty to derive it automatically from the host URL.</div>
+        <div class="hint" data-i18n="settings.connection.wsHint">Leave empty to derive it automatically from the host URL.</div>
       </div>
 
       <div class="field">
-        <label for="biostar_user">API Username</label>
-        <input type="text" id="biostar_user" placeholder="BioStar 2 API user" />
+        <label for="biostar_user" data-i18n="settings.connection.user">API Username</label>
+        <input type="text" id="biostar_user" data-i18n-placeholder="settings.connection.userPlaceholder" placeholder="BioStar 2 API user" />
       </div>
 
       <div class="field">
-        <label for="biostar_password">API Password</label>
-        <input type="password" id="biostar_password" placeholder="Enter API password" />
-        <div class="hint" id="password-hint">Leave unchanged to keep the stored password.</div>
+        <label for="biostar_password" data-i18n="settings.connection.password">API Password</label>
+        <input type="password" id="biostar_password" data-i18n-placeholder="settings.connection.passwordPlaceholder" placeholder="Enter API password" />
+        <div class="hint" id="password-hint"></div>
       </div>
 
       <div class="field">
         <label class="checkbox-label">
           <input type="checkbox" id="biostar_reject_unauthorized" />
-          Verify SSL/TLS Certificate (Uncheck for self-signed certificates)
+          <span data-i18n="settings.connection.ssl">Verify SSL/TLS certificate (uncheck for self-signed certificates)</span>
         </label>
       </div>
 
       <div class="button-group">
-        <button type="button" id="save-button" class="btn-save">Save Settings</button>
-        <button type="button" id="test-button" class="btn-test">Test Connection</button>
-        <button type="button" id="reconnect-button" class="btn-test">Force Reconnect</button>
+        <button type="button" id="save-button" class="btn-save" data-i18n="settings.buttons.save">Save Settings</button>
+        <button type="button" id="test-button" class="btn-test" data-i18n="settings.buttons.test">Test Connection</button>
+        <button type="button" id="reconnect-button" class="btn-test" data-i18n="settings.buttons.reconnect">Force Reconnect</button>
       </div>
 
       <div id="test-result"></div>
@@ -314,75 +315,80 @@
   <!-- Tab 2: Advanced Pane -->
   <div id="pane-advanced" class="tab-pane">
     <div class="field">
-      <label>Event types seen</label>
-      <div class="hint" style="margin-bottom:8px;">Every event name BioStar 2 has sent since the app
+      <label data-i18n="settings.eventTypes.label">Event types seen</label>
+      <div class="hint" style="margin-bottom:8px;" data-i18n="settings.eventTypes.hint">Every event name BioStar 2 has sent since the app
         started, most frequent first. Tick one to drop it before any processing — that is what keeps the
         app idle when nothing relevant is happening. Ticked rows never reach your Flows.</div>
       <div id="event-types-wrap">
         <table id="event-types">
           <thead>
-            <tr><th>Event name</th><th class="num">Count</th><th class="num">Last seen</th><th class="num">Ignore</th></tr>
+            <tr>
+              <th data-i18n="settings.eventTypes.colName">Event name</th>
+              <th class="num" data-i18n="settings.eventTypes.colCount">Count</th>
+              <th class="num" data-i18n="settings.eventTypes.colLast">Last seen</th>
+              <th class="num" data-i18n="settings.eventTypes.colIgnore">Ignore</th>
+            </tr>
           </thead>
           <tbody id="event-types-body">
-            <tr><td colspan="4" class="muted">Loading…</td></tr>
+            <tr><td colspan="4" class="muted" data-i18n="settings.eventTypes.loading">Loading…</td></tr>
           </tbody>
         </table>
       </div>
       <div style="display:flex; gap:8px; margin-top:8px;">
-        <input type="text" id="manual-ignore-input" placeholder="Add an event name not listed yet" />
-        <button type="button" id="manual-ignore-add" class="btn-sm">Add</button>
+        <input type="text" id="manual-ignore-input" data-i18n-placeholder="settings.eventTypes.manualPlaceholder" placeholder="Add an event name not listed yet" />
+        <button type="button" id="manual-ignore-add" class="btn-sm" data-i18n="settings.buttons.add">Add</button>
       </div>
     </div>
 
     <div class="field">
-      <label for="biostar_ignore_substrings">Ignored event names (contains)</label>
+      <label for="biostar_ignore_substrings" data-i18n="settings.ignoreSubstrings.label">Ignored event names (contains)</label>
       <textarea id="biostar_ignore_substrings" placeholder="DOOR_&#10;_ALERT"></textarea>
-      <div class="hint">One per line. Any event whose name contains one of these fragments is dropped.</div>
+      <div class="hint" data-i18n="settings.ignoreSubstrings.hint">One per line. Any event whose name contains one of these fragments is dropped.</div>
     </div>
 
     <div class="field">
       <label class="checkbox-label">
         <input type="checkbox" id="biostar_log_usernames" />
-        Show user names in the activity log
+        <span data-i18n="settings.logUserNames.label">Show user names in the activity log</span>
       </label>
-      <div class="hint">On by default, because names are what make the log useful when a Flow
+      <div class="hint" data-i18n="settings.logUserNames.hint">On by default, because names are what make the log useful when a Flow
         misbehaves. Turn it off to keep identifiable access data out of the log view — entries then
-        read <code>User: &lt;hidden&gt;</code>. This only affects the log; Flow tags always carry the
+        read "User: &lt;hidden&gt;". This only affects the log; Flow tags always carry the
         real user, and the log is in-memory only and cleared when the app restarts.</div>
     </div>
 
     <div class="field">
-      <label for="biostar_heartbeat_s">Heartbeat interval (seconds)</label>
+      <label for="biostar_heartbeat_s" data-i18n="settings.timing.heartbeat">Heartbeat interval (seconds)</label>
       <input type="number" id="biostar_heartbeat_s" min="5" max="300" placeholder="30" />
-      <div class="hint">How often the app pings BioStar 2. The connection is considered dead after twice this long without a reply.</div>
+      <div class="hint" data-i18n="settings.timing.heartbeatHint">How often the app pings BioStar 2. The connection is considered dead after twice this long without a reply.</div>
     </div>
 
     <div class="field">
-      <label for="biostar_reconnect_min_s">Reconnect delay, first attempt (seconds)</label>
+      <label for="biostar_reconnect_min_s" data-i18n="settings.timing.reconnectMin">Reconnect delay, first attempt (seconds)</label>
       <input type="number" id="biostar_reconnect_min_s" min="1" max="60" placeholder="2" />
     </div>
 
     <div class="field">
-      <label for="biostar_reconnect_max_s">Reconnect delay, maximum (seconds)</label>
+      <label for="biostar_reconnect_max_s" data-i18n="settings.timing.reconnectMax">Reconnect delay, maximum (seconds)</label>
       <input type="number" id="biostar_reconnect_max_s" min="5" max="900" placeholder="60" />
-      <div class="hint">The delay grows by 50% after each failed attempt, up to this ceiling.</div>
+      <div class="hint" data-i18n="settings.timing.reconnectHint">The delay grows by 50% after each failed attempt, up to this ceiling.</div>
     </div>
 
     <div class="button-group">
-      <button type="button" id="save-advanced-button" class="btn-save">Save Advanced Settings</button>
+      <button type="button" id="save-advanced-button" class="btn-save" data-i18n="settings.buttons.saveAdvanced">Save Advanced Settings</button>
     </div>
   </div>
 
   <!-- Tab 3: Live Logs Pane -->
   <div id="pane-logs" class="tab-pane">
     <div class="log-controls">
-      <span>Real-Time BioStar &amp; App Activity Log:</span>
+      <span data-i18n="settings.logs.title">Real-time BioStar 2 and app activity log:</span>
       <div style="display: flex; gap: 8px;">
-        <button type="button" id="refresh-logs-button" class="btn-sm">Refresh Logs</button>
-        <button type="button" id="clear-logs-button" class="btn-sm btn-danger">Clear Logs</button>
+        <button type="button" id="refresh-logs-button" class="btn-sm" data-i18n="settings.buttons.refreshLogs">Refresh Logs</button>
+        <button type="button" id="clear-logs-button" class="btn-sm btn-danger" data-i18n="settings.buttons.clearLogs">Clear Logs</button>
       </div>
     </div>
-    <pre id="log-window">Loading logs...</pre>
+    <pre id="log-window" data-i18n="settings.logs.loading">Loading logs...</pre>
   </div>
 
   <script type="text/javascript" src="index.js"></script>

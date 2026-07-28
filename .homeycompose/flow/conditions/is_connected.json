@@ -1,9 +1,13 @@
 {
   "id": "is_connected",
   "title": {
-    "en": "BioStar 2 connection is online"
+    "en": "BioStar 2 connection is online",
+    "nl": "BioStar 2-verbinding is online",
+    "fr": "La connexion BioStar 2 est en ligne"
   },
   "hint": {
-    "en": "Checks whether the app currently has a live connection to the BioStar 2 server and is receiving events. Use it to guard Flows that depend on live access events, or to be warned when the connection drops."
+    "en": "Checks whether the app currently has a live connection to the BioStar 2 server and is receiving events. Use it to guard Flows that depend on live access events, or to be warned when the connection drops.",
+    "nl": "Controleert of de app op dit moment een actieve verbinding met de BioStar 2-server heeft en gebeurtenissen ontvangt. Gebruik dit om Flows te beveiligen die afhangen van live toegangsgebeurtenissen, of om gewaarschuwd te worden wanneer de verbinding wegvalt.",
+    "fr": "Vérifie si l'application dispose actuellement d'une connexion active au serveur BioStar 2 et reçoit des événements. Utilisez-la pour protéger les Flows qui dépendent d'événements d'accès en direct, ou pour être averti lorsque la connexion tombe."
   }
 }

@@ -4,5 +4,10 @@
   },
   "1.1.0": {
     "en": "Lower memory use and less work per event: bounded user cache, no leaked sockets or timers on reconnect, and background events are now filtered before any lookup. Events carry BioStar 2's own timestamp and always reach Flows in order. New: open a door from a Flow, filter triggers by reader, force reconnect and tune the ignore lists from Settings, live counters, and a warning when the BioStar 2 account lacks permissions. Adds an option to hide user names from the activity log. The Advanced tab now lists every event type BioStar 2 has sent, with counts, so you tick the ones to ignore instead of typing exact names. The reader picker now lists only devices that can actually authenticate, hiding slave I/O modules."
+  },
+  "1.2.0": {
+    "en": "The app now speaks Dutch and French as well as English: Flow cards, their hints and tags, the settings screen and the notifications all follow Homey's language setting. Privacy fix: the settings page no longer receives your stored BioStar 2 password, only whether one is set. The contributing guidelines and code of conduct now point at this project instead of Athom.",
+    "nl": "De app spreekt nu ook Nederlands en Frans naast Engels: Flow-kaarten, hun hints en tags, het instellingenscherm en de meldingen volgen allemaal de taalinstelling van Homey. Privacyverbetering: de instellingenpagina ontvangt uw opgeslagen BioStar 2-wachtwoord niet langer, alleen of er een is ingesteld. De richtlijnen voor bijdragen en de gedragscode verwijzen nu naar dit project in plaats van naar Athom.",
+    "fr": "L'application parle désormais néerlandais et français en plus de l'anglais : les cartes de Flow, leurs indications et étiquettes, l'écran des paramètres et les notifications suivent tous la langue de Homey. Correctif de confidentialité : la page des paramètres ne reçoit plus votre mot de passe BioStar 2 enregistré, seulement l'information qu'un mot de passe existe. Les règles de contribution et le code de conduite renvoient maintenant à ce projet plutôt qu'à Athom."
   }
 }

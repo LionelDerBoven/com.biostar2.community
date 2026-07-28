@@ -108,7 +108,7 @@ class BioStarApp extends Homey.App {
     openDoorCard.registerRunListener(async (args) => {
       const doorId = args.door?.id;
       const doorName = args.door?.name || doorId;
-      if (!doorId) throw new Error('No door selected.');
+      if (!doorId) throw new Error(this.homey.__('errors.noDoorSelected'));
       this.addLog(`Opening door '${doorName}' via Flow action...`, 'ACTION');
       await this.client.openDoor(doorId);
       this.addLog(`Door '${doorName}' opened.`, 'ACTION');
@@ -284,7 +284,7 @@ class BioStarApp extends Homey.App {
         this.disconnectAlertTimer = null;
         if (this.connectionStatus === 'CONNECTED') return;
         this.homey.notifications.createNotification({
-          excerpt: 'BioStar 2: connection lost. Access events are not reaching Homey.',
+          excerpt: this.homey.__('notifications.connectionLost'),
         }).catch((err) => this.error(`Notification failed: ${err.message}`));
       }, DISCONNECT_ALERT_MS);
     }
@@ -368,6 +368,9 @@ class BioStarApp extends Homey.App {
       lastEventAt: s.lastEventAt || null,
       cachedUsers: this.client ? this.client.userCache.size : 0,
       profileLookupDisabled: this.client ? this.client.profileLookupDisabled : false,
+      // Whether a password is stored, so the settings page can show its state
+      // without the secret itself ever being sent to the page.
+      hasPassword: Boolean(this.homey.settings.get('biostar_password')),
     };
   }
 
@@ -416,7 +419,7 @@ class BioStarApp extends Homey.App {
     const rejectUnauthorized = config.rejectUnauthorized === true;
 
     if (!host || !user || !password) {
-      throw new Error('Host URL, Username, and Password must be provided.');
+      throw new Error(this.homey.__('errors.incompleteCredentials'));
     }
 
     this.addLog(`Testing connection to ${host} as user '${user}'...`, 'TEST');

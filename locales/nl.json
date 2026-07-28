@@ -1,0 +1,98 @@
+{
+  "errors": {
+    "noDoorSelected": "Geen deur geselecteerd.",
+    "incompleteCredentials": "Host-URL, gebruikersnaam en wachtwoord moeten alle drie ingevuld zijn."
+  },
+  "notifications": {
+    "connectionLost": "BioStar 2: verbinding verbroken. Toegangsgebeurtenissen bereiken Homey niet."
+  },
+  "settings": {
+    "tabs": {
+      "settings": "Instellingen",
+      "advanced": "Geavanceerd",
+      "logs": "Live logboek"
+    },
+    "status": {
+      "label": "Verbindingsstatus:",
+      "UNKNOWN": "ONBEKEND",
+      "CONNECTED": "VERBONDEN",
+      "DISCONNECTED": "VERBROKEN",
+      "CONNECTING": "VERBINDEN"
+    },
+    "stats": {
+      "forwarded": "Doorgestuurde gebeurtenissen",
+      "filtered": "Gefilterde gebeurtenissen",
+      "reconnects": "Herverbindingen",
+      "cached": "Gebruikers in cache",
+      "uptime": "Verbonden sinds",
+      "last": "Laatste gebeurtenis"
+    },
+    "permWarning": {
+      "title": "Beperkte rechten.",
+      "body": "Dit account kan geen gebruikersprofielen lezen in BioStar 2, waardoor de tags groep, e-mail, afdeling, telefoon en login-ID terugvallen op de ruwe gebeurtenisgegevens. Geef het account in BioStar 2 leesrechten op Users om ze in te schakelen."
+    },
+    "connection": {
+      "host": "BioStar 2 host-URL",
+      "ws": "WebSocket-URI",
+      "wsHint": "Laat leeg om deze automatisch af te leiden uit de host-URL.",
+      "user": "API-gebruikersnaam",
+      "userPlaceholder": "BioStar 2 API-gebruiker",
+      "password": "API-wachtwoord",
+      "passwordPlaceholder": "Voer het API-wachtwoord in",
+      "passwordStored": "Er is een wachtwoord opgeslagen. Laat het veld ongewijzigd om het te behouden.",
+      "passwordEmpty": "Nog geen wachtwoord opgeslagen.",
+      "ssl": "SSL/TLS-certificaat verifiëren (uitvinken bij een zelfondertekend certificaat)"
+    },
+    "buttons": {
+      "save": "Instellingen opslaan",
+      "test": "Verbinding testen",
+      "reconnect": "Opnieuw verbinden",
+      "saveAdvanced": "Geavanceerde instellingen opslaan",
+      "add": "Toevoegen",
+      "refreshLogs": "Logboek vernieuwen",
+      "clearLogs": "Logboek wissen"
+    },
+    "eventTypes": {
+      "label": "Waargenomen gebeurtenistypes",
+      "hint": "Elke gebeurtenisnaam die BioStar 2 heeft verstuurd sinds de app is gestart, meest voorkomende eerst. Vink er een aan om die te negeren nog vóór enige verwerking — dat is wat de app rustig houdt wanneer er niets relevants gebeurt. Aangevinkte rijen bereiken uw Flows nooit.",
+      "colName": "Gebeurtenisnaam",
+      "colCount": "Aantal",
+      "colLast": "Laatst gezien",
+      "colIgnore": "Negeren",
+      "loading": "Laden…",
+      "empty": "Nog geen gebeurtenissen gezien. Ze verschijnen hier zodra BioStar 2 ze verstuurt.",
+      "manualPlaceholder": "Voeg een gebeurtenisnaam toe die er nog niet bij staat"
+    },
+    "ignoreSubstrings": {
+      "label": "Genegeerde gebeurtenisnamen (bevat)",
+      "hint": "Eén per regel. Elke gebeurtenis waarvan de naam een van deze fragmenten bevat, wordt genegeerd."
+    },
+    "logUserNames": {
+      "label": "Gebruikersnamen tonen in het activiteitenlogboek",
+      "hint": "Standaard aan, omdat namen het logboek bruikbaar maken wanneer een Flow zich vreemd gedraagt. Zet dit uit om identificeerbare toegangsgegevens uit het logboek te houden — regels tonen dan \"User: <hidden>\". Dit heeft alleen effect op het logboek; Flow-tags bevatten altijd de echte gebruiker, en het logboek staat alleen in het geheugen en wordt gewist wanneer de app herstart."
+    },
+    "timing": {
+      "heartbeat": "Heartbeat-interval (seconden)",
+      "heartbeatHint": "Hoe vaak de app BioStar 2 aanpingt. De verbinding wordt als dood beschouwd na twee keer deze tijd zonder antwoord.",
+      "reconnectMin": "Wachttijd voor herverbinden, eerste poging (seconden)",
+      "reconnectMax": "Wachttijd voor herverbinden, maximum (seconden)",
+      "reconnectHint": "De wachttijd groeit na elke mislukte poging met 50%, tot aan dit maximum."
+    },
+    "logs": {
+      "title": "Live logboek van BioStar 2 en de app:",
+      "loading": "Logboek laden...",
+      "empty": "Nog geen logregels beschikbaar."
+    },
+    "messages": {
+      "testing": "Verbinding met BioStar 2 testen...",
+      "testError": "Fout bij het testen van de verbinding:",
+      "testFailed": "Verbinding mislukt.",
+      "reconnecting": "Opnieuw verbinden met BioStar 2...",
+      "reconnectFailed": "Opnieuw verbinden mislukt:",
+      "reconnectRequested": "Opnieuw verbinden aangevraagd.",
+      "saved": "BioStar 2-instellingen opgeslagen.",
+      "savedAdvanced": "Geavanceerde instellingen opgeslagen. Er wordt opnieuw verbonden met de nieuwe configuratie.",
+      "loadFailed": "De opgeslagen instellingen konden niet worden geladen."
+    }
+  }
+}

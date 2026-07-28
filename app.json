@@ -1,7 +1,7 @@
 {
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "com.biostar2.community",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "compatibility": ">=12.4.0",
   "sdk": 3,
   "runtime": "nodejs",
@@ -9,10 +9,14 @@
     "local"
   ],
   "name": {
-    "en": "Biostar 2 Community"
+    "en": "Biostar 2 Community",
+    "nl": "Biostar 2 Community",
+    "fr": "Biostar 2 Community"
   },
   "description": {
-    "en": "Connects Suprema BioStar 2 access control events to Homey Pro. Unofficial community app, not affiliated with or endorsed by Suprema Inc."
+    "en": "Connects Suprema BioStar 2 access control events to Homey Pro. Unofficial community app, not affiliated with or endorsed by Suprema Inc.",
+    "nl": "Verbindt toegangscontrolegebeurtenissen van Suprema BioStar 2 met Homey Pro. Onofficiële community-app, niet verbonden met of goedgekeurd door Suprema Inc.",
+    "fr": "Relie les événements de contrôle d'accès Suprema BioStar 2 à Homey Pro. Application communautaire non officielle, sans lien avec Suprema Inc. ni approuvée par cette société."
   },
   "brandColor": "#0E74BE",
   "category": [
@@ -59,23 +63,33 @@
       {
         "id": "access_denied",
         "title": {
-          "en": "Access denied"
+          "en": "Access denied",
+          "nl": "Toegang geweigerd",
+          "fr": "Accès refusé"
         },
         "titleFormatted": {
-          "en": "Access denied at [[device]]"
+          "en": "Access denied at [[device]]",
+          "nl": "Toegang geweigerd bij [[device]]",
+          "fr": "Accès refusé à [[device]]"
         },
         "hint": {
-          "en": "Triggers when BioStar 2 refuses access at a reader, usually because the person has no permission for that door or is outside their access schedule. Pick a reader to trigger only for that one, or leave it on 'Any reader'. The user tags are filled in when BioStar 2 recognised the person, and read 'N/A' when it did not."
+          "en": "Triggers when BioStar 2 refuses access at a reader, usually because the person has no permission for that door or is outside their access schedule. Pick a reader to trigger only for that one, or leave it on 'Any reader'. The user tags are filled in when BioStar 2 recognised the person, and read 'N/A' when it did not.",
+          "nl": "Wordt geactiveerd wanneer BioStar 2 de toegang bij een lezer weigert, meestal omdat de persoon geen rechten heeft voor die deur of buiten zijn toegangsschema valt. Kies een lezer om alleen daarvoor te activeren, of laat het op 'Elke lezer' staan. De gebruikerstags worden ingevuld wanneer BioStar 2 de persoon herkende, en tonen 'N/A' wanneer dat niet zo was.",
+          "fr": "Se déclenche lorsque BioStar 2 refuse l'accès à un lecteur, généralement parce que la personne n'a pas d'autorisation pour cette porte ou se présente en dehors de sa plage horaire. Choisissez un lecteur pour ne réagir qu'à celui-ci, ou laissez « N'importe quel lecteur ». Les étiquettes utilisateur sont remplies lorsque BioStar 2 a reconnu la personne, et affichent « N/A » dans le cas contraire."
         },
         "args": [
           {
             "name": "device",
             "type": "autocomplete",
             "title": {
-              "en": "Reader"
+              "en": "Reader",
+              "nl": "Lezer",
+              "fr": "Lecteur"
             },
             "placeholder": {
-              "en": "Any reader"
+              "en": "Any reader",
+              "nl": "Elke lezer",
+              "fr": "N'importe quel lecteur"
             }
           }
         ],
@@ -84,7 +98,9 @@
             "name": "user",
             "type": "string",
             "title": {
-              "en": "User Name"
+              "en": "User Name",
+              "nl": "Gebruikersnaam",
+              "fr": "Nom d'utilisateur"
             },
             "example": "John Doe"
           },
@@ -92,7 +108,9 @@
             "name": "device",
             "type": "string",
             "title": {
-              "en": "Device / Door Name"
+              "en": "Device / Door Name",
+              "nl": "Apparaat- of deurnaam",
+              "fr": "Nom de l'appareil ou de la porte"
             },
             "example": "Main Entrance"
           },
@@ -100,7 +118,9 @@
             "name": "user_id",
             "type": "string",
             "title": {
-              "en": "User ID"
+              "en": "User ID",
+              "nl": "Gebruikers-ID",
+              "fr": "ID utilisateur"
             },
             "example": "101"
           },
@@ -108,7 +128,9 @@
             "name": "user_group",
             "type": "string",
             "title": {
-              "en": "User Group"
+              "en": "User Group",
+              "nl": "Gebruikersgroep",
+              "fr": "Groupe d'utilisateurs"
             },
             "example": "All Users"
           },
@@ -116,7 +138,9 @@
             "name": "email",
             "type": "string",
             "title": {
-              "en": "Email"
+              "en": "Email",
+              "nl": "E-mail",
+              "fr": "E-mail"
             },
             "example": "user@example.com"
           },
@@ -124,7 +148,9 @@
             "name": "title",
             "type": "string",
             "title": {
-              "en": "Title"
+              "en": "Title",
+              "nl": "Functietitel",
+              "fr": "Fonction"
             },
             "example": "Staff"
           },
@@ -132,7 +158,9 @@
             "name": "department",
             "type": "string",
             "title": {
-              "en": "Department"
+              "en": "Department",
+              "nl": "Afdeling",
+              "fr": "Département"
             },
             "example": "Management"
           },
@@ -140,7 +168,9 @@
             "name": "telephone",
             "type": "string",
             "title": {
-              "en": "Telephone"
+              "en": "Telephone",
+              "nl": "Telefoon",
+              "fr": "Téléphone"
             },
             "example": "+1234567890"
           },
@@ -148,7 +178,9 @@
             "name": "login_id",
             "type": "string",
             "title": {
-              "en": "Login ID"
+              "en": "Login ID",
+              "nl": "Login-ID",
+              "fr": "Identifiant de connexion"
             },
             "example": "johndoe"
           },
@@ -156,7 +188,9 @@
             "name": "event_name",
             "type": "string",
             "title": {
-              "en": "Event Name"
+              "en": "Event Name",
+              "nl": "Gebeurtenisnaam",
+              "fr": "Nom de l'événement"
             },
             "example": "BS2_EVENT_ACCESS_DENIED"
           },
@@ -164,7 +198,9 @@
             "name": "timestamp",
             "type": "string",
             "title": {
-              "en": "Timestamp"
+              "en": "Timestamp",
+              "nl": "Tijdstempel",
+              "fr": "Horodatage"
             },
             "example": "2026-01-01T12:00:00+00:00"
           }
@@ -173,23 +209,33 @@
       {
         "id": "auth_succeeded",
         "title": {
-          "en": "Authentication succeeded"
+          "en": "Authentication succeeded",
+          "nl": "Authenticatie geslaagd",
+          "fr": "Authentification réussie"
         },
         "titleFormatted": {
-          "en": "Authentication succeeded at [[device]]"
+          "en": "Authentication succeeded at [[device]]",
+          "nl": "Authenticatie geslaagd bij [[device]]",
+          "fr": "Authentification réussie à [[device]]"
         },
         "hint": {
-          "en": "Triggers when a person is successfully identified or verified at a BioStar 2 reader and access is granted. Pick a reader to trigger only for that one, or leave it on 'Any reader' for all of them. Events without an identified user are discarded for security, so the user tags are always filled in."
+          "en": "Triggers when a person is successfully identified or verified at a BioStar 2 reader and access is granted. Pick a reader to trigger only for that one, or leave it on 'Any reader' for all of them. Events without an identified user are discarded for security, so the user tags are always filled in.",
+          "nl": "Wordt geactiveerd wanneer een persoon met succes wordt geïdentificeerd of geverifieerd bij een BioStar 2-lezer en toegang krijgt. Kies een lezer om alleen daarvoor te activeren, of laat het op 'Elke lezer' staan voor allemaal. Gebeurtenissen zonder geïdentificeerde gebruiker worden om veiligheidsredenen genegeerd, dus de gebruikerstags zijn altijd ingevuld.",
+          "fr": "Se déclenche lorsqu'une personne est identifiée ou vérifiée avec succès à un lecteur BioStar 2 et que l'accès lui est accordé. Choisissez un lecteur pour ne réagir qu'à celui-ci, ou laissez « N'importe quel lecteur » pour tous. Les événements sans utilisateur identifié sont écartés par sécurité, les étiquettes utilisateur sont donc toujours remplies."
         },
         "args": [
           {
             "name": "device",
             "type": "autocomplete",
             "title": {
-              "en": "Reader"
+              "en": "Reader",
+              "nl": "Lezer",
+              "fr": "Lecteur"
             },
             "placeholder": {
-              "en": "Any reader"
+              "en": "Any reader",
+              "nl": "Elke lezer",
+              "fr": "N'importe quel lecteur"
             }
           }
         ],
@@ -198,7 +244,9 @@
             "name": "user",
             "type": "string",
             "title": {
-              "en": "User Name"
+              "en": "User Name",
+              "nl": "Gebruikersnaam",
+              "fr": "Nom d'utilisateur"
             },
             "example": "John Doe"
           },
@@ -206,7 +254,9 @@
             "name": "device",
             "type": "string",
             "title": {
-              "en": "Device / Door Name"
+              "en": "Device / Door Name",
+              "nl": "Apparaat- of deurnaam",
+              "fr": "Nom de l'appareil ou de la porte"
             },
             "example": "Main Entrance"
           },
@@ -214,7 +264,9 @@
             "name": "user_id",
             "type": "string",
             "title": {
-              "en": "User ID"
+              "en": "User ID",
+              "nl": "Gebruikers-ID",
+              "fr": "ID utilisateur"
             },
             "example": "101"
           },
@@ -222,7 +274,9 @@
             "name": "user_group",
             "type": "string",
             "title": {
-              "en": "User Group"
+              "en": "User Group",
+              "nl": "Gebruikersgroep",
+              "fr": "Groupe d'utilisateurs"
             },
             "example": "All Users"
           },
@@ -230,7 +284,9 @@
             "name": "email",
             "type": "string",
             "title": {
-              "en": "Email"
+              "en": "Email",
+              "nl": "E-mail",
+              "fr": "E-mail"
             },
             "example": "user@example.com"
           },
@@ -238,7 +294,9 @@
             "name": "title",
             "type": "string",
             "title": {
-              "en": "Title"
+              "en": "Title",
+              "nl": "Functietitel",
+              "fr": "Fonction"
             },
             "example": "Staff"
           },
@@ -246,7 +304,9 @@
             "name": "department",
             "type": "string",
             "title": {
-              "en": "Department"
+              "en": "Department",
+              "nl": "Afdeling",
+              "fr": "Département"
             },
             "example": "Management"
           },
@@ -254,7 +314,9 @@
             "name": "telephone",
             "type": "string",
             "title": {
-              "en": "Telephone"
+              "en": "Telephone",
+              "nl": "Telefoon",
+              "fr": "Téléphone"
             },
             "example": "+1234567890"
           },
@@ -262,7 +324,9 @@
             "name": "login_id",
             "type": "string",
             "title": {
-              "en": "Login ID"
+              "en": "Login ID",
+              "nl": "Login-ID",
+              "fr": "Identifiant de connexion"
             },
             "example": "johndoe"
           },
@@ -270,7 +334,9 @@
             "name": "event_name",
             "type": "string",
             "title": {
-              "en": "Event Name"
+              "en": "Event Name",
+              "nl": "Gebeurtenisnaam",
+              "fr": "Nom de l'événement"
             },
             "example": "BS2_EVENT_IDENTIFY_SUCCESS_FINGER"
           },
@@ -278,7 +344,9 @@
             "name": "timestamp",
             "type": "string",
             "title": {
-              "en": "Timestamp"
+              "en": "Timestamp",
+              "nl": "Tijdstempel",
+              "fr": "Horodatage"
             },
             "example": "2026-01-01T12:00:00+00:00"
           }
@@ -287,23 +355,33 @@
       {
         "id": "event_received",
         "title": {
-          "en": "BioStar 2 event received"
+          "en": "BioStar 2 event received",
+          "nl": "BioStar 2-gebeurtenis ontvangen",
+          "fr": "Événement BioStar 2 reçu"
         },
         "titleFormatted": {
-          "en": "BioStar 2 event received at [[device]]"
+          "en": "BioStar 2 event received at [[device]]",
+          "nl": "BioStar 2-gebeurtenis ontvangen bij [[device]]",
+          "fr": "Événement BioStar 2 reçu à [[device]]"
         },
         "hint": {
-          "en": "Triggers on every BioStar 2 event this app forwards, whatever the outcome. Use the Event Type tag to tell them apart: 'success' (identified and granted access), 'access_denied' (refused at the reader) or 'identification_fail' (person not recognised). Pick a reader to trigger only for that one, or leave it on 'Any reader'. Background events such as door lock and unlock are filtered out and never trigger this card."
+          "en": "Triggers on every BioStar 2 event this app forwards, whatever the outcome. Use the Event Type tag to tell them apart: 'success' (identified and granted access), 'access_denied' (refused at the reader) or 'identification_fail' (person not recognised). Pick a reader to trigger only for that one, or leave it on 'Any reader'. Background events such as door lock and unlock are filtered out and never trigger this card.",
+          "nl": "Wordt geactiveerd bij elke BioStar 2-gebeurtenis die deze app doorstuurt, wat de uitkomst ook is. Gebruik de tag Gebeurtenistype om ze te onderscheiden: 'success' (geïdentificeerd en toegang verleend), 'access_denied' (geweigerd bij de lezer) of 'identification_fail' (persoon niet herkend). Kies een lezer om alleen daarvoor te activeren, of laat het op 'Elke lezer' staan. Achtergrondgebeurtenissen zoals het vergrendelen en ontgrendelen van deuren worden gefilterd en activeren deze kaart nooit.",
+          "fr": "Se déclenche à chaque événement BioStar 2 transmis par l'application, quel qu'en soit le résultat. Utilisez l'étiquette Type d'événement pour les distinguer : « success » (identifié et accès accordé), « access_denied » (refusé au lecteur) ou « identification_fail » (personne non reconnue). Choisissez un lecteur pour ne réagir qu'à celui-ci, ou laissez « N'importe quel lecteur ». Les événements d'arrière-plan comme le verrouillage et le déverrouillage des portes sont filtrés et ne déclenchent jamais cette carte."
         },
         "args": [
           {
             "name": "device",
             "type": "autocomplete",
             "title": {
-              "en": "Reader"
+              "en": "Reader",
+              "nl": "Lezer",
+              "fr": "Lecteur"
             },
             "placeholder": {
-              "en": "Any reader"
+              "en": "Any reader",
+              "nl": "Elke lezer",
+              "fr": "N'importe quel lecteur"
             }
           }
         ],
@@ -312,7 +390,9 @@
             "name": "event_type",
             "type": "string",
             "title": {
-              "en": "Event Type"
+              "en": "Event Type",
+              "nl": "Gebeurtenistype",
+              "fr": "Type d'événement"
             },
             "example": "success"
           },
@@ -320,7 +400,9 @@
             "name": "user",
             "type": "string",
             "title": {
-              "en": "User Name"
+              "en": "User Name",
+              "nl": "Gebruikersnaam",
+              "fr": "Nom d'utilisateur"
             },
             "example": "John Doe"
           },
@@ -328,7 +410,9 @@
             "name": "device",
             "type": "string",
             "title": {
-              "en": "Device / Door Name"
+              "en": "Device / Door Name",
+              "nl": "Apparaat- of deurnaam",
+              "fr": "Nom de l'appareil ou de la porte"
             },
             "example": "Main Entrance"
           },
@@ -336,7 +420,9 @@
             "name": "user_id",
             "type": "string",
             "title": {
-              "en": "User ID"
+              "en": "User ID",
+              "nl": "Gebruikers-ID",
+              "fr": "ID utilisateur"
             },
             "example": "101"
           },
@@ -344,7 +430,9 @@
             "name": "user_group",
             "type": "string",
             "title": {
-              "en": "User Group"
+              "en": "User Group",
+              "nl": "Gebruikersgroep",
+              "fr": "Groupe d'utilisateurs"
             },
             "example": "All Users"
           },
@@ -352,7 +440,9 @@
             "name": "email",
             "type": "string",
             "title": {
-              "en": "Email"
+              "en": "Email",
+              "nl": "E-mail",
+              "fr": "E-mail"
             },
             "example": "user@example.com"
           },
@@ -360,7 +450,9 @@
             "name": "title",
             "type": "string",
             "title": {
-              "en": "Title"
+              "en": "Title",
+              "nl": "Functietitel",
+              "fr": "Fonction"
             },
             "example": "Staff"
           },
@@ -368,7 +460,9 @@
             "name": "department",
             "type": "string",
             "title": {
-              "en": "Department"
+              "en": "Department",
+              "nl": "Afdeling",
+              "fr": "Département"
             },
             "example": "Management"
           },
@@ -376,7 +470,9 @@
             "name": "telephone",
             "type": "string",
             "title": {
-              "en": "Telephone"
+              "en": "Telephone",
+              "nl": "Telefoon",
+              "fr": "Téléphone"
             },
             "example": "+1234567890"
           },
@@ -384,7 +480,9 @@
             "name": "login_id",
             "type": "string",
             "title": {
-              "en": "Login ID"
+              "en": "Login ID",
+              "nl": "Login-ID",
+              "fr": "Identifiant de connexion"
             },
             "example": "johndoe"
           },
@@ -392,7 +490,9 @@
             "name": "event_name",
             "type": "string",
             "title": {
-              "en": "Event Name"
+              "en": "Event Name",
+              "nl": "Gebeurtenisnaam",
+              "fr": "Nom de l'événement"
             },
             "example": "BS2_EVENT_IDENTIFY_SUCCESS_FINGER"
           },
@@ -400,7 +500,9 @@
             "name": "timestamp",
             "type": "string",
             "title": {
-              "en": "Timestamp"
+              "en": "Timestamp",
+              "nl": "Tijdstempel",
+              "fr": "Horodatage"
             },
             "example": "2026-01-01T12:00:00+00:00"
           }
@@ -409,23 +511,33 @@
       {
         "id": "identification_failed",
         "title": {
-          "en": "Identification failed"
+          "en": "Identification failed",
+          "nl": "Identificatie mislukt",
+          "fr": "Échec de l'identification"
         },
         "titleFormatted": {
-          "en": "Identification failed at [[device]]"
+          "en": "Identification failed at [[device]]",
+          "nl": "Identificatie mislukt bij [[device]]",
+          "fr": "Échec de l'identification à [[device]]"
         },
         "hint": {
-          "en": "Triggers when a reader could not identify the person at all, for example an unknown fingerprint, an unrecognised card or an unknown face. Pick a reader to trigger only for that one, or leave it on 'Any reader'. BioStar 2 has no user to report, so only the device, event name and timestamp are available as tags."
+          "en": "Triggers when a reader could not identify the person at all, for example an unknown fingerprint, an unrecognised card or an unknown face. Pick a reader to trigger only for that one, or leave it on 'Any reader'. BioStar 2 has no user to report, so only the device, event name and timestamp are available as tags.",
+          "nl": "Wordt geactiveerd wanneer een lezer de persoon helemaal niet kon identificeren, bijvoorbeeld bij een onbekende vingerafdruk, een niet-herkende kaart of een onbekend gezicht. Kies een lezer om alleen daarvoor te activeren, of laat het op 'Elke lezer' staan. BioStar 2 heeft geen gebruiker om te melden, dus alleen het apparaat, de gebeurtenisnaam en het tijdstempel zijn beschikbaar als tags.",
+          "fr": "Se déclenche lorsqu'un lecteur n'a pas pu identifier la personne du tout, par exemple une empreinte inconnue, une carte non reconnue ou un visage inconnu. Choisissez un lecteur pour ne réagir qu'à celui-ci, ou laissez « N'importe quel lecteur ». BioStar 2 n'a aucun utilisateur à signaler : seuls l'appareil, le nom de l'événement et l'horodatage sont disponibles comme étiquettes."
         },
         "args": [
           {
             "name": "device",
             "type": "autocomplete",
             "title": {
-              "en": "Reader"
+              "en": "Reader",
+              "nl": "Lezer",
+              "fr": "Lecteur"
             },
             "placeholder": {
-              "en": "Any reader"
+              "en": "Any reader",
+              "nl": "Elke lezer",
+              "fr": "N'importe quel lecteur"
             }
           }
         ],
@@ -434,7 +546,9 @@
             "name": "device",
             "type": "string",
             "title": {
-              "en": "Device / Door Name"
+              "en": "Device / Door Name",
+              "nl": "Apparaat- of deurnaam",
+              "fr": "Nom de l'appareil ou de la porte"
             },
             "example": "Main Entrance"
           },
@@ -442,7 +556,9 @@
             "name": "event_name",
             "type": "string",
             "title": {
-              "en": "Event Name"
+              "en": "Event Name",
+              "nl": "Gebeurtenisnaam",
+              "fr": "Nom de l'événement"
             },
             "example": "BS2_EVENT_IDENTIFY_FAIL_FINGER"
           },
@@ -450,7 +566,9 @@
             "name": "timestamp",
             "type": "string",
             "title": {
-              "en": "Timestamp"
+              "en": "Timestamp",
+              "nl": "Tijdstempel",
+              "fr": "Horodatage"
             },
             "example": "2026-01-01T12:00:00+00:00"
           }
@@ -461,20 +579,28 @@
       {
         "id": "department_is",
         "title": {
-          "en": "User belongs to department !{{[department]}}"
+          "en": "User belongs to department !{{[department]}}",
+          "nl": "Gebruiker behoort tot afdeling !{{[department]}}",
+          "fr": "L'utilisateur appartient au département !{{[department]}}"
         },
         "titleFormatted": {
-          "en": "User belongs to department [[department]]"
+          "en": "User belongs to department [[department]]",
+          "nl": "Gebruiker behoort tot afdeling [[department]]",
+          "fr": "L'utilisateur appartient au département [[department]]"
         },
         "hint": {
-          "en": "Checks the department of the person in the event that started this Flow, as set on their BioStar 2 user profile. Matching ignores upper and lower case and accepts a part of the department name. Only works in Flows started by a BioStar 2 trigger card that carries user information; elsewhere it is always false."
+          "en": "Checks the department of the person in the event that started this Flow, as set on their BioStar 2 user profile. Matching ignores upper and lower case and accepts a part of the department name. Only works in Flows started by a BioStar 2 trigger card that carries user information; elsewhere it is always false.",
+          "nl": "Controleert de afdeling van de persoon in de gebeurtenis die deze Flow startte, zoals ingesteld in zijn BioStar 2-gebruikersprofiel. Bij het vergelijken worden hoofd- en kleine letters genegeerd en volstaat een deel van de afdelingsnaam. Werkt alleen in Flows die zijn gestart door een BioStar 2-triggerkaart met gebruikersinformatie; elders is dit altijd onwaar.",
+          "fr": "Vérifie le département de la personne dans l'événement qui a démarré ce Flow, tel qu'il figure sur son profil utilisateur BioStar 2. La comparaison ignore la casse et accepte une partie du nom du département. Ne fonctionne que dans les Flows démarrés par une carte de déclenchement BioStar 2 portant des informations utilisateur ; ailleurs, le résultat est toujours faux."
         },
         "args": [
           {
             "name": "department",
             "type": "text",
             "placeholder": {
-              "en": "IT, Management, Cleaning..."
+              "en": "IT, Management, Cleaning...",
+              "nl": "IT, Directie, Schoonmaak...",
+              "fr": "Informatique, Direction, Nettoyage..."
             }
           }
         ]
@@ -482,20 +608,28 @@
       {
         "id": "device_is",
         "title": {
-          "en": "Device is !{{[device]}}"
+          "en": "Device is !{{[device]}}",
+          "nl": "Apparaat is !{{[device]}}",
+          "fr": "L'appareil est !{{[device]}}"
         },
         "titleFormatted": {
-          "en": "Device is [[device]]"
+          "en": "Device is [[device]]",
+          "nl": "Apparaat is [[device]]",
+          "fr": "L'appareil est [[device]]"
         },
         "hint": {
-          "en": "Checks which reader or door the event that started this Flow came from. Matching ignores upper and lower case and accepts a part of the name, so 'entrance' also matches 'Main Entrance'. Only works in Flows started by a BioStar 2 trigger card; elsewhere it is always false."
+          "en": "Checks which reader or door the event that started this Flow came from. Matching ignores upper and lower case and accepts a part of the name, so 'entrance' also matches 'Main Entrance'. Only works in Flows started by a BioStar 2 trigger card; elsewhere it is always false.",
+          "nl": "Controleert van welke lezer of deur de gebeurtenis kwam die deze Flow startte. Bij het vergelijken worden hoofd- en kleine letters genegeerd en volstaat een deel van de naam, dus 'ingang' komt ook overeen met 'Hoofdingang'. Werkt alleen in Flows die door een BioStar 2-triggerkaart zijn gestart; elders is dit altijd onwaar.",
+          "fr": "Vérifie de quel lecteur ou de quelle porte provient l'événement qui a démarré ce Flow. La comparaison ignore la casse et accepte une partie du nom : « entrée » correspond donc aussi à « Entrée principale ». Ne fonctionne que dans les Flows démarrés par une carte de déclenchement BioStar 2 ; ailleurs, le résultat est toujours faux."
         },
         "args": [
           {
             "name": "device",
             "type": "text",
             "placeholder": {
-              "en": "Main Entrance, Side Door..."
+              "en": "Main Entrance, Side Door...",
+              "nl": "Hoofdingang, Zijdeur...",
+              "fr": "Entrée principale, Porte latérale..."
             }
           }
         ]
@@ -503,29 +637,41 @@
       {
         "id": "is_connected",
         "title": {
-          "en": "BioStar 2 connection is online"
+          "en": "BioStar 2 connection is online",
+          "nl": "BioStar 2-verbinding is online",
+          "fr": "La connexion BioStar 2 est en ligne"
         },
         "hint": {
-          "en": "Checks whether the app currently has a live connection to the BioStar 2 server and is receiving events. Use it to guard Flows that depend on live access events, or to be warned when the connection drops."
+          "en": "Checks whether the app currently has a live connection to the BioStar 2 server and is receiving events. Use it to guard Flows that depend on live access events, or to be warned when the connection drops.",
+          "nl": "Controleert of de app op dit moment een actieve verbinding met de BioStar 2-server heeft en gebeurtenissen ontvangt. Gebruik dit om Flows te beveiligen die afhangen van live toegangsgebeurtenissen, of om gewaarschuwd te worden wanneer de verbinding wegvalt.",
+          "fr": "Vérifie si l'application dispose actuellement d'une connexion active au serveur BioStar 2 et reçoit des événements. Utilisez-la pour protéger les Flows qui dépendent d'événements d'accès en direct, ou pour être averti lorsque la connexion tombe."
         }
       },
       {
         "id": "user_group_is",
         "title": {
-          "en": "User belongs to group !{{[user_group]}}"
+          "en": "User belongs to group !{{[user_group]}}",
+          "nl": "Gebruiker behoort tot groep !{{[user_group]}}",
+          "fr": "L'utilisateur appartient au groupe !{{[user_group]}}"
         },
         "titleFormatted": {
-          "en": "User belongs to group [[user_group]]"
+          "en": "User belongs to group [[user_group]]",
+          "nl": "Gebruiker behoort tot groep [[user_group]]",
+          "fr": "L'utilisateur appartient au groupe [[user_group]]"
         },
         "hint": {
-          "en": "Checks the BioStar 2 user group of the person in the event that started this Flow. Matching ignores upper and lower case and accepts a part of the group name. Only works in Flows started by a BioStar 2 trigger card that carries user information; elsewhere it is always false."
+          "en": "Checks the BioStar 2 user group of the person in the event that started this Flow. Matching ignores upper and lower case and accepts a part of the group name. Only works in Flows started by a BioStar 2 trigger card that carries user information; elsewhere it is always false.",
+          "nl": "Controleert de BioStar 2-gebruikersgroep van de persoon in de gebeurtenis die deze Flow startte. Bij het vergelijken worden hoofd- en kleine letters genegeerd en volstaat een deel van de groepsnaam. Werkt alleen in Flows die zijn gestart door een BioStar 2-triggerkaart met gebruikersinformatie; elders is dit altijd onwaar.",
+          "fr": "Vérifie le groupe d'utilisateurs BioStar 2 de la personne dans l'événement qui a démarré ce Flow. La comparaison ignore la casse et accepte une partie du nom du groupe. Ne fonctionne que dans les Flows démarrés par une carte de déclenchement BioStar 2 portant des informations utilisateur ; ailleurs, le résultat est toujours faux."
         },
         "args": [
           {
             "name": "user_group",
             "type": "text",
             "placeholder": {
-              "en": "All Users, Administrators..."
+              "en": "All Users, Administrators...",
+              "nl": "Alle gebruikers, Beheerders...",
+              "fr": "Tous les utilisateurs, Administrateurs..."
             }
           }
         ]
@@ -533,20 +679,28 @@
       {
         "id": "user_is",
         "title": {
-          "en": "User is !{{[user]}}"
+          "en": "User is !{{[user]}}",
+          "nl": "Gebruiker is !{{[user]}}",
+          "fr": "L'utilisateur est !{{[user]}}"
         },
         "titleFormatted": {
-          "en": "User is [[user]]"
+          "en": "User is [[user]]",
+          "nl": "Gebruiker is [[user]]",
+          "fr": "L'utilisateur est [[user]]"
         },
         "hint": {
-          "en": "Checks the name of the person in the BioStar 2 event that started this Flow. Matching ignores upper and lower case and accepts a part of the name, so 'john' also matches 'John Doe'. Only works in Flows started by a BioStar 2 trigger card; elsewhere it is always false."
+          "en": "Checks the name of the person in the BioStar 2 event that started this Flow. Matching ignores upper and lower case and accepts a part of the name, so 'john' also matches 'John Doe'. Only works in Flows started by a BioStar 2 trigger card; elsewhere it is always false.",
+          "nl": "Controleert de naam van de persoon in de BioStar 2-gebeurtenis die deze Flow startte. Bij het vergelijken worden hoofd- en kleine letters genegeerd en volstaat een deel van de naam, dus 'jan' komt ook overeen met 'Jan Jansen'. Werkt alleen in Flows die door een BioStar 2-triggerkaart zijn gestart; elders is dit altijd onwaar.",
+          "fr": "Vérifie le nom de la personne dans l'événement BioStar 2 qui a démarré ce Flow. La comparaison ignore la casse et accepte une partie du nom : « jean » correspond donc aussi à « Jean Dupont ». Ne fonctionne que dans les Flows démarrés par une carte de déclenchement BioStar 2 ; ailleurs, le résultat est toujours faux."
         },
         "args": [
           {
             "name": "user",
             "type": "text",
             "placeholder": {
-              "en": "John Doe"
+              "en": "John Doe",
+              "nl": "Jan Jansen",
+              "fr": "Jean Dupont"
             }
           }
         ]
@@ -556,23 +710,33 @@
       {
         "id": "open_door",
         "title": {
-          "en": "Open door"
+          "en": "Open door",
+          "nl": "Deur openen",
+          "fr": "Ouvrir la porte"
         },
         "titleFormatted": {
-          "en": "Open door [[door]]"
+          "en": "Open door [[door]]",
+          "nl": "Deur [[door]] openen",
+          "fr": "Ouvrir la porte [[door]]"
         },
         "hint": {
-          "en": "Momentarily releases a door in BioStar 2, the same as pressing Open Door in the BioStar 2 console. The account configured in this app needs the Door control permission in BioStar 2, otherwise the card fails with a permission error."
+          "en": "Momentarily releases a door in BioStar 2, the same as pressing Open Door in the BioStar 2 console. The account configured in this app needs the Door control permission in BioStar 2, otherwise the card fails with a permission error.",
+          "nl": "Ontgrendelt een deur kortstondig in BioStar 2, net zoals wanneer u in de BioStar 2-console op Open Door drukt. Het account dat in deze app is ingesteld heeft in BioStar 2 de rechten voor deurbediening nodig, anders mislukt de kaart met een rechtenfout.",
+          "fr": "Déverrouille brièvement une porte dans BioStar 2, comme si vous appuyiez sur Open Door dans la console BioStar 2. Le compte configuré dans cette application doit disposer de l'autorisation de commande des portes dans BioStar 2, sinon la carte échoue avec une erreur d'autorisation."
         },
         "args": [
           {
             "name": "door",
             "type": "autocomplete",
             "title": {
-              "en": "Door"
+              "en": "Door",
+              "nl": "Deur",
+              "fr": "Porte"
             },
             "placeholder": {
-              "en": "Select a door"
+              "en": "Select a door",
+              "nl": "Kies een deur",
+              "fr": "Choisissez une porte"
             }
           }
         ]
@@ -580,10 +744,14 @@
       {
         "id": "reconnect",
         "title": {
-          "en": "Force reconnect to BioStar 2"
+          "en": "Force reconnect to BioStar 2",
+          "nl": "Opnieuw verbinden met BioStar 2 forceren",
+          "fr": "Forcer la reconnexion à BioStar 2"
         },
         "hint": {
-          "en": "Drops the current BioStar 2 session and reconnects: the app logs in again, reopens the connection and re-subscribes to the event stream. Handy after a BioStar 2 server restart, although the app already reconnects on its own."
+          "en": "Drops the current BioStar 2 session and reconnects: the app logs in again, reopens the connection and re-subscribes to the event stream. Handy after a BioStar 2 server restart, although the app already reconnects on its own.",
+          "nl": "Verbreekt de huidige BioStar 2-sessie en maakt opnieuw verbinding: de app logt opnieuw in, heropent de verbinding en schrijft zich weer in op de gebeurtenisstroom. Handig na een herstart van de BioStar 2-server, al maakt de app ook uit zichzelf opnieuw verbinding.",
+          "fr": "Interrompt la session BioStar 2 en cours et se reconnecte : l'application se reconnecte, rouvre la connexion et se réabonne au flux d'événements. Pratique après un redémarrage du serveur BioStar 2, même si l'application se reconnecte déjà d'elle-même."
         }
       }
     ]

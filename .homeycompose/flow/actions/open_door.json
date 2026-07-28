@@ -1,23 +1,33 @@
 {
   "id": "open_door",
   "title": {
-    "en": "Open door"
+    "en": "Open door",
+    "nl": "Deur openen",
+    "fr": "Ouvrir la porte"
   },
   "titleFormatted": {
-    "en": "Open door [[door]]"
+    "en": "Open door [[door]]",
+    "nl": "Deur [[door]] openen",
+    "fr": "Ouvrir la porte [[door]]"
   },
   "hint": {
-    "en": "Momentarily releases a door in BioStar 2, the same as pressing Open Door in the BioStar 2 console. The account configured in this app needs the Door control permission in BioStar 2, otherwise the card fails with a permission error."
+    "en": "Momentarily releases a door in BioStar 2, the same as pressing Open Door in the BioStar 2 console. The account configured in this app needs the Door control permission in BioStar 2, otherwise the card fails with a permission error.",
+    "nl": "Ontgrendelt een deur kortstondig in BioStar 2, net zoals wanneer u in de BioStar 2-console op Open Door drukt. Het account dat in deze app is ingesteld heeft in BioStar 2 de rechten voor deurbediening nodig, anders mislukt de kaart met een rechtenfout.",
+    "fr": "Déverrouille brièvement une porte dans BioStar 2, comme si vous appuyiez sur Open Door dans la console BioStar 2. Le compte configuré dans cette application doit disposer de l'autorisation de commande des portes dans BioStar 2, sinon la carte échoue avec une erreur d'autorisation."
   },
   "args": [
     {
       "name": "door",
       "type": "autocomplete",
       "title": {
-        "en": "Door"
+        "en": "Door",
+        "nl": "Deur",
+        "fr": "Porte"
       },
       "placeholder": {
-        "en": "Select a door"
+        "en": "Select a door",
+        "nl": "Kies een deur",
+        "fr": "Choisissez une porte"
       }
     }
   ]

@@ -1,20 +1,28 @@
 {
   "id": "device_is",
   "title": {
-    "en": "Device is !{{[device]}}"
+    "en": "Device is !{{[device]}}",
+    "nl": "Apparaat is !{{[device]}}",
+    "fr": "L'appareil est !{{[device]}}"
   },
   "titleFormatted": {
-    "en": "Device is [[device]]"
+    "en": "Device is [[device]]",
+    "nl": "Apparaat is [[device]]",
+    "fr": "L'appareil est [[device]]"
   },
   "hint": {
-    "en": "Checks which reader or door the event that started this Flow came from. Matching ignores upper and lower case and accepts a part of the name, so 'entrance' also matches 'Main Entrance'. Only works in Flows started by a BioStar 2 trigger card; elsewhere it is always false."
+    "en": "Checks which reader or door the event that started this Flow came from. Matching ignores upper and lower case and accepts a part of the name, so 'entrance' also matches 'Main Entrance'. Only works in Flows started by a BioStar 2 trigger card; elsewhere it is always false.",
+    "nl": "Controleert van welke lezer of deur de gebeurtenis kwam die deze Flow startte. Bij het vergelijken worden hoofd- en kleine letters genegeerd en volstaat een deel van de naam, dus 'ingang' komt ook overeen met 'Hoofdingang'. Werkt alleen in Flows die door een BioStar 2-triggerkaart zijn gestart; elders is dit altijd onwaar.",
+    "fr": "Vérifie de quel lecteur ou de quelle porte provient l'événement qui a démarré ce Flow. La comparaison ignore la casse et accepte une partie du nom : « entrée » correspond donc aussi à « Entrée principale ». Ne fonctionne que dans les Flows démarrés par une carte de déclenchement BioStar 2 ; ailleurs, le résultat est toujours faux."
   },
   "args": [
     {
       "name": "device",
       "type": "text",
       "placeholder": {
-        "en": "Main Entrance, Side Door..."
+        "en": "Main Entrance, Side Door...",
+        "nl": "Hoofdingang, Zijdeur...",
+        "fr": "Entrée principale, Porte latérale..."
       }
     }
   ]

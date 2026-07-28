@@ -1,1 +1,98 @@
-{}
+{
+  "errors": {
+    "noDoorSelected": "No door selected.",
+    "incompleteCredentials": "Host URL, username and password must all be provided."
+  },
+  "notifications": {
+    "connectionLost": "BioStar 2: connection lost. Access events are not reaching Homey."
+  },
+  "settings": {
+    "tabs": {
+      "settings": "Settings",
+      "advanced": "Advanced",
+      "logs": "Live Logs"
+    },
+    "status": {
+      "label": "Connection Status:",
+      "UNKNOWN": "UNKNOWN",
+      "CONNECTED": "CONNECTED",
+      "DISCONNECTED": "DISCONNECTED",
+      "CONNECTING": "CONNECTING"
+    },
+    "stats": {
+      "forwarded": "Events forwarded",
+      "filtered": "Events filtered",
+      "reconnects": "Reconnects",
+      "cached": "Cached users",
+      "uptime": "Connected for",
+      "last": "Last event"
+    },
+    "permWarning": {
+      "title": "Limited permissions.",
+      "body": "This account cannot read user profiles in BioStar 2, so the group, email, department, telephone and login ID tags fall back to the raw event data. Grant the account the Users read permission in BioStar 2 to enable them."
+    },
+    "connection": {
+      "host": "BioStar 2 Host URL",
+      "ws": "WebSocket URI",
+      "wsHint": "Leave empty to derive it automatically from the host URL.",
+      "user": "API Username",
+      "userPlaceholder": "BioStar 2 API user",
+      "password": "API Password",
+      "passwordPlaceholder": "Enter API password",
+      "passwordStored": "A password is stored. Leave unchanged to keep it.",
+      "passwordEmpty": "No password stored yet.",
+      "ssl": "Verify SSL/TLS certificate (uncheck for self-signed certificates)"
+    },
+    "buttons": {
+      "save": "Save Settings",
+      "test": "Test Connection",
+      "reconnect": "Force Reconnect",
+      "saveAdvanced": "Save Advanced Settings",
+      "add": "Add",
+      "refreshLogs": "Refresh Logs",
+      "clearLogs": "Clear Logs"
+    },
+    "eventTypes": {
+      "label": "Event types seen",
+      "hint": "Every event name BioStar 2 has sent since the app started, most frequent first. Tick one to drop it before any processing — that is what keeps the app idle when nothing relevant is happening. Ticked rows never reach your Flows.",
+      "colName": "Event name",
+      "colCount": "Count",
+      "colLast": "Last seen",
+      "colIgnore": "Ignore",
+      "loading": "Loading…",
+      "empty": "No events seen yet. They appear here as BioStar 2 sends them.",
+      "manualPlaceholder": "Add an event name not listed yet"
+    },
+    "ignoreSubstrings": {
+      "label": "Ignored event names (contains)",
+      "hint": "One per line. Any event whose name contains one of these fragments is dropped."
+    },
+    "logUserNames": {
+      "label": "Show user names in the activity log",
+      "hint": "On by default, because names are what make the log useful when a Flow misbehaves. Turn it off to keep identifiable access data out of the log view — entries then read \"User: <hidden>\". This only affects the log; Flow tags always carry the real user, and the log is in-memory only and cleared when the app restarts."
+    },
+    "timing": {
+      "heartbeat": "Heartbeat interval (seconds)",
+      "heartbeatHint": "How often the app pings BioStar 2. The connection is considered dead after twice this long without a reply.",
+      "reconnectMin": "Reconnect delay, first attempt (seconds)",
+      "reconnectMax": "Reconnect delay, maximum (seconds)",
+      "reconnectHint": "The delay grows by 50% after each failed attempt, up to this ceiling."
+    },
+    "logs": {
+      "title": "Real-time BioStar 2 and app activity log:",
+      "loading": "Loading logs...",
+      "empty": "No logs available yet."
+    },
+    "messages": {
+      "testing": "Testing connection to BioStar 2...",
+      "testError": "Error testing connection:",
+      "testFailed": "Connection failed.",
+      "reconnecting": "Reconnecting to BioStar 2...",
+      "reconnectFailed": "Reconnect failed:",
+      "reconnectRequested": "Reconnect requested.",
+      "saved": "BioStar 2 settings saved successfully.",
+      "savedAdvanced": "Advanced settings saved. Reconnecting with the new configuration.",
+      "loadFailed": "Could not load the stored settings."
+    }
+  }
+}

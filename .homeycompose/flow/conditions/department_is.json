@@ -1,20 +1,28 @@
 {
   "id": "department_is",
   "title": {
-    "en": "User belongs to department !{{[department]}}"
+    "en": "User belongs to department !{{[department]}}",
+    "nl": "Gebruiker behoort tot afdeling !{{[department]}}",
+    "fr": "L'utilisateur appartient au département !{{[department]}}"
   },
   "titleFormatted": {
-    "en": "User belongs to department [[department]]"
+    "en": "User belongs to department [[department]]",
+    "nl": "Gebruiker behoort tot afdeling [[department]]",
+    "fr": "L'utilisateur appartient au département [[department]]"
   },
   "hint": {
-    "en": "Checks the department of the person in the event that started this Flow, as set on their BioStar 2 user profile. Matching ignores upper and lower case and accepts a part of the department name. Only works in Flows started by a BioStar 2 trigger card that carries user information; elsewhere it is always false."
+    "en": "Checks the department of the person in the event that started this Flow, as set on their BioStar 2 user profile. Matching ignores upper and lower case and accepts a part of the department name. Only works in Flows started by a BioStar 2 trigger card that carries user information; elsewhere it is always false.",
+    "nl": "Controleert de afdeling van de persoon in de gebeurtenis die deze Flow startte, zoals ingesteld in zijn BioStar 2-gebruikersprofiel. Bij het vergelijken worden hoofd- en kleine letters genegeerd en volstaat een deel van de afdelingsnaam. Werkt alleen in Flows die zijn gestart door een BioStar 2-triggerkaart met gebruikersinformatie; elders is dit altijd onwaar.",
+    "fr": "Vérifie le département de la personne dans l'événement qui a démarré ce Flow, tel qu'il figure sur son profil utilisateur BioStar 2. La comparaison ignore la casse et accepte une partie du nom du département. Ne fonctionne que dans les Flows démarrés par une carte de déclenchement BioStar 2 portant des informations utilisateur ; ailleurs, le résultat est toujours faux."
   },
   "args": [
     {
       "name": "department",
       "type": "text",
       "placeholder": {
-        "en": "IT, Management, Cleaning..."
+        "en": "IT, Management, Cleaning...",
+        "nl": "IT, Directie, Schoonmaak...",
+        "fr": "Informatique, Direction, Nettoyage..."
       }
     }
   ]

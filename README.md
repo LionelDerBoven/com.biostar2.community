@@ -129,15 +129,35 @@ events reach Flows in the order the server produced them.
 Filtering happens before lookups, so ignored events cost almost nothing and the
 app stays idle when nothing relevant is going on.
 
+## Languages
+
+The app is available in **English**, **Dutch** and **French** — Flow cards,
+their hints and tags, the settings screen and the notifications all follow
+Homey's language setting.
+
+Translations live in `locales/*.json` for the settings page and runtime strings,
+and in the language blocks inside `.homeycompose/` for the Flow cards. After
+changing either, run `homey app build` to regenerate `app.json`.
+
 ## Privacy
 
-Access control data is sensitive. This app is built so it stays on your network:
+Access control data identifies real people, so the app is built to keep it on
+your network:
 
-- Events travel only between BioStar 2 and your Homey Pro, over your LAN.
-- Nothing is sent to any third-party service, and the app requests no Homey
-  permissions.
+- Events travel only between BioStar 2 and your Homey Pro, over your LAN. The
+  app contains no third-party endpoints — the only host it contacts is the one
+  you configure.
+- The app requests no Homey permissions.
+- Your BioStar 2 password is stored by Homey and never sent to the settings
+  page; the page is told only whether a password exists.
 - The activity log lives in memory only and is cleared when the app restarts.
-- User names can be hidden from that log with a single setting.
+- **Show user names in the activity log** can be turned off in the Advanced tab.
+  Log lines then read `User: <hidden>`. Flow tags are unaffected, so your Flows
+  keep working while the on-screen log stops naming people.
+
+Note that with that setting left on, user names also appear in Homey's own
+application log, which persists across restarts and is included in diagnostic
+reports. Turn it off before generating a diagnostic report you intend to share.
 
 ## Trademarks and affiliation
 

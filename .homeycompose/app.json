@@ -1,6 +1,6 @@
 {
   "id": "com.biostar2.community",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "compatibility": ">=12.4.0",
   "sdk": 3,
   "runtime": "nodejs",
@@ -8,10 +8,14 @@
     "local"
   ],
   "name": {
-    "en": "Biostar 2 Community"
+    "en": "Biostar 2 Community",
+    "nl": "Biostar 2 Community",
+    "fr": "Biostar 2 Community"
   },
   "description": {
-    "en": "Connects Suprema BioStar 2 access control events to Homey Pro. Unofficial community app, not affiliated with or endorsed by Suprema Inc."
+    "en": "Connects Suprema BioStar 2 access control events to Homey Pro. Unofficial community app, not affiliated with or endorsed by Suprema Inc.",
+    "nl": "Verbindt toegangscontrolegebeurtenissen van Suprema BioStar 2 met Homey Pro. Onofficiële community-app, niet verbonden met of goedgekeurd door Suprema Inc.",
+    "fr": "Relie les événements de contrôle d'accès Suprema BioStar 2 à Homey Pro. Application communautaire non officielle, sans lien avec Suprema Inc. ni approuvée par cette société."
   },
   "brandColor": "#0E74BE",
   "category": [
