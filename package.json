@@ -1,6 +1,6 @@
 {
   "name": "com.biostar2.community",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "main": "app.js",
   "engines": {
     "node": ">=16.0.0"
