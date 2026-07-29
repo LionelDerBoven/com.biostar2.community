@@ -73,7 +73,7 @@
     },
     "clock": {
       "label": "Afficher les heures sur une horloge de 24 heures",
-      "hint": "Suit la langue de Homey par défaut — 24 heures pour le néerlandais et le français, 12 heures avec AM/PM pour l'anglais. S'applique à tout le journal, y compris aux entrées déjà affichées."
+      "hint": "Cochée, l'heure s'affiche 20:50:20 ; décochée, 8:50:20 PM. Tant que vous ne choisissez pas, elle suit la langue de Homey — 24 heures pour le néerlandais et le français, 12 heures pour l'anglais. S'applique à tout le journal, y compris aux entrées déjà affichées."
     },
     "persistLogs": {
       "label": "Conserver le journal après un redémarrage de l'application",

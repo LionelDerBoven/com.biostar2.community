@@ -73,7 +73,7 @@
     },
     "clock": {
       "label": "Show times on a 24-hour clock",
-      "hint": "Follows Homey's language by default — 24 hours for Dutch and French, 12 hours with AM/PM for English. Applies to the whole log, including entries already shown."
+      "hint": "Ticked shows 20:50:20, unticked shows 8:50:20 PM. Until you choose, it follows Homey's language — 24 hours for Dutch and French, 12 hours for English. Applies to the whole log, including entries already on screen."
     },
     "persistLogs": {
       "label": "Keep the log across app restarts",

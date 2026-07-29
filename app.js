@@ -229,12 +229,20 @@ class BioStarApp extends Homey.App {
   }
 
   /**
-   * 12-hour clock for an English Homey, 24-hour for every other language, unless
-   * the owner has forced 24-hour. Resolved once per settings change rather than
-   * per log line, since it cannot change without one.
+   * Whether to show a 12-hour clock.
+   *
+   * An explicit choice wins, and wins in both directions: the checkbox has to be
+   * able to turn a 24-hour clock back into a 12-hour one, not only force 24 hours
+   * on. Treating it as an override of the language default made it a no-op on a
+   * Dutch or French Homey, where 24 hours is already what you get.
+   *
+   * Until a choice is made the clock follows Homey's language. Resolved once per
+   * settings change rather than per log line, since it cannot change without one.
    */
   resolveHour12() {
-    if (this.homey.settings.get('biostar_clock_24h') === true) return false;
+    const chosen = this.homey.settings.get('biostar_clock_24h');
+    if (typeof chosen === 'boolean') return !chosen;
+
     let language = 'en';
     try {
       language = this.homey.i18n.getLanguage() || 'en';
@@ -433,6 +441,9 @@ class BioStarApp extends Homey.App {
       // without the secret itself ever being sent to the page.
       hasPassword: Boolean(this.homey.settings.get('biostar_password')),
       persistLogs: Boolean(this.logStore && this.logStore.enabled),
+      // The effective clock, so the checkbox can show what is actually in force
+      // rather than only whether a preference has been stored.
+      clock24h: !this.hour12,
     };
   }
 

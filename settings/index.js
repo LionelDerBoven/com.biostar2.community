@@ -77,6 +77,7 @@ function onHomeyReady(Homey) {
   let logsSeen = 0;
   let logEntries = [];
   let hour12 = false;
+  let clockWriting = false;
   let passwordTouched = false;
   let ignoreSet = new Set(); // exact-match ignores, driven by the table
 
@@ -274,11 +275,17 @@ function onHomeyReady(Homey) {
         logsSeen = 0; logEntries = [];
       }
 
-      // The app owns the clock choice, so a language change is picked up here
-      // without the page having to know Homey's language itself.
-      const nextHour12 = res.hour12 === true;
-      const clockChanged = nextHour12 !== hour12;
-      hour12 = nextHour12;
+      // The app owns the clock, so the page never has to know Homey's language.
+      // The checkbox is set from the effective value, not from whether a
+      // preference happens to be stored — otherwise it reads "off" while the log
+      // plainly shows 24-hour times.
+      let clockChanged = false;
+      if (!clockWriting) {
+        const nextHour12 = res.hour12 === true;
+        clockChanged = nextHour12 !== hour12;
+        hour12 = nextHour12;
+        els.clock24h.checked = !hour12;
+      }
 
       if (Array.isArray(res.entries) && res.entries.length) {
         logEntries = logEntries.concat(res.entries).slice(-200);
@@ -341,8 +348,12 @@ function onHomeyReady(Homey) {
     els.reconnectMin.value = await getSetting('biostar_reconnect_min_s');
     els.reconnectMax.value = await getSetting('biostar_reconnect_max_s');
     els.logUserNames.checked = (await getSetting('biostar_log_usernames', true)) !== false;
-    els.clock24h.checked = (await getSetting('biostar_clock_24h', false)) === true;
-    els.persistLogs.checked = (await getSetting('biostar_persist_logs', false)) === true;
+
+    // Both log options come from the app's effective state rather than the raw
+    // settings, so each box shows what is actually in force.
+    els.clock24h.checked = status ? status.clock24h === true : false;
+    els.persistLogs.checked = status ? status.persistLogs === true : false;
+    hour12 = !els.clock24h.checked;
 
     const savedFilter = await getSetting('log_filter', 'all');
     if ([...els.logFilter.options].some((o) => o.value === savedFilter)) {
@@ -399,15 +410,16 @@ function onHomeyReady(Homey) {
   // The two log options sit with the log and save on the spot: there is no Save
   // button on this tab, and both take effect immediately.
   els.clock24h.addEventListener('change', () => {
-    Homey.set('biostar_clock_24h', els.clock24h.checked, () => {});
-    // Forcing 24 hours can be applied right away. Releasing it cannot, because
-    // only the app knows which format Homey's language falls back to; that
-    // arrives with the next poll, which the fetch below brings forward.
-    if (els.clock24h.checked) {
-      hour12 = false;
-      renderLogs(false);
-    }
-    fetchLogs();
+    // Applied in both directions at once, so the log reformats under the cursor
+    // instead of waiting for a poll. clockWriting stops the poll in flight from
+    // reading back the old value and flipping the box while the write lands.
+    clockWriting = true;
+    hour12 = !els.clock24h.checked;
+    renderLogs(false);
+    Homey.set('biostar_clock_24h', els.clock24h.checked, () => {
+      clockWriting = false;
+      fetchLogs();
+    });
   });
 
   els.persistLogs.addEventListener('change', () => {

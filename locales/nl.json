@@ -73,7 +73,7 @@
     },
     "clock": {
       "label": "Tijden tonen op een 24-uursklok",
-      "hint": "Volgt standaard de taal van Homey — 24 uur voor Nederlands en Frans, 12 uur met AM/PM voor Engels. Geldt voor het hele logboek, ook voor regels die al te zien zijn."
+      "hint": "Aangevinkt toont 20:50:20, uitgevinkt 8:50:20 PM. Zolang je niets kiest, volgt het de taal van Homey — 24 uur voor Nederlands en Frans, 12 uur voor Engels. Geldt voor het hele logboek, ook voor regels die al te zien zijn."
     },
     "persistLogs": {
       "label": "Logboek bewaren na een herstart van de app",
