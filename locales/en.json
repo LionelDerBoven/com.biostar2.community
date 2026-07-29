@@ -71,6 +71,14 @@
       "label": "Show user names in the activity log",
       "hint": "On by default, because names are what make the log useful when a Flow misbehaves. Turn it off to keep identifiable access data out of the log view — entries then read \"User: <hidden>\". This only affects the log; Flow tags always carry the real user, and the log is in-memory only and cleared when the app restarts."
     },
+    "clock": {
+      "label": "Always use a 24-hour clock in the activity log",
+      "hint": "Off by default: the clock follows Homey's language — 24 hours for Dutch and French, 12 hours with AM/PM for English. Tick this to use 24 hours whatever the language. Entries already in the log keep the format they were written with."
+    },
+    "persistLogs": {
+      "label": "Also keep the activity log on Homey's storage",
+      "hint": "Off by default. The log normally lives in memory only and is lost whenever the app restarts. Turn this on to write it to Homey's internal storage as well, so it survives a restart. At most 256 KB is kept and the oldest entries are dropped first; writes are batched so the flash memory is not worn down. Turning it off again deletes the stored file. Consider that this puts access-control history on disk."
+    },
     "timing": {
       "heartbeat": "Heartbeat interval (seconds)",
       "heartbeatHint": "How often the app pings BioStar 2. The connection is considered dead after twice this long without a reply.",
@@ -81,7 +89,14 @@
     "logs": {
       "title": "Real-time BioStar 2 and app activity log:",
       "loading": "Loading logs...",
-      "empty": "No logs available yet."
+      "empty": "No logs available yet.",
+      "filterLabel": "Show:",
+      "catEvents": "Access events",
+      "catActions": "Flow actions",
+      "catErrors": "Errors and warnings",
+      "catInfo": "Info and connection",
+      "hidden": "hidden",
+      "allFiltered": "Every entry is hidden by the filter above."
     },
     "messages": {
       "testing": "Testing connection to BioStar 2...",

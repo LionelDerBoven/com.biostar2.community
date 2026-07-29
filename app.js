@@ -3,14 +3,25 @@
 const Homey = require('homey');
 const BiostarClient = require('./lib/BiostarClient');
 const EventMapper = require('./lib/EventMapper');
+const LogStore = require('./lib/LogStore');
 
 const LOG_LIMIT = 100;
 const RESTART_DEBOUNCE_MS = 500;
 const DISCONNECT_ALERT_MS = 120000;
 const LIST_CACHE_TTL_MS = 60000;
 
-// Settings that only change what is displayed, never how we talk to BioStar 2.
-const COSMETIC_SETTINGS = new Set(['biostar_log_usernames']);
+// Languages that write the time on a 12-hour clock. Everything else — Dutch and
+// French included — gets 24 hours, which is what those locales actually use.
+const HOUR12_LANGUAGES = new Set(['en']);
+
+// Settings that only change what is displayed or where it is stored, never how
+// we talk to BioStar 2. Reconnecting for these would drop the event stream for
+// a change that affects nothing on the wire.
+const COSMETIC_SETTINGS = new Set([
+  'biostar_log_usernames',
+  'biostar_clock_24h',
+  'biostar_persist_logs',
+]);
 
 /**
  * BioStar 2 Community Homey App
@@ -27,7 +38,11 @@ class BioStarApp extends Homey.App {
     this.connectionStatus = 'UNKNOWN';
     this.listCache = {};
     this.logUserNames = this.homey.settings.get('biostar_log_usernames') !== false;
+    this.hour12 = this.resolveHour12();
     this.startedAt = Date.now();
+
+    this.logStore = new LogStore({ errorLog: (msg) => this.error(msg) });
+    await this.initPersistentLog();
 
     this.addLog('Initializing BioStar 2 Community Homey App...', 'INFO');
 
@@ -199,9 +214,68 @@ class BioStarApp extends Homey.App {
    * Applies display-only settings to the running client without reconnecting.
    */
   applyCosmeticSettings() {
+    const wasHour12 = this.hour12;
     this.logUserNames = this.homey.settings.get('biostar_log_usernames') !== false;
+    this.hour12 = this.resolveHour12();
     if (this.client) this.client.options.logUserNames = this.logUserNames;
+
     this.addLog(`Activity log user names ${this.logUserNames ? 'shown' : 'hidden'}.`, 'INFO');
+    if (this.hour12 !== wasHour12) {
+      this.addLog(`Activity log clock switched to ${this.hour12 ? '12' : '24'}-hour format.`, 'INFO');
+    }
+    this.initPersistentLog().catch((err) => this.error(`Persistent log: ${err.message}`));
+  }
+
+  /**
+   * 12-hour clock for an English Homey, 24-hour for every other language, unless
+   * the owner has forced 24-hour. Resolved once per settings change rather than
+   * per log line, since it cannot change without one.
+   */
+  resolveHour12() {
+    if (this.homey.settings.get('biostar_clock_24h') === true) return false;
+    let language = 'en';
+    try {
+      language = this.homey.i18n.getLanguage() || 'en';
+    } catch (_) { /* fall back to English */ }
+    return HOUR12_LANGUAGES.has(String(language).slice(0, 2).toLowerCase());
+  }
+
+  /**
+   * Formats a wall clock time without Intl. Homey's Node build cannot be relied
+   * on to carry locale data for every language, and a log timestamp that
+   * silently falls back to a different format would be worse than no choice at
+   * all. Matches what toLocaleTimeString produced before: no leading zero on a
+   * 12-hour hour, a leading zero on a 24-hour one.
+   */
+  static formatClock(date, hour12) {
+    const pad = (n) => String(n).padStart(2, '0');
+    const h = date.getHours();
+    const rest = `${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+    if (!hour12) return `${pad(h)}:${rest}`;
+    return `${h % 12 === 0 ? 12 : h % 12}:${rest} ${h < 12 ? 'AM' : 'PM'}`;
+  }
+
+  /**
+   * Brings the on-flash log in line with the setting. Enabling it replays what
+   * was already stored into the in-memory buffer, so the log view survives an
+   * app restart instead of starting blank.
+   */
+  async initPersistentLog() {
+    const wanted = this.homey.settings.get('biostar_persist_logs') === true;
+    if (!this.logStore || wanted === this.logStore.enabled) return;
+
+    await this.logStore.setEnabled(wanted);
+    if (!wanted) {
+      this.addLog('Persistent log turned off; the stored file has been deleted.', 'INFO');
+      return;
+    }
+
+    const stored = await this.logStore.readRecent(LOG_LIMIT);
+    if (stored.length) {
+      // Restored lines go in front of anything logged during this startup.
+      this.logs = stored.concat(this.logs || []).slice(-LOG_LIMIT);
+    }
+    this.addLog(`Persistent log turned on; ${stored.length} stored line(s) restored.`, 'INFO');
   }
 
   /**
@@ -217,7 +291,10 @@ class BioStarApp extends Homey.App {
       log: (...args) => {
         const msg = args.join(' ');
         this.log(msg);
-        this.addLog(msg, 'INFO');
+        // The client reports an access event on its normal log channel. Tagging
+        // it here rather than as plain INFO is what lets the log filter treat
+        // door activity as its own category.
+        this.addLog(msg, /\bEvent: \[/.test(msg) ? 'EVENT' : 'INFO');
       },
       errorLog: (...args) => {
         const msg = args.join(' ');
@@ -371,6 +448,7 @@ class BioStarApp extends Homey.App {
       // Whether a password is stored, so the settings page can show its state
       // without the secret itself ever being sent to the page.
       hasPassword: Boolean(this.homey.settings.get('biostar_password')),
+      persistLogs: Boolean(this.logStore && this.logStore.enabled),
     };
   }
 
@@ -379,10 +457,15 @@ class BioStarApp extends Homey.App {
    */
   addLog(msg, type = 'INFO') {
     if (!this.logs) this.logs = [];
-    const timestamp = new Date().toLocaleTimeString();
+    const timestamp = BioStarApp.formatClock(new Date(), this.hour12);
     const cleanMsg = typeof msg === 'string' ? msg.replace(/\[BioStarClient\]\s*/, '') : JSON.stringify(msg);
-    this.logs.push(`[${timestamp}] [${type}] ${cleanMsg}`);
+    const line = `[${timestamp}] [${type}] ${cleanMsg}`;
+
+    this.logs.push(line);
     if (this.logs.length > LOG_LIMIT) this.logs.splice(0, this.logs.length - LOG_LIMIT);
+
+    // The buffer above is capped at LOG_LIMIT; the file keeps the older lines.
+    if (this.logStore) this.logStore.append(line);
   }
 
   /**
@@ -403,8 +486,12 @@ class BioStarApp extends Homey.App {
   /**
    * Clears in-memory log buffer.
    */
-  clearLogs() {
+  async clearLogs() {
     this.logs = [];
+    // Clearing has to reach flash too, or the next restart would replay
+    // everything the user just asked to be rid of. The store stays enabled and
+    // simply starts a new file.
+    if (this.logStore) await this.logStore.clear();
     this.addLog('Log buffer cleared by user.', 'INFO');
     return { success: true };
   }
@@ -533,6 +620,8 @@ class BioStarApp extends Homey.App {
       await this.client.stop().catch(() => {});
       this.client.destroy();
     }
+    // Last, so anything the shutdown itself logged still reaches flash.
+    if (this.logStore) await this.logStore.destroy().catch(() => {});
   }
 
 }

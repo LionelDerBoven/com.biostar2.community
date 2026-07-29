@@ -3,16 +3,107 @@
 <head>
   <script type="text/javascript" src="/homey.js" data-origin="settings"></script>
   <style>
+    /*
+     * Theming
+     *
+     * `color-scheme` is the important line. Without it a dark-mode webview treats
+     * this page as light-only and applies its own automatic darkening, which
+     * inverts the log console into a white box — exactly the bug this replaces.
+     * Declaring both schemes hands the styling back to us, so the palette below
+     * is what actually renders. Homey signals its own theme with the
+     * .homey-dark-mode class; prefers-color-scheme covers everywhere else.
+     */
+    :root {
+      color-scheme: light dark;
+
+      --fg: #222222;
+      --fg-soft: #555555;
+      --fg-muted: #777777;
+      --line: #e0e0e0;
+      --line-soft: #f0f0f0;
+      --surface: #f4f6f9;
+      --surface-hover: #e2e8f0;
+      --input-bg: #ffffff;
+      --input-border: #cccccc;
+      --accent: #1a2980;
+      --accent-contrast: #ffffff;
+      --accent-hover: #26d0ce;
+      --ok: #2b8a3e;
+      --bad: #c92a2a;
+      --warn-bg: #fff8e1;
+      --warn-line: #f0a30a;
+      --danger-bg: #fff0f0;
+      --danger-line: #ffc9c9;
+      --danger-fg: #c92a2a;
+      --danger-hover: #ffe3e3;
+
+      /* The console stays dark in both themes: it is a terminal, not a form. */
+      --console-bg: #1e1e1e;
+      --console-fg: #00ff66;
+    }
+
+    /* Kept in step with the .homey-dark-mode block below. */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --fg: #f2f2f2;
+        --fg-soft: #c4c4c4;
+        --fg-muted: #9a9a9a;
+        --line: #3a3a3a;
+        --line-soft: #2e2e2e;
+        --surface: #262626;
+        --surface-hover: #333333;
+        --input-bg: #1c1c1c;
+        --input-border: #4a4a4a;
+        --accent: #6ea8ff;
+        --accent-contrast: #10203a;
+        --accent-hover: #26d0ce;
+        --ok: #63d471;
+        --bad: #ff8787;
+        --warn-bg: #3a3117;
+        --warn-line: #f0a30a;
+        --danger-bg: #3a1f1f;
+        --danger-line: #6b3535;
+        --danger-fg: #ff8787;
+        --danger-hover: #4a2727;
+      }
+    }
+
+    :root.homey-dark-mode, .homey-dark-mode {
+      --fg: #f2f2f2;
+      --fg-soft: #c4c4c4;
+      --fg-muted: #9a9a9a;
+      --line: #3a3a3a;
+      --line-soft: #2e2e2e;
+      --surface: #262626;
+      --surface-hover: #333333;
+      --input-bg: #1c1c1c;
+      --input-border: #4a4a4a;
+      --accent: #6ea8ff;
+      --accent-contrast: #10203a;
+      --accent-hover: #26d0ce;
+      --ok: #63d471;
+      --bad: #ff8787;
+      --warn-bg: #3a3117;
+      --warn-line: #f0a30a;
+      --danger-bg: #3a1f1f;
+      --danger-line: #6b3535;
+      --danger-fg: #ff8787;
+      --danger-hover: #4a2727;
+    }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       padding: 10px;
       margin: 0;
+      /* No background: Homey paints the dialog, and overriding it would leave a
+         mismatched rectangle inside the panel. Only the text colour is ours. */
+      color: var(--fg);
     }
 
     /* Tab Header Navigation */
     .tab-bar {
       display: flex;
-      border-bottom: 2px solid #e0e0e0;
+      border-bottom: 2px solid var(--line);
       margin-bottom: 20px;
     }
     .tab-btn {
@@ -21,18 +112,18 @@
       padding: 10px 20px;
       font-size: 14px;
       font-weight: 600;
-      color: #666;
+      color: var(--fg-muted);
       cursor: pointer;
       border-bottom: 3px solid transparent;
       margin-bottom: -2px;
       transition: all 0.2s ease-in-out;
     }
     .tab-btn:hover {
-      color: #1A2980;
+      color: var(--accent);
     }
     .tab-btn.active {
-      color: #1A2980;
-      border-bottom-color: #1A2980;
+      color: var(--accent);
+      border-bottom-color: var(--accent);
     }
 
     /* Tab Content Panes */
@@ -54,11 +145,13 @@
     input[type="text"], input[type="password"], input[type="number"], textarea {
       width: 100%;
       padding: 8px;
-      border: 1px solid #ccc;
+      border: 1px solid var(--input-border);
       border-radius: 4px;
       box-sizing: border-box;
       font-family: inherit;
       font-size: 14px;
+      background: var(--input-bg);
+      color: var(--fg);
     }
     textarea {
       min-height: 70px;
@@ -69,7 +162,7 @@
     .hint {
       font-weight: normal;
       font-size: 12px;
-      color: #777;
+      color: var(--fg-muted);
       margin-top: 4px;
     }
     .checkbox-label {
@@ -87,8 +180,8 @@
       flex-wrap: wrap;
     }
     .btn-save {
-      background-color: #1A2980;
-      color: white;
+      background-color: var(--accent);
+      color: var(--accent-contrast);
       border: none;
       padding: 10px 20px;
       border-radius: 4px;
@@ -97,12 +190,12 @@
       font-weight: 600;
     }
     .btn-save:hover {
-      background-color: #26D0CE;
+      background-color: var(--accent-hover);
     }
     .btn-test {
-      background-color: #f4f6f9;
-      color: #333;
-      border: 1px solid #ccc;
+      background-color: var(--surface);
+      color: var(--fg);
+      border: 1px solid var(--input-border);
       padding: 10px 20px;
       border-radius: 4px;
       cursor: pointer;
@@ -110,11 +203,11 @@
       font-weight: 600;
     }
     .btn-test:hover {
-      background-color: #e2e8f0;
+      background-color: var(--surface-hover);
     }
     .status-card {
-      background: #f4f6f9;
-      border-left: 4px solid #1A2980;
+      background: var(--surface);
+      border-left: 4px solid var(--accent);
       padding: 10px 15px;
       margin-bottom: 20px;
       border-radius: 4px;
@@ -122,26 +215,26 @@
     .status-value {
       font-weight: bold;
     }
-    .status-value.ok    { color: #2b8a3e; }
-    .status-value.bad   { color: #c92a2a; }
+    .status-value.ok    { color: var(--ok); }
+    .status-value.bad   { color: var(--bad); }
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
       gap: 8px 16px;
       margin-top: 10px;
       padding-top: 10px;
-      border-top: 1px solid #e0e0e0;
+      border-top: 1px solid var(--line);
       font-size: 12px;
-      color: #555;
+      color: var(--fg-soft);
     }
     .stats-grid b {
       display: block;
       font-size: 15px;
-      color: #222;
+      color: var(--fg);
     }
     .warn-banner {
-      background: #fff8e1;
-      border-left: 4px solid #f0a30a;
+      background: var(--warn-bg);
+      border-left: 4px solid var(--warn-line);
       padding: 10px 15px;
       margin-bottom: 20px;
       border-radius: 4px;
@@ -169,8 +262,9 @@
       flex-shrink: 0;
     }
     .btn-sm {
-      background-color: #eee;
-      border: 1px solid #ccc;
+      background-color: var(--surface);
+      color: var(--fg);
+      border: 1px solid var(--input-border);
       padding: 6px 12px;
       border-radius: 4px;
       cursor: pointer;
@@ -178,21 +272,44 @@
       font-weight: 600;
     }
     .btn-sm:hover {
-      background-color: #ddd;
+      background-color: var(--surface-hover);
     }
     .btn-danger {
-      background-color: #fff0f0;
-      color: #c92a2a;
-      border-color: #ffc9c9;
+      background-color: var(--danger-bg);
+      color: var(--danger-fg);
+      border-color: var(--danger-line);
     }
     .btn-danger:hover {
-      background-color: #ffe3e3;
+      background-color: var(--danger-hover);
     }
+
+    /* Log category filter */
+    .log-filter {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px 14px;
+      margin-bottom: 10px;
+      font-size: 12px;
+      color: var(--fg-soft);
+    }
+    .log-filter .checkbox-label {
+      gap: 5px;
+    }
+    .filter-title {
+      font-weight: 600;
+      color: var(--fg);
+    }
+    .filter-count {
+      color: var(--fg-muted);
+      font-style: italic;
+    }
+
     /* Discovered event types table */
     #event-types-wrap {
       max-height: 260px;
       overflow-y: auto;
-      border: 1px solid #ddd;
+      border: 1px solid var(--line);
       border-radius: 4px;
     }
     #event-types {
@@ -203,15 +320,15 @@
     #event-types th {
       position: sticky;
       top: 0;
-      background: #f4f6f9;
+      background: var(--surface);
       text-align: left;
       padding: 8px;
-      border-bottom: 1px solid #ddd;
+      border-bottom: 1px solid var(--line);
       font-weight: 600;
     }
     #event-types td {
       padding: 7px 8px;
-      border-bottom: 1px solid #f0f0f0;
+      border-bottom: 1px solid var(--line-soft);
       font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
       word-break: break-all;
     }
@@ -221,10 +338,10 @@
       font-family: inherit;
     }
     #event-types tr.is-ignored td {
-      color: #999;
+      color: var(--fg-muted);
     }
     #event-types td.muted {
-      color: #888;
+      color: var(--fg-muted);
       font-family: inherit;
       text-align: center;
       padding: 16px;
@@ -234,8 +351,8 @@
     }
 
     #log-window {
-      background: #1e1e1e;
-      color: #00ff66;
+      background: var(--console-bg);
+      color: var(--console-fg);
       font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
       font-size: 11px;
       padding: 12px;
@@ -245,6 +362,9 @@
       white-space: pre-wrap;
       word-break: break-all;
       box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+      /* The console is dark in both themes, so its scrollbars must be too —
+         otherwise dark mode hands it a light track that reads as a seam. */
+      color-scheme: dark;
     }
   </style>
 </head>
@@ -365,6 +485,28 @@
     </div>
 
     <div class="field">
+      <label class="checkbox-label">
+        <input type="checkbox" id="biostar_clock_24h" />
+        <span data-t="settings.clock.label">Always use a 24-hour clock in the activity log</span>
+      </label>
+      <div class="hint" data-t="settings.clock.hint">Off by default: the clock follows Homey's language — 24 hours for
+        Dutch and French, 12 hours with AM/PM for English. Tick this to use 24 hours whatever the language.
+        Entries already in the log keep the format they were written with.</div>
+    </div>
+
+    <div class="field">
+      <label class="checkbox-label">
+        <input type="checkbox" id="biostar_persist_logs" />
+        <span data-t="settings.persistLogs.label">Also keep the activity log on Homey's storage</span>
+      </label>
+      <div class="hint" data-t="settings.persistLogs.hint">Off by default. The log normally lives in memory only and is
+        lost whenever the app restarts. Turn this on to write it to Homey's internal storage as well, so it survives a
+        restart. At most 256 KB is kept and the oldest entries are dropped first; writes are batched so the flash
+        memory is not worn down. Turning it off again deletes the stored file. Consider that this puts access-control
+        history on disk.</div>
+    </div>
+
+    <div class="field">
       <label for="biostar_heartbeat_s" data-t="settings.timing.heartbeat">Heartbeat interval (seconds)</label>
       <input type="number" id="biostar_heartbeat_s" min="5" max="300" placeholder="30" />
       <div class="hint" data-t="settings.timing.heartbeatHint">How often the app pings BioStar 2. The connection is considered dead after twice this long without a reply.</div>
@@ -394,6 +536,26 @@
         <button type="button" id="refresh-logs-button" class="btn-sm" data-t="settings.buttons.refreshLogs">Refresh Logs</button>
         <button type="button" id="clear-logs-button" class="btn-sm btn-danger" data-t="settings.buttons.clearLogs">Clear Logs</button>
       </div>
+    </div>
+    <div class="log-filter">
+      <span class="filter-title" data-t="settings.logs.filterLabel">Show:</span>
+      <label class="checkbox-label">
+        <input type="checkbox" class="log-cat" value="events" checked />
+        <span data-t="settings.logs.catEvents">Access events</span>
+      </label>
+      <label class="checkbox-label">
+        <input type="checkbox" class="log-cat" value="actions" checked />
+        <span data-t="settings.logs.catActions">Flow actions</span>
+      </label>
+      <label class="checkbox-label">
+        <input type="checkbox" class="log-cat" value="errors" checked />
+        <span data-t="settings.logs.catErrors">Errors and warnings</span>
+      </label>
+      <label class="checkbox-label">
+        <input type="checkbox" class="log-cat" value="info" checked />
+        <span data-t="settings.logs.catInfo">Info and connection</span>
+      </label>
+      <span id="log-hidden-count" class="filter-count"></span>
     </div>
     <pre id="log-window" data-t="settings.logs.loading">Loading logs...</pre>
   </div>

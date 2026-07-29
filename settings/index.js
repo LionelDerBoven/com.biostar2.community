@@ -5,6 +5,17 @@
 const PASSWORD_MASK = '••••••••••';
 const LOG_POLL_MS = 3000;
 
+// Which log tag belongs to which filter checkbox. Anything not listed here
+// falls into 'info', so an unrecognised tag can never silently disappear from
+// the view — the worst case is that it shows up in the broadest category.
+const LOG_CATEGORIES = {
+  EVENT: 'events',
+  ACTION: 'actions',
+  ERROR: 'errors',
+  WARN: 'errors',
+  TEST_ERROR: 'errors',
+};
+
 function onHomeyReady(Homey) {
   Homey.ready();
 
@@ -49,10 +60,13 @@ function onHomeyReady(Homey) {
     reconnectMin: $('biostar_reconnect_min_s'),
     reconnectMax: $('biostar_reconnect_max_s'),
     logUserNames: $('biostar_log_usernames'),
+    clock24h: $('biostar_clock_24h'),
+    persistLogs: $('biostar_persist_logs'),
     status: $('connection-status'),
     permWarning: $('perm-warning'),
     testResult: $('test-result'),
     logWindow: $('log-window'),
+    hiddenCount: $('log-hidden-count'),
   };
 
   let logPollTimer = null;
@@ -172,6 +186,53 @@ function onHomeyReady(Homey) {
   // Logs — incremental fetch, only new lines cross the API
   // ---------------------------------------------------------------------------
 
+  /**
+   * The tag a line was written with, e.g. "[10:04:11] [EVENT] ..." -> 'events'.
+   */
+  function categoryOf(line) {
+    const match = /^\[[^\]]*\]\s*\[([A-Z_]+)\]/.exec(line);
+    return LOG_CATEGORIES[match && match[1]] || 'info';
+  }
+
+  function activeCategories() {
+    const on = new Set();
+    document.querySelectorAll('.log-cat').forEach((cb) => {
+      if (cb.checked) on.add(cb.value);
+    });
+    return on;
+  }
+
+  /**
+   * Filtering happens here rather than in the app: the page already holds every
+   * line it has fetched, so a category can be switched on and off without
+   * another round trip, and no line is ever discarded on the way in.
+   *
+   * `follow` keeps the view pinned to the newest line when it already was —
+   * scrolling back to read something must not be undone by the next poll.
+   */
+  function renderLogs(follow = true) {
+    const on = activeCategories();
+    const visible = logLines.filter((line) => on.has(categoryOf(line)));
+    const hidden = logLines.length - visible.length;
+
+    const atBottom = els.logWindow.scrollHeight - els.logWindow.clientHeight
+      <= els.logWindow.scrollTop + 30;
+
+    if (visible.length) {
+      els.logWindow.textContent = visible.join('\n');
+    } else {
+      els.logWindow.textContent = logLines.length
+        ? t('settings.logs.allFiltered', 'Every entry is hidden by the filter above.')
+        : t('settings.logs.empty', 'No logs available yet.');
+    }
+
+    els.hiddenCount.textContent = hidden
+      ? `${hidden} ${t('settings.logs.hidden', 'hidden')}`
+      : '';
+
+    if (!follow || atBottom) els.logWindow.scrollTop = els.logWindow.scrollHeight;
+  }
+
   function fetchLogs(reset = false) {
     if (reset) {
       logsSeen = 0; logLines = [];
@@ -187,13 +248,9 @@ function onHomeyReady(Homey) {
       if (Array.isArray(res.lines) && res.lines.length) {
         logLines = logLines.concat(res.lines).slice(-200);
         logsSeen = res.total;
-
-        const atBottom = els.logWindow.scrollHeight - els.logWindow.clientHeight
-          <= els.logWindow.scrollTop + 30;
-        els.logWindow.textContent = logLines.join('\n');
-        if (atBottom) els.logWindow.scrollTop = els.logWindow.scrollHeight;
+        renderLogs();
       } else if (!logLines.length) {
-        els.logWindow.textContent = t('settings.logs.empty', 'No logs available yet.');
+        renderLogs();
       }
 
       renderStats(res.stats);
@@ -249,6 +306,8 @@ function onHomeyReady(Homey) {
     els.reconnectMin.value = await getSetting('biostar_reconnect_min_s');
     els.reconnectMax.value = await getSetting('biostar_reconnect_max_s');
     els.logUserNames.checked = (await getSetting('biostar_log_usernames', true)) !== false;
+    els.clock24h.checked = (await getSetting('biostar_clock_24h', false)) === true;
+    els.persistLogs.checked = (await getSetting('biostar_persist_logs', false)) === true;
 
     refreshStatus();
   }
@@ -284,6 +343,12 @@ function onHomeyReady(Homey) {
     if (!payload) return;
     renderStatus(payload.status);
     renderStats(payload.stats);
+  });
+
+  // Filtering is a view choice, so it is applied to what the page already has
+  // and jumps back to the newest line rather than leaving you mid-history.
+  document.querySelectorAll('.log-cat').forEach((cb) => {
+    cb.addEventListener('change', () => renderLogs(false));
   });
 
   $('refresh-logs-button').addEventListener('click', () => fetchLogs(true));
@@ -374,6 +439,8 @@ function onHomeyReady(Homey) {
     Homey.set('biostar_reconnect_min_s', toNumber(els.reconnectMin));
     Homey.set('biostar_reconnect_max_s', toNumber(els.reconnectMax));
     Homey.set('biostar_log_usernames', els.logUserNames.checked);
+    Homey.set('biostar_clock_24h', els.clock24h.checked);
+    Homey.set('biostar_persist_logs', els.persistLogs.checked);
 
     Homey.alert(t('settings.messages.savedAdvanced',
       'Advanced settings saved. Reconnecting with the new configuration.'));

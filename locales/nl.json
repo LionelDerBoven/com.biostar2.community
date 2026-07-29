@@ -71,6 +71,14 @@
       "label": "Gebruikersnamen tonen in het activiteitenlogboek",
       "hint": "Standaard aan, omdat namen het logboek bruikbaar maken wanneer een Flow zich vreemd gedraagt. Zet dit uit om identificeerbare toegangsgegevens uit het logboek te houden — regels tonen dan \"User: <hidden>\". Dit heeft alleen effect op het logboek; Flow-tags bevatten altijd de echte gebruiker, en het logboek staat alleen in het geheugen en wordt gewist wanneer de app herstart."
     },
+    "clock": {
+      "label": "Altijd een 24-uursklok in het activiteitenlogboek gebruiken",
+      "hint": "Standaard uit: de klok volgt de taal van Homey — 24 uur voor Nederlands en Frans, 12 uur met AM/PM voor Engels. Vink dit aan om altijd 24 uur te gebruiken, ongeacht de taal. Regels die al in het logboek staan behouden de notatie waarmee ze zijn geschreven."
+    },
+    "persistLogs": {
+      "label": "Het activiteitenlogboek ook op de opslag van Homey bewaren",
+      "hint": "Standaard uit. Het logboek staat normaal alleen in het geheugen en gaat verloren zodra de app herstart. Zet dit aan om het ook naar de interne opslag van Homey te schrijven, zodat het een herstart overleeft. Er wordt maximaal 256 KB bewaard en de oudste regels verdwijnen het eerst; schrijfacties worden gebundeld zodat het flashgeheugen niet slijt. Weer uitzetten verwijdert het opgeslagen bestand. Houd er rekening mee dat hiermee toegangsgeschiedenis op schijf terechtkomt."
+    },
     "timing": {
       "heartbeat": "Heartbeat-interval (seconden)",
       "heartbeatHint": "Hoe vaak de app BioStar 2 aanpingt. De verbinding wordt als dood beschouwd na twee keer deze tijd zonder antwoord.",
@@ -81,7 +89,14 @@
     "logs": {
       "title": "Live logboek van BioStar 2 en de app:",
       "loading": "Logboek laden...",
-      "empty": "Nog geen logregels beschikbaar."
+      "empty": "Nog geen logregels beschikbaar.",
+      "filterLabel": "Tonen:",
+      "catEvents": "Toegangsgebeurtenissen",
+      "catActions": "Flow-acties",
+      "catErrors": "Fouten en waarschuwingen",
+      "catInfo": "Info en verbinding",
+      "hidden": "verborgen",
+      "allFiltered": "Alle regels zijn verborgen door het filter hierboven."
     },
     "messages": {
       "testing": "Verbinding met BioStar 2 testen...",
