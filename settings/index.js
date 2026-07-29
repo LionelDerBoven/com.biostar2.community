@@ -5,16 +5,19 @@
 const PASSWORD_MASK = '••••••••••';
 const LOG_POLL_MS = 3000;
 
-// Which log tag belongs to which filter checkbox. Anything not listed here
-// falls into 'info', so an unrecognised tag can never silently disappear from
-// the view — the worst case is that it shows up in the broadest category.
+// Which log tag belongs to which filter option. Anything not listed here falls
+// into 'info', so an unrecognised tag can never silently disappear from the
+// view — the worst case is that it shows up in the broadest category.
 const LOG_CATEGORIES = {
-  EVENT: 'events',
+  AUTH: 'auth',
   ACTION: 'actions',
   ERROR: 'errors',
   WARN: 'errors',
   TEST_ERROR: 'errors',
 };
+
+// Categories that get a tinted row, so the eye finds them without reading.
+const ROW_TINT = { auth: 'level-auth', actions: 'level-action', errors: 'level-error' };
 
 function onHomeyReady(Homey) {
   Homey.ready();
@@ -65,13 +68,15 @@ function onHomeyReady(Homey) {
     status: $('connection-status'),
     permWarning: $('perm-warning'),
     testResult: $('test-result'),
-    logWindow: $('log-window'),
-    hiddenCount: $('log-hidden-count'),
+    log: $('log'),
+    logCount: $('log-count'),
+    logFilter: $('log-filter'),
   };
 
   let logPollTimer = null;
   let logsSeen = 0;
-  let logLines = [];
+  let logEntries = [];
+  let hour12 = false;
   let passwordTouched = false;
   let ignoreSet = new Set(); // exact-match ignores, driven by the table
 
@@ -186,70 +191,100 @@ function onHomeyReady(Homey) {
   // Logs — incremental fetch, only new lines cross the API
   // ---------------------------------------------------------------------------
 
+  function categoryOf(entry) {
+    return LOG_CATEGORIES[entry && entry.type] || 'info';
+  }
+
   /**
-   * The tag a line was written with, e.g. "[10:04:11] [EVENT] ..." -> 'events'.
+   * Formats a wall clock time without Intl. Homey's webview cannot be relied on
+   * to carry locale data for every language, and a timestamp that silently falls
+   * back to another format would be worse than not choosing one.
    */
-  function categoryOf(line) {
-    const match = /^\[[^\]]*\]\s*\[([A-Z_]+)\]/.exec(line);
-    return LOG_CATEGORIES[match && match[1]] || 'info';
-  }
-
-  function activeCategories() {
-    const on = new Set();
-    document.querySelectorAll('.log-cat').forEach((cb) => {
-      if (cb.checked) on.add(cb.value);
-    });
-    return on;
+  function formatTime(at) {
+    const d = new Date(at);
+    const pad = (n) => String(n).padStart(2, '0');
+    const h = d.getHours();
+    const rest = `${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+    if (!hour12) return `${pad(h)}:${rest}`;
+    return `${h % 12 === 0 ? 12 : h % 12}:${rest} ${h < 12 ? 'AM' : 'PM'}`;
   }
 
   /**
-   * Filtering happens here rather than in the app: the page already holds every
-   * line it has fetched, so a category can be switched on and off without
-   * another round trip, and no line is ever discarded on the way in.
+   * Renders from the entries the page already holds. Two consequences worth
+   * having: changing the filter or the clock format costs no round trip, and
+   * nothing is discarded on the way in, so a category can always be shown again.
    *
-   * `follow` keeps the view pinned to the newest line when it already was —
+   * `follow` keeps the view pinned to the newest entry when it already was —
    * scrolling back to read something must not be undone by the next poll.
    */
   function renderLogs(follow = true) {
-    const on = activeCategories();
-    const visible = logLines.filter((line) => on.has(categoryOf(line)));
-    const hidden = logLines.length - visible.length;
+    const wanted = els.logFilter.value;
+    const visible = wanted === 'all'
+      ? logEntries
+      : logEntries.filter((entry) => categoryOf(entry) === wanted);
 
-    const atBottom = els.logWindow.scrollHeight - els.logWindow.clientHeight
-      <= els.logWindow.scrollTop + 30;
+    const atBottom = els.log.scrollHeight - els.log.clientHeight <= els.log.scrollTop + 30;
 
-    if (visible.length) {
-      els.logWindow.textContent = visible.join('\n');
-    } else {
-      els.logWindow.textContent = logLines.length
+    els.log.textContent = '';
+
+    if (!visible.length) {
+      const li = document.createElement('li');
+      li.className = 'log-empty';
+      li.textContent = logEntries.length
         ? t('settings.logs.allFiltered', 'Every entry is hidden by the filter above.')
         : t('settings.logs.empty', 'No logs available yet.');
+      els.log.appendChild(li);
     }
 
-    els.hiddenCount.textContent = hidden
-      ? `${hidden} ${t('settings.logs.hidden', 'hidden')}`
-      : '';
+    visible.forEach((entry) => {
+      const li = document.createElement('li');
+      const tint = ROW_TINT[categoryOf(entry)];
+      if (tint) li.className = tint;
 
-    if (!follow || atBottom) els.logWindow.scrollTop = els.logWindow.scrollHeight;
+      const time = document.createElement('span');
+      time.className = 'log-time';
+      time.textContent = formatTime(entry.at);
+      li.appendChild(time);
+
+      const msg = document.createElement('span');
+      msg.className = 'log-msg';
+      msg.textContent = entry.message; // textContent, never innerHTML
+      li.appendChild(msg);
+
+      els.log.appendChild(li);
+    });
+
+    const suffix = t('settings.logs.shownSuffix', 'shown');
+    els.logCount.textContent = visible.length === logEntries.length
+      ? `${visible.length} ${suffix}`
+      : `${visible.length} / ${logEntries.length} ${suffix}`;
+
+    if (!follow || atBottom) els.log.scrollTop = els.log.scrollHeight;
   }
 
   function fetchLogs(reset = false) {
     if (reset) {
-      logsSeen = 0; logLines = [];
+      logsSeen = 0; logEntries = [];
     }
     Homey.api('GET', `/logs?since=${logsSeen}`, (err, res) => {
       if (err || !res) return;
 
       // The buffer was cleared or rotated behind us — start over.
       if (res.total < logsSeen) {
-        logsSeen = 0; logLines = [];
+        logsSeen = 0; logEntries = [];
       }
 
-      if (Array.isArray(res.lines) && res.lines.length) {
-        logLines = logLines.concat(res.lines).slice(-200);
+      // The app owns the clock choice, so a language change is picked up here
+      // without the page having to know Homey's language itself.
+      const nextHour12 = res.hour12 === true;
+      const clockChanged = nextHour12 !== hour12;
+      hour12 = nextHour12;
+
+      if (Array.isArray(res.entries) && res.entries.length) {
+        logEntries = logEntries.concat(res.entries).slice(-200);
         logsSeen = res.total;
         renderLogs();
-      } else if (!logLines.length) {
+      } else if (clockChanged || !logEntries.length) {
         renderLogs();
       }
 
@@ -309,6 +344,11 @@ function onHomeyReady(Homey) {
     els.clock24h.checked = (await getSetting('biostar_clock_24h', false)) === true;
     els.persistLogs.checked = (await getSetting('biostar_persist_logs', false)) === true;
 
+    const savedFilter = await getSetting('log_filter', 'all');
+    if ([...els.logFilter.options].some((o) => o.value === savedFilter)) {
+      els.logFilter.value = savedFilter;
+    }
+
     refreshStatus();
   }
 
@@ -346,9 +386,32 @@ function onHomeyReady(Homey) {
   });
 
   // Filtering is a view choice, so it is applied to what the page already has
-  // and jumps back to the newest line rather than leaving you mid-history.
-  document.querySelectorAll('.log-cat').forEach((cb) => {
-    cb.addEventListener('change', () => renderLogs(false));
+  // and jumps back to the newest entry rather than leaving you mid-history.
+  // Remembered so the choice survives closing the settings page.
+  // Deliberately not prefixed 'biostar_': the app restarts its BioStar client
+  // when a 'biostar_' setting it does not recognise changes, and a view
+  // preference must never cost the event stream a reconnect.
+  els.logFilter.addEventListener('change', () => {
+    renderLogs(false);
+    Homey.set('log_filter', els.logFilter.value, () => {});
+  });
+
+  // The two log options sit with the log and save on the spot: there is no Save
+  // button on this tab, and both take effect immediately.
+  els.clock24h.addEventListener('change', () => {
+    Homey.set('biostar_clock_24h', els.clock24h.checked, () => {});
+    // Forcing 24 hours can be applied right away. Releasing it cannot, because
+    // only the app knows which format Homey's language falls back to; that
+    // arrives with the next poll, which the fetch below brings forward.
+    if (els.clock24h.checked) {
+      hour12 = false;
+      renderLogs(false);
+    }
+    fetchLogs();
+  });
+
+  els.persistLogs.addEventListener('change', () => {
+    Homey.set('biostar_persist_logs', els.persistLogs.checked, () => {});
   });
 
   $('refresh-logs-button').addEventListener('click', () => fetchLogs(true));
@@ -439,8 +502,8 @@ function onHomeyReady(Homey) {
     Homey.set('biostar_reconnect_min_s', toNumber(els.reconnectMin));
     Homey.set('biostar_reconnect_max_s', toNumber(els.reconnectMax));
     Homey.set('biostar_log_usernames', els.logUserNames.checked);
-    Homey.set('biostar_clock_24h', els.clock24h.checked);
-    Homey.set('biostar_persist_logs', els.persistLogs.checked);
+    // The clock and persistence options live on the Live Logs tab and save
+    // themselves when toggled, so they are deliberately not written here.
 
     Homey.alert(t('settings.messages.savedAdvanced',
       'Advanced settings saved. Reconnecting with the new configuration.'));

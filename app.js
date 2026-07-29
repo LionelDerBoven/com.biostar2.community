@@ -6,6 +6,8 @@ const EventMapper = require('./lib/EventMapper');
 const LogStore = require('./lib/LogStore');
 
 const LOG_LIMIT = 100;
+// A runaway error message must not be able to grow the buffer without limit.
+const MAX_MESSAGE_LENGTH = 300;
 const RESTART_DEBOUNCE_MS = 500;
 const DISCONNECT_ALERT_MS = 120000;
 const LIST_CACHE_TTL_MS = 60000;
@@ -41,7 +43,7 @@ class BioStarApp extends Homey.App {
     this.hour12 = this.resolveHour12();
     this.startedAt = Date.now();
 
-    this.logStore = new LogStore({ errorLog: (msg) => this.error(msg) });
+    this.logStore = new LogStore({ errorLog: (msg) => this.logError(msg) });
     await this.initPersistentLog();
 
     this.addLog('Initializing BioStar 2 Community Homey App...', 'INFO');
@@ -66,7 +68,7 @@ class BioStarApp extends Homey.App {
         this.restartDebounceTimer = null;
         this.log('BioStar configuration updated in settings. Restarting client...');
         this.addLog('Configuration updated in settings. Restarting client...', 'INFO');
-        this.restartClient().catch((err) => this.error(`Restart failed: ${err.message}`));
+        this.restartClient().catch((err) => this.logError(`Restart failed: ${err.message}`));
       }, RESTART_DEBOUNCE_MS);
     });
 
@@ -223,7 +225,7 @@ class BioStarApp extends Homey.App {
     if (this.hour12 !== wasHour12) {
       this.addLog(`Activity log clock switched to ${this.hour12 ? '12' : '24'}-hour format.`, 'INFO');
     }
-    this.initPersistentLog().catch((err) => this.error(`Persistent log: ${err.message}`));
+    this.initPersistentLog().catch((err) => this.logError(`Persistent log: ${err.message}`));
   }
 
   /**
@@ -238,21 +240,6 @@ class BioStarApp extends Homey.App {
       language = this.homey.i18n.getLanguage() || 'en';
     } catch (_) { /* fall back to English */ }
     return HOUR12_LANGUAGES.has(String(language).slice(0, 2).toLowerCase());
-  }
-
-  /**
-   * Formats a wall clock time without Intl. Homey's Node build cannot be relied
-   * on to carry locale data for every language, and a log timestamp that
-   * silently falls back to a different format would be worse than no choice at
-   * all. Matches what toLocaleTimeString produced before: no leading zero on a
-   * 12-hour hour, a leading zero on a 24-hour one.
-   */
-  static formatClock(date, hour12) {
-    const pad = (n) => String(n).padStart(2, '0');
-    const h = date.getHours();
-    const rest = `${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
-    if (!hour12) return `${pad(h)}:${rest}`;
-    return `${h % 12 === 0 ? 12 : h % 12}:${rest} ${h < 12 ? 'AM' : 'PM'}`;
   }
 
   /**
@@ -291,10 +278,7 @@ class BioStarApp extends Homey.App {
       log: (...args) => {
         const msg = args.join(' ');
         this.log(msg);
-        // The client reports an access event on its normal log channel. Tagging
-        // it here rather than as plain INFO is what lets the log filter treat
-        // door activity as its own category.
-        this.addLog(msg, /\bEvent: \[/.test(msg) ? 'EVENT' : 'INFO');
+        this.addLog(msg, 'INFO');
       },
       errorLog: (...args) => {
         const msg = args.join(' ');
@@ -362,7 +346,7 @@ class BioStarApp extends Homey.App {
         if (this.connectionStatus === 'CONNECTED') return;
         this.homey.notifications.createNotification({
           excerpt: this.homey.__('notifications.connectionLost'),
-        }).catch((err) => this.error(`Notification failed: ${err.message}`));
+        }).catch((err) => this.logError(`Notification failed: ${err.message}`));
       }, DISCONNECT_ALERT_MS);
     }
   }
@@ -457,15 +441,32 @@ class BioStarApp extends Homey.App {
    */
   addLog(msg, type = 'INFO') {
     if (!this.logs) this.logs = [];
-    const timestamp = BioStarApp.formatClock(new Date(), this.hour12);
-    const cleanMsg = typeof msg === 'string' ? msg.replace(/\[BioStarClient\]\s*/, '') : JSON.stringify(msg);
-    const line = `[${timestamp}] [${type}] ${cleanMsg}`;
+    const text = typeof msg === 'string' ? msg.replace(/\[BioStarClient\]\s*/, '') : JSON.stringify(msg);
 
-    this.logs.push(line);
+    // Stored as data, not as a rendered line: the settings page formats the
+    // timestamp itself, so switching the clock format re-renders the whole log
+    // instead of only applying to entries written from then on.
+    const entry = {
+      at: Date.now(),
+      type,
+      message: text.length > MAX_MESSAGE_LENGTH ? `${text.slice(0, MAX_MESSAGE_LENGTH)}…` : text,
+    };
+
+    this.logs.push(entry);
     if (this.logs.length > LOG_LIMIT) this.logs.splice(0, this.logs.length - LOG_LIMIT);
 
-    // The buffer above is capped at LOG_LIMIT; the file keeps the older lines.
-    if (this.logStore) this.logStore.append(line);
+    // The buffer above is capped at LOG_LIMIT; the file keeps the older entries.
+    if (this.logStore) this.logStore.append(entry);
+  }
+
+  /**
+   * Reports a failure to Homey's own log and to the activity log. Several error
+   * paths used to call this.error() alone, which meant the log a person actually
+   * reads never mentioned them.
+   */
+  logError(msg) {
+    this.error(msg);
+    this.addLog(msg, 'ERROR');
   }
 
   /**
@@ -477,8 +478,10 @@ class BioStarApp extends Homey.App {
     const start = Number.isFinite(Number(since)) ? Math.max(0, Number(since)) : 0;
     return {
       total: logs.length,
-      lines: start >= logs.length ? [] : logs.slice(start),
+      entries: start >= logs.length ? [] : logs.slice(start),
       status: this.connectionStatus,
+      // The page renders the timestamps, so it needs to know which clock to use.
+      hour12: this.hour12,
       stats: this.getStats(),
     };
   }
@@ -563,10 +566,10 @@ class BioStarApp extends Homey.App {
    */
   handleBioStarEvent(evt) {
     // Flow tokens always carry the real identity; only the on-screen log is masked.
-    const who = this.logUserNames
-      ? `User: '${evt.user || 'N/A'}' (ID: ${evt.userId || 'N/A'})`
-      : 'User: <hidden>';
-    this.addLog(`[Flow Dispatch] ${evt.type} | ${who} | Device: '${evt.device}'`, 'EVENT');
+    const who = this.logUserNames ? (evt.user || 'N/A') : '<hidden>';
+    // AUTH, not INFO: an authentication is the one thing in this log a person
+    // actually comes looking for, so it has to be filterable on its own.
+    this.addLog(`${evt.type} | ${who} | Device: '${evt.device}' | ${evt.rawName}`, 'AUTH');
 
     const state = {
       user: evt.user,
@@ -593,20 +596,21 @@ class BioStarApp extends Homey.App {
       event_type: evt.type,
       event_name: evt.rawName,
       timestamp: evt.timestamp,
-    }, state).catch(this.error);
+    }, state).catch((err) => this.logError(`Flow trigger 'event_received' failed: ${err.message}`));
 
     if (evt.type === 'success') {
       this.triggerAuthSucceeded.trigger({
         ...userTokens, event_name: evt.rawName, timestamp: evt.timestamp,
-      }, state).catch(this.error);
+      }, state).catch((err) => this.logError(`Flow trigger 'auth_succeeded' failed: ${err.message}`));
     } else if (evt.type === 'access_denied') {
       this.triggerAccessDenied.trigger({
         ...userTokens, event_name: evt.rawName, timestamp: evt.timestamp,
-      }, state).catch(this.error);
+      }, state).catch((err) => this.logError(`Flow trigger 'access_denied' failed: ${err.message}`));
     } else if (evt.type === 'identification_fail') {
       this.triggerIdentificationFailed.trigger({
         device: evt.device, event_name: evt.rawName, timestamp: evt.timestamp,
-      }, { device: evt.device, deviceId: evt.deviceId }).catch(this.error);
+      }, { device: evt.device, deviceId: evt.deviceId })
+        .catch((err) => this.logError(`Flow trigger 'identification_failed' failed: ${err.message}`));
     }
   }
 

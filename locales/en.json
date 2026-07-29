@@ -72,12 +72,12 @@
       "hint": "On by default, because names are what make the log useful when a Flow misbehaves. Turn it off to keep identifiable access data out of the log view — entries then read \"User: <hidden>\". This only affects the log; Flow tags always carry the real user, and the log is in-memory only and cleared when the app restarts."
     },
     "clock": {
-      "label": "Always use a 24-hour clock in the activity log",
-      "hint": "Off by default: the clock follows Homey's language — 24 hours for Dutch and French, 12 hours with AM/PM for English. Tick this to use 24 hours whatever the language. Entries already in the log keep the format they were written with."
+      "label": "Show times on a 24-hour clock",
+      "hint": "Follows Homey's language by default — 24 hours for Dutch and French, 12 hours with AM/PM for English. Applies to the whole log, including entries already shown."
     },
     "persistLogs": {
-      "label": "Also keep the activity log on Homey's storage",
-      "hint": "Off by default. The log normally lives in memory only and is lost whenever the app restarts. Turn this on to write it to Homey's internal storage as well, so it survives a restart. At most 256 KB is kept and the oldest entries are dropped first; writes are batched so the flash memory is not worn down. Turning it off again deletes the stored file. Consider that this puts access-control history on disk."
+      "label": "Keep the log across app restarts",
+      "hint": "Writes the log to Homey's internal storage, at most 256 KB, oldest entries dropped first. Writes are batched to spare the flash memory. Turning it off deletes the stored file. Note that this puts access history on disk."
     },
     "timing": {
       "heartbeat": "Heartbeat interval (seconds)",
@@ -87,16 +87,17 @@
       "reconnectHint": "The delay grows by 50% after each failed attempt, up to this ceiling."
     },
     "logs": {
-      "title": "Real-time BioStar 2 and app activity log:",
-      "loading": "Loading logs...",
-      "empty": "No logs available yet.",
-      "filterLabel": "Show:",
-      "catEvents": "Access events",
+      "title": "What the app has been doing",
+      "intro": "Authentications at your readers, Flow actions, connection changes and any errors — newest last. Kept in memory only unless you turn on the option below, so it is normally cleared whenever the app restarts.",
+      "filterLabel": "Show",
+      "filterAll": "All entries",
+      "catEvents": "Authentication events",
       "catActions": "Flow actions",
       "catErrors": "Errors and warnings",
       "catInfo": "Info and connection",
-      "hidden": "hidden",
-      "allFiltered": "Every entry is hidden by the filter above."
+      "shownSuffix": "shown",
+      "allFiltered": "Nothing in this category yet.",
+      "empty": "Nothing logged yet."
     },
     "messages": {
       "testing": "Testing connection to BioStar 2...",

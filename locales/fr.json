@@ -72,12 +72,12 @@
       "hint": "Activé par défaut, car ce sont les noms qui rendent le journal utile quand un Flow se comporte mal. Désactivez-le pour garder les données d'accès identifiables hors du journal — les lignes affichent alors « User: <hidden> ». Cela n'affecte que le journal ; les étiquettes de Flow contiennent toujours l'utilisateur réel, et le journal réside uniquement en mémoire et est effacé au redémarrage de l'application."
     },
     "clock": {
-      "label": "Toujours utiliser une horloge de 24 heures dans le journal d'activité",
-      "hint": "Désactivé par défaut : l'horloge suit la langue de Homey — 24 heures pour le néerlandais et le français, 12 heures avec AM/PM pour l'anglais. Cochez cette case pour utiliser 24 heures quelle que soit la langue. Les entrées déjà présentes dans le journal conservent le format avec lequel elles ont été écrites."
+      "label": "Afficher les heures sur une horloge de 24 heures",
+      "hint": "Suit la langue de Homey par défaut — 24 heures pour le néerlandais et le français, 12 heures avec AM/PM pour l'anglais. S'applique à tout le journal, y compris aux entrées déjà affichées."
     },
     "persistLogs": {
-      "label": "Conserver aussi le journal d'activité sur le stockage de Homey",
-      "hint": "Désactivé par défaut. Le journal ne réside normalement qu'en mémoire et disparaît à chaque redémarrage de l'application. Activez cette option pour l'écrire également dans le stockage interne de Homey, afin qu'il survive à un redémarrage. 256 Ko au maximum sont conservés et les entrées les plus anciennes sont supprimées en premier ; les écritures sont regroupées afin de ménager la mémoire flash. La désactiver supprime le fichier enregistré. Notez que cela inscrit l'historique du contrôle d'accès sur le disque."
+      "label": "Conserver le journal après un redémarrage de l'application",
+      "hint": "Écrit le journal dans le stockage interne de Homey, 256 Ko au maximum, les entrées les plus anciennes étant supprimées en premier. Les écritures sont regroupées pour ménager la mémoire flash. La désactiver supprime le fichier. Notez que cela inscrit l'historique d'accès sur le disque."
     },
     "timing": {
       "heartbeat": "Intervalle du signal de présence (secondes)",
@@ -87,16 +87,17 @@
       "reconnectHint": "Le délai augmente de 50 % après chaque tentative échouée, jusqu'à ce plafond."
     },
     "logs": {
-      "title": "Journal d'activité en direct de BioStar 2 et de l'application :",
-      "loading": "Chargement du journal...",
-      "empty": "Aucune entrée de journal pour l'instant.",
-      "filterLabel": "Afficher :",
-      "catEvents": "Événements d'accès",
+      "title": "Ce que l'application a fait",
+      "intro": "Les authentifications sur vos lecteurs, les actions de Flow, les changements de connexion et les éventuelles erreurs — les plus récentes en bas. Conservé uniquement en mémoire sauf si vous activez l'option ci-dessous, donc normalement effacé à chaque redémarrage de l'application.",
+      "filterLabel": "Afficher",
+      "filterAll": "Toutes les entrées",
+      "catEvents": "Événements d'authentification",
       "catActions": "Actions de Flow",
       "catErrors": "Erreurs et avertissements",
       "catInfo": "Infos et connexion",
-      "hidden": "masqué(s)",
-      "allFiltered": "Toutes les entrées sont masquées par le filtre ci-dessus."
+      "shownSuffix": "affichées",
+      "allFiltered": "Rien dans cette catégorie pour le moment.",
+      "empty": "Rien de consigné pour le moment."
     },
     "messages": {
       "testing": "Test de la connexion à BioStar 2...",

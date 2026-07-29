@@ -72,12 +72,12 @@
       "hint": "Standaard aan, omdat namen het logboek bruikbaar maken wanneer een Flow zich vreemd gedraagt. Zet dit uit om identificeerbare toegangsgegevens uit het logboek te houden — regels tonen dan \"User: <hidden>\". Dit heeft alleen effect op het logboek; Flow-tags bevatten altijd de echte gebruiker, en het logboek staat alleen in het geheugen en wordt gewist wanneer de app herstart."
     },
     "clock": {
-      "label": "Altijd een 24-uursklok in het activiteitenlogboek gebruiken",
-      "hint": "Standaard uit: de klok volgt de taal van Homey — 24 uur voor Nederlands en Frans, 12 uur met AM/PM voor Engels. Vink dit aan om altijd 24 uur te gebruiken, ongeacht de taal. Regels die al in het logboek staan behouden de notatie waarmee ze zijn geschreven."
+      "label": "Tijden tonen op een 24-uursklok",
+      "hint": "Volgt standaard de taal van Homey — 24 uur voor Nederlands en Frans, 12 uur met AM/PM voor Engels. Geldt voor het hele logboek, ook voor regels die al te zien zijn."
     },
     "persistLogs": {
-      "label": "Het activiteitenlogboek ook op de opslag van Homey bewaren",
-      "hint": "Standaard uit. Het logboek staat normaal alleen in het geheugen en gaat verloren zodra de app herstart. Zet dit aan om het ook naar de interne opslag van Homey te schrijven, zodat het een herstart overleeft. Er wordt maximaal 256 KB bewaard en de oudste regels verdwijnen het eerst; schrijfacties worden gebundeld zodat het flashgeheugen niet slijt. Weer uitzetten verwijdert het opgeslagen bestand. Houd er rekening mee dat hiermee toegangsgeschiedenis op schijf terechtkomt."
+      "label": "Logboek bewaren na een herstart van de app",
+      "hint": "Schrijft het logboek naar de interne opslag van Homey, maximaal 256 KB, oudste regels verdwijnen het eerst. Schrijfacties worden gebundeld om het flashgeheugen te sparen. Uitzetten verwijdert het opgeslagen bestand. Houd er rekening mee dat hiermee toegangsgeschiedenis op schijf komt."
     },
     "timing": {
       "heartbeat": "Heartbeat-interval (seconden)",
@@ -87,16 +87,17 @@
       "reconnectHint": "De wachttijd groeit na elke mislukte poging met 50%, tot aan dit maximum."
     },
     "logs": {
-      "title": "Live logboek van BioStar 2 en de app:",
-      "loading": "Logboek laden...",
-      "empty": "Nog geen logregels beschikbaar.",
-      "filterLabel": "Tonen:",
-      "catEvents": "Toegangsgebeurtenissen",
+      "title": "Wat de app heeft gedaan",
+      "intro": "Authenticaties aan je lezers, Flow-acties, verbindingswijzigingen en eventuele fouten — nieuwste onderaan. Wordt alleen in het geheugen bewaard tenzij je de optie hieronder aanzet, dus normaal wordt het gewist zodra de app herstart.",
+      "filterLabel": "Tonen",
+      "filterAll": "Alle regels",
+      "catEvents": "Authenticatiegebeurtenissen",
       "catActions": "Flow-acties",
       "catErrors": "Fouten en waarschuwingen",
       "catInfo": "Info en verbinding",
-      "hidden": "verborgen",
-      "allFiltered": "Alle regels zijn verborgen door het filter hierboven."
+      "shownSuffix": "getoond",
+      "allFiltered": "Nog niets in deze categorie.",
+      "empty": "Nog niets gelogd."
     },
     "messages": {
       "testing": "Verbinding met BioStar 2 testen...",
