@@ -12,7 +12,7 @@
   },
   "hint": {
     "en": "Momentarily releases a door in BioStar 2, the same as pressing Open Door in the BioStar 2 console. The account configured in this app needs the Door control permission in BioStar 2, otherwise the card fails with a permission error.",
-    "nl": "Ontgrendelt een deur kortstondig in BioStar 2, net zoals wanneer u in de BioStar 2-console op Open Door drukt. Het account dat in deze app is ingesteld heeft in BioStar 2 de rechten voor deurbediening nodig, anders mislukt de kaart met een rechtenfout.",
+    "nl": "Ontgrendelt een deur kortstondig in BioStar 2, net zoals wanneer je in de BioStar 2-console op Open Door drukt. Het account dat in deze app is ingesteld heeft in BioStar 2 de rechten voor deurbediening nodig, anders mislukt de kaart met een rechtenfout.",
     "fr": "Déverrouille brièvement une porte dans BioStar 2, comme si vous appuyiez sur Open Door dans la console BioStar 2. Le compte configuré dans cette application doit disposer de l'autorisation de commande des portes dans BioStar 2, sinon la carte échoue avec une erreur d'autorisation."
   },
   "args": [

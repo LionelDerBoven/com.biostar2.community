@@ -746,7 +746,7 @@
         },
         "hint": {
           "en": "Momentarily releases a door in BioStar 2, the same as pressing Open Door in the BioStar 2 console. The account configured in this app needs the Door control permission in BioStar 2, otherwise the card fails with a permission error.",
-          "nl": "Ontgrendelt een deur kortstondig in BioStar 2, net zoals wanneer u in de BioStar 2-console op Open Door drukt. Het account dat in deze app is ingesteld heeft in BioStar 2 de rechten voor deurbediening nodig, anders mislukt de kaart met een rechtenfout.",
+          "nl": "Ontgrendelt een deur kortstondig in BioStar 2, net zoals wanneer je in de BioStar 2-console op Open Door drukt. Het account dat in deze app is ingesteld heeft in BioStar 2 de rechten voor deurbediening nodig, anders mislukt de kaart met een rechtenfout.",
           "fr": "Déverrouille brièvement une porte dans BioStar 2, comme si vous appuyiez sur Open Door dans la console BioStar 2. Le compte configuré dans cette application doit disposer de l'autorisation de commande des portes dans BioStar 2, sinon la carte échoue avec une erreur d'autorisation."
         },
         "args": [
@@ -776,7 +776,7 @@
         "hint": {
           "en": "Drops the current BioStar 2 session and reconnects: the app logs in again, reopens the connection and re-subscribes to the event stream. Handy after a BioStar 2 server restart, although the app already reconnects on its own.",
           "nl": "Verbreekt de huidige BioStar 2-sessie en maakt opnieuw verbinding: de app logt opnieuw in, heropent de verbinding en schrijft zich weer in op de gebeurtenisstroom. Handig na een herstart van de BioStar 2-server, al maakt de app ook uit zichzelf opnieuw verbinding.",
-          "fr": "Interrompt la session BioStar 2 en cours et se reconnecte : l'application se reconnecte, rouvre la connexion et se réabonne au flux d'événements. Pratique après un redémarrage du serveur BioStar 2, même si l'application se reconnecte déjà d'elle-même."
+          "fr": "Interrompt la session BioStar 2 en cours et se reconnecte : l'application s'authentifie à nouveau, rouvre la connexion et se réabonne au flux d'événements. Pratique après un redémarrage du serveur BioStar 2, même si l'application se reconnecte déjà d'elle-même."
         }
       }
     ]

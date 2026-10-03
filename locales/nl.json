@@ -43,7 +43,7 @@
       "filtered": "Gefilterde gebeurtenissen",
       "reconnects": "Herverbindingen",
       "cached": "Gebruikers in cache",
-      "uptime": "Verbonden sinds",
+      "uptime": "Verbindingsduur",
       "last": "Laatste gebeurtenis"
     },
     "permWarning": {
@@ -73,7 +73,7 @@
     },
     "eventTypes": {
       "label": "Waargenomen gebeurtenistypes",
-      "hint": "Elke gebeurtenisnaam die BioStar 2 heeft verstuurd sinds de app is gestart, meest voorkomende eerst. Vink er een aan om die te negeren nog vóór enige verwerking — dat is wat de app rustig houdt wanneer er niets relevants gebeurt. Aangevinkte rijen bereiken uw Flows nooit.",
+      "hint": "Elke gebeurtenisnaam die BioStar 2 heeft verstuurd sinds de app is gestart, meest voorkomende eerst. Vink er een aan om die te negeren nog vóór enige verwerking — dat is wat de app rustig houdt wanneer er niets relevants gebeurt. Aangevinkte rijen bereiken je Flows nooit.",
       "colName": "Gebeurtenisnaam",
       "colCount": "Aantal",
       "colLast": "Laatst gezien",
