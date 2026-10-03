@@ -29,16 +29,6 @@ Settings when the account it is using lacks the permissions it needs.
 Give the app its own BioStar 2 account rather than reusing an administrator
 login — it makes the access log readable and lets you revoke it independently.
 
-## Installing
-
-Homey CLI, from this folder:
-
-```bash
-npm install
-homey app install     # install onto your Homey Pro
-homey app run         # or run it live, with the log in your terminal
-```
-
 ## Configuration
 
 Everything is configured in the app's Settings screen in the Homey app.
@@ -169,14 +159,32 @@ describe which system this app interoperates with, which is nominative fair use.
 No Suprema artwork, branding, logo, icon or other asset is included or reproduced
 in this app.
 
-All artwork in this app is original work created for it, generated from a script
-kept with the project sources.
+All artwork in this app is original work created for it.
+
+## Development
+
+```bash
+npm install
+npm run lint
+homey app validate --level publish
+homey app install                 # install onto your Homey Pro
+homey app run                     # or run it live, with the log in your terminal
+```
+
+- `lib/BiostarClient.js`, `lib/EventMapper.js`, `app.js` — see *How it works* above.
+- `lib/LogStore.js` — the activity log shown in Settings.
+- `settings/` — the settings page; `locales/` — its strings and the runtime messages.
+- `README.txt` / `README.nl.txt` / `README.fr.txt` — the App Store text.
 
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) and the
 [Code of Conduct](CODE_OF_CONDUCT.md).
 
+## Credits
+
+Built by LDB Technology, with [Claude](https://claude.com/claude-code) (Anthropic) as co-author.
+
 ## License
 
-[GPL-3.0](LICENSE) © LDB Technology
+[GPL-3.0-or-later](LICENSE) © LDB Technology

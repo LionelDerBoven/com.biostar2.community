@@ -9,14 +9,14 @@
     "local"
   ],
   "name": {
-    "en": "Biostar 2 Community",
-    "nl": "Biostar 2 Community",
-    "fr": "Biostar 2 Community"
+    "en": "BioStar 2 Community",
+    "nl": "BioStar 2 Community",
+    "fr": "BioStar 2 Community"
   },
   "description": {
-    "en": "Connects Suprema BioStar 2 access control events to Homey Pro. Unofficial community app, not affiliated with or endorsed by Suprema Inc.",
-    "nl": "Verbindt toegangscontrolegebeurtenissen van Suprema BioStar 2 met Homey Pro. Onofficiële community-app, niet verbonden met of goedgekeurd door Suprema Inc.",
-    "fr": "Relie les événements de contrôle d'accès Suprema BioStar 2 à Homey Pro. Application communautaire non officielle, sans lien avec Suprema Inc. ni approuvée par cette société."
+    "en": "Let every badge and fingerprint at your door start a Flow",
+    "nl": "Laat elke badge en vingerafdruk aan je deur een Flow starten",
+    "fr": "Chaque badge ou empreinte à votre porte peut lancer un Flow"
   },
   "brandColor": "#0E74BE",
   "category": [
@@ -31,6 +31,11 @@
   "author": {
     "name": "LDB Technology",
     "email": "homey@ldbtechnology.be"
+  },
+  "support": "mailto:support@ldbtechnology.be",
+  "source": "https://github.com/LionelDerBoven/com.biostar2.community",
+  "bugs": {
+    "url": "https://github.com/LionelDerBoven/com.biostar2.community/issues"
   },
   "api": {
     "testConnection": {

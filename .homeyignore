@@ -1,0 +1,9 @@
+# Kept out of the package that gets installed on the Homey. None of this is used at
+# runtime, and the Homey has better uses for the storage. The App Store reads
+# README*.txt; README.md and the other Markdown files are for GitHub only.
+/README.md
+/CONTRIBUTING.md
+/CODE_OF_CONDUCT.md
+/package-lock.json
+/tsconfig.json
+/.eslintrc.json
