@@ -18,6 +18,11 @@
   "args": [
     {
       "name": "user_group",
+      "title": {
+        "en": "User group",
+        "nl": "Gebruikersgroep",
+        "fr": "Groupe d'utilisateurs"
+      },
       "type": "text",
       "placeholder": {
         "en": "All Users, Administrators...",

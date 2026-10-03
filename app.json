@@ -601,6 +601,11 @@
         "args": [
           {
             "name": "department",
+            "title": {
+              "en": "Department",
+              "nl": "Afdeling",
+              "fr": "Département"
+            },
             "type": "text",
             "placeholder": {
               "en": "IT, Management, Cleaning...",
@@ -630,6 +635,11 @@
         "args": [
           {
             "name": "device",
+            "title": {
+              "en": "Reader",
+              "nl": "Lezer",
+              "fr": "Lecteur"
+            },
             "type": "text",
             "placeholder": {
               "en": "Main Entrance, Side Door...",
@@ -672,6 +682,11 @@
         "args": [
           {
             "name": "user_group",
+            "title": {
+              "en": "User group",
+              "nl": "Gebruikersgroep",
+              "fr": "Groupe d'utilisateurs"
+            },
             "type": "text",
             "placeholder": {
               "en": "All Users, Administrators...",
@@ -701,6 +716,11 @@
         "args": [
           {
             "name": "user",
+            "title": {
+              "en": "User",
+              "nl": "Gebruiker",
+              "fr": "Utilisateur"
+            },
             "type": "text",
             "placeholder": {
               "en": "John Doe",

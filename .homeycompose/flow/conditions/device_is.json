@@ -18,6 +18,11 @@
   "args": [
     {
       "name": "device",
+      "title": {
+        "en": "Reader",
+        "nl": "Lezer",
+        "fr": "Lecteur"
+      },
       "type": "text",
       "placeholder": {
         "en": "Main Entrance, Side Door...",

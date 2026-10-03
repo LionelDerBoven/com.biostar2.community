@@ -18,6 +18,11 @@
   "args": [
     {
       "name": "user",
+      "title": {
+        "en": "User",
+        "nl": "Gebruiker",
+        "fr": "Utilisateur"
+      },
       "type": "text",
       "placeholder": {
         "en": "John Doe",
