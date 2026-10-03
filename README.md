@@ -170,7 +170,8 @@ describe which system this app interoperates with, which is nominative fair use.
 No Suprema artwork, branding, logo, icon or other asset is included or reproduced
 in this app.
 
-All artwork in this app is original work created for it.
+The app icon is original work created for this app. The store photo is a free
+stock photo used under the Unsplash License.
 
 ## Development
 

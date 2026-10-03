@@ -1,7 +1,7 @@
 {
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "com.biostar2.community",
-  "version": "1.4.2",
+  "version": "1.5.0",
   "compatibility": ">=12.4.0",
   "sdk": 3,
   "runtime": "nodejs",
@@ -24,9 +24,9 @@
   ],
   "permissions": [],
   "images": {
-    "small": "assets/images/small.png",
-    "large": "assets/images/large.png",
-    "xlarge": "assets/images/xlarge.png"
+    "small": "assets/images/small.jpg",
+    "large": "assets/images/large.jpg",
+    "xlarge": "assets/images/xlarge.jpg"
   },
   "author": {
     "name": "LDB Technology",
@@ -594,9 +594,9 @@
           "fr": "L'utilisateur appartient au département [[department]]"
         },
         "hint": {
-          "en": "Checks the department of the person in the event that started this Flow, as set on their BioStar 2 user profile. Matching ignores upper and lower case and accepts a part of the department name. Only works in Flows started by a BioStar 2 trigger card that carries user information; elsewhere it is always false.",
-          "nl": "Controleert de afdeling van de persoon in de gebeurtenis die deze Flow startte, zoals ingesteld in zijn BioStar 2-gebruikersprofiel. Bij het vergelijken worden hoofd- en kleine letters genegeerd en volstaat een deel van de afdelingsnaam. Werkt alleen in Flows die zijn gestart door een BioStar 2-triggerkaart met gebruikersinformatie; elders is dit altijd onwaar.",
-          "fr": "Vérifie le département de la personne dans l'événement qui a démarré ce Flow, tel qu'il figure sur son profil utilisateur BioStar 2. La comparaison ignore la casse et accepte une partie du nom du département. Ne fonctionne que dans les Flows démarrés par une carte de déclenchement BioStar 2 portant des informations utilisateur ; ailleurs, le résultat est toujours faux."
+          "en": "Checks the department of the person in the event that started this Flow, as set on their BioStar 2 user profile. Matching ignores upper and lower case and surrounding spaces, but the full department name must match. Only works in Flows started by a BioStar 2 trigger card that carries user information; elsewhere it is always false.",
+          "nl": "Controleert de afdeling van de persoon in de gebeurtenis die deze Flow startte, zoals ingesteld in zijn BioStar 2-gebruikersprofiel. Bij het vergelijken worden hoofd- en kleine letters en spaties aan het begin en einde genegeerd, maar de volledige afdelingsnaam moet overeenkomen. Werkt alleen in Flows die zijn gestart door een BioStar 2-triggerkaart met gebruikersinformatie; elders is dit altijd onwaar.",
+          "fr": "Vérifie le département de la personne dans l'événement qui a démarré ce Flow, tel qu'il figure sur son profil utilisateur BioStar 2. La comparaison ignore la casse et les espaces en début et en fin, mais le nom complet du département doit correspondre. Ne fonctionne que dans les Flows démarrés par une carte de déclenchement BioStar 2 portant des informations utilisateur ; ailleurs, le résultat est toujours faux."
         },
         "args": [
           {
@@ -623,9 +623,9 @@
           "fr": "L'appareil est [[device]]"
         },
         "hint": {
-          "en": "Checks which reader or door the event that started this Flow came from. Matching ignores upper and lower case and accepts a part of the name, so 'entrance' also matches 'Main Entrance'. Only works in Flows started by a BioStar 2 trigger card; elsewhere it is always false.",
-          "nl": "Controleert van welke lezer of deur de gebeurtenis kwam die deze Flow startte. Bij het vergelijken worden hoofd- en kleine letters genegeerd en volstaat een deel van de naam, dus 'ingang' komt ook overeen met 'Hoofdingang'. Werkt alleen in Flows die door een BioStar 2-triggerkaart zijn gestart; elders is dit altijd onwaar.",
-          "fr": "Vérifie de quel lecteur ou de quelle porte provient l'événement qui a démarré ce Flow. La comparaison ignore la casse et accepte une partie du nom : « entrée » correspond donc aussi à « Entrée principale ». Ne fonctionne que dans les Flows démarrés par une carte de déclenchement BioStar 2 ; ailleurs, le résultat est toujours faux."
+          "en": "Checks which reader or door the event that started this Flow came from. Matching ignores upper and lower case and surrounding spaces, but the full name must match: 'main entrance' matches 'Main Entrance', 'entrance' does not. Only works in Flows started by a BioStar 2 trigger card; elsewhere it is always false.",
+          "nl": "Controleert van welke lezer of deur de gebeurtenis kwam die deze Flow startte. Bij het vergelijken worden hoofd- en kleine letters en spaties aan het begin en einde genegeerd, maar de volledige naam moet overeenkomen: 'hoofdingang' komt overeen met 'Hoofdingang', 'ingang' niet. Werkt alleen in Flows die door een BioStar 2-triggerkaart zijn gestart; elders is dit altijd onwaar.",
+          "fr": "Vérifie de quel lecteur ou de quelle porte provient l'événement qui a démarré ce Flow. La comparaison ignore la casse et les espaces en début et en fin, mais le nom complet doit correspondre : « entrée principale » correspond à « Entrée principale », « entrée » non. Ne fonctionne que dans les Flows démarrés par une carte de déclenchement BioStar 2 ; ailleurs, le résultat est toujours faux."
         },
         "args": [
           {
@@ -647,9 +647,9 @@
           "fr": "La connexion BioStar 2 est en ligne"
         },
         "hint": {
-          "en": "Checks whether the app currently has a live connection to the BioStar 2 server and is receiving events. Use it to guard Flows that depend on live access events, or to be warned when the connection drops.",
-          "nl": "Controleert of de app op dit moment een actieve verbinding met de BioStar 2-server heeft en gebeurtenissen ontvangt. Gebruik dit om Flows te beveiligen die afhangen van live toegangsgebeurtenissen, of om gewaarschuwd te worden wanneer de verbinding wegvalt.",
-          "fr": "Vérifie si l'application dispose actuellement d'une connexion active au serveur BioStar 2 et reçoit des événements. Utilisez-la pour protéger les Flows qui dépendent d'événements d'accès en direct, ou pour être averti lorsque la connexion tombe."
+          "en": "Checks whether the app currently has a live connection to the BioStar 2 server and is receiving events. Use it to guard Flows that depend on live access events. It is only checked when the Flow runs, so it cannot notice a dropped connection by itself; the app sends a Homey notification for that when the connection stays down for two minutes.",
+          "nl": "Controleert of de app op dit moment een actieve verbinding met de BioStar 2-server heeft en gebeurtenissen ontvangt. Gebruik dit om Flows te beveiligen die afhangen van live toegangsgebeurtenissen. Dit wordt alleen gecontroleerd wanneer de Flow loopt en merkt een weggevallen verbinding dus niet zelf op; daarvoor stuurt de app een Homey-melding wanneer de verbinding twee minuten weg blijft.",
+          "fr": "Vérifie si l'application dispose actuellement d'une connexion active au serveur BioStar 2 et reçoit des événements. Utilisez-la pour protéger les Flows qui dépendent d'événements d'accès en direct. Elle n'est vérifiée qu'à l'exécution du Flow et ne détecte donc pas seule une coupure ; pour cela, l'application envoie une notification Homey lorsque la connexion reste coupée pendant deux minutes."
         }
       },
       {
@@ -665,9 +665,9 @@
           "fr": "L'utilisateur appartient au groupe [[user_group]]"
         },
         "hint": {
-          "en": "Checks the BioStar 2 user group of the person in the event that started this Flow. Matching ignores upper and lower case and accepts a part of the group name. Only works in Flows started by a BioStar 2 trigger card that carries user information; elsewhere it is always false.",
-          "nl": "Controleert de BioStar 2-gebruikersgroep van de persoon in de gebeurtenis die deze Flow startte. Bij het vergelijken worden hoofd- en kleine letters genegeerd en volstaat een deel van de groepsnaam. Werkt alleen in Flows die zijn gestart door een BioStar 2-triggerkaart met gebruikersinformatie; elders is dit altijd onwaar.",
-          "fr": "Vérifie le groupe d'utilisateurs BioStar 2 de la personne dans l'événement qui a démarré ce Flow. La comparaison ignore la casse et accepte une partie du nom du groupe. Ne fonctionne que dans les Flows démarrés par une carte de déclenchement BioStar 2 portant des informations utilisateur ; ailleurs, le résultat est toujours faux."
+          "en": "Checks the BioStar 2 user group of the person in the event that started this Flow. Matching ignores upper and lower case and surrounding spaces, but the full group name must match. Only works in Flows started by a BioStar 2 trigger card that carries user information; elsewhere it is always false.",
+          "nl": "Controleert de BioStar 2-gebruikersgroep van de persoon in de gebeurtenis die deze Flow startte. Bij het vergelijken worden hoofd- en kleine letters en spaties aan het begin en einde genegeerd, maar de volledige groepsnaam moet overeenkomen. Werkt alleen in Flows die zijn gestart door een BioStar 2-triggerkaart met gebruikersinformatie; elders is dit altijd onwaar.",
+          "fr": "Vérifie le groupe d'utilisateurs BioStar 2 de la personne dans l'événement qui a démarré ce Flow. La comparaison ignore la casse et les espaces en début et en fin, mais le nom complet du groupe doit correspondre. Ne fonctionne que dans les Flows démarrés par une carte de déclenchement BioStar 2 portant des informations utilisateur ; ailleurs, le résultat est toujours faux."
         },
         "args": [
           {
@@ -694,9 +694,9 @@
           "fr": "L'utilisateur est [[user]]"
         },
         "hint": {
-          "en": "Checks the name of the person in the BioStar 2 event that started this Flow. Matching ignores upper and lower case and accepts a part of the name, so 'john' also matches 'John Doe'. Only works in Flows started by a BioStar 2 trigger card; elsewhere it is always false.",
-          "nl": "Controleert de naam van de persoon in de BioStar 2-gebeurtenis die deze Flow startte. Bij het vergelijken worden hoofd- en kleine letters genegeerd en volstaat een deel van de naam, dus 'jan' komt ook overeen met 'Jan Jansen'. Werkt alleen in Flows die door een BioStar 2-triggerkaart zijn gestart; elders is dit altijd onwaar.",
-          "fr": "Vérifie le nom de la personne dans l'événement BioStar 2 qui a démarré ce Flow. La comparaison ignore la casse et accepte une partie du nom : « jean » correspond donc aussi à « Jean Dupont ». Ne fonctionne que dans les Flows démarrés par une carte de déclenchement BioStar 2 ; ailleurs, le résultat est toujours faux."
+          "en": "Checks the name of the person in the BioStar 2 event that started this Flow. Matching ignores upper and lower case and surrounding spaces, but the full name must match: 'john doe' matches 'John Doe', 'john' does not. Only works in Flows started by a BioStar 2 trigger card; elsewhere it is always false.",
+          "nl": "Controleert de naam van de persoon in de BioStar 2-gebeurtenis die deze Flow startte. Bij het vergelijken worden hoofd- en kleine letters en spaties aan het begin en einde genegeerd, maar de volledige naam moet overeenkomen: 'jan jansen' komt overeen met 'Jan Jansen', 'jan' niet. Werkt alleen in Flows die door een BioStar 2-triggerkaart zijn gestart; elders is dit altijd onwaar.",
+          "fr": "Vérifie le nom de la personne dans l'événement BioStar 2 qui a démarré ce Flow. La comparaison ignore la casse et les espaces en début et en fin, mais le nom complet doit correspondre : « jean dupont » correspond à « Jean Dupont », « jean » non. Ne fonctionne que dans les Flows démarrés par une carte de déclenchement BioStar 2 ; ailleurs, le résultat est toujours faux."
         },
         "args": [
           {
