@@ -1,7 +1,25 @@
 {
   "errors": {
     "noDoorSelected": "Aucune porte sélectionnée.",
-    "incompleteCredentials": "L'URL de l'hôte, le nom d'utilisateur et le mot de passe doivent tous être renseignés."
+    "incompleteCredentials": "L'URL de l'hôte, le nom d'utilisateur et le mot de passe doivent tous être renseignés.",
+    "passwordRequired": "Saisissez le mot de passe pour tester un hôte ou un utilisateur différent de celui enregistré. Le mot de passe enregistré n'est envoyé qu'à l'hôte enregistré.",
+    "invalidHost": "L'URL de l'hôte BioStar 2 doit commencer par http:// ou https://. L'application ne se connecte pas tant que ce n'est pas corrigé.",
+    "client": {
+      "loginRequestFailed": "Échec de la requête de connexion : __reason__",
+      "loginHttp": "Échec de la connexion avec HTTP __status__",
+      "loginHttpDetail": "Échec de la connexion avec HTTP __status__ : __detail__",
+      "noSessionHeader": "BioStar 2 n'a pas renvoyé d'en-tête bs-session-id.",
+      "requestTimeout": "Délai de la requête dépassé après __ms__ ms",
+      "responseTooLarge": "La réponse de BioStar 2 était trop volumineuse.",
+      "responseIncomplete": "La connexion a été fermée avant que la réponse de BioStar 2 soit complète.",
+      "devicesDenied": "Lecture des appareils refusée. Accordez à ce compte l'autorisation de lecture des appareils dans BioStar 2.",
+      "devicesHttp": "Impossible de lire les appareils (HTTP __status__).",
+      "doorsDenied": "Lecture des portes refusée. Accordez à ce compte l'autorisation de lecture des portes dans BioStar 2.",
+      "doorsHttp": "Impossible de lire les portes (HTTP __status__).",
+      "openDoorDenied": "Ouverture de la porte refusée. Ce compte peut lire les portes mais pas les commander. Dans BioStar 2, ouvrez le jeu d'autorisations d'opérateur attribué à ce compte et activez Monitoring au niveau Modification/Lecture.",
+      "openDoorHttp": "Échec de l'ouverture de la porte (HTTP __status__).",
+      "openDoorHttpDetail": "Échec de l'ouverture de la porte (HTTP __status__) : __detail__"
+    }
   },
   "notifications": {
     "connectionLost": "BioStar 2 : connexion perdue. Les événements d'accès n'arrivent plus à Homey."
@@ -17,7 +35,8 @@
       "UNKNOWN": "INCONNU",
       "CONNECTED": "CONNECTÉ",
       "DISCONNECTED": "DÉCONNECTÉ",
-      "CONNECTING": "CONNEXION"
+      "CONNECTING": "CONNEXION",
+      "CONFIG_ERROR": "ERREUR DE CONFIGURATION"
     },
     "stats": {
       "forwarded": "Événements transmis",
@@ -69,7 +88,7 @@
     },
     "logUserNames": {
       "label": "Afficher les noms d'utilisateur dans le journal d'activité",
-      "hint": "Activé par défaut, car ce sont les noms qui rendent le journal utile quand un Flow se comporte mal. Désactivez-le pour garder les données d'accès identifiables hors du journal — les lignes affichent alors « User: <hidden> ». Cela n'affecte que le journal ; les étiquettes de Flow contiennent toujours l'utilisateur réel, et le journal réside uniquement en mémoire et est effacé au redémarrage de l'application."
+      "hint": "Activé par défaut, car ce sont les noms qui rendent le journal utile quand un Flow se comporte mal. Désactivez-le pour garder les données d'accès identifiables hors du journal — les lignes affichent alors « User: <hidden> ». Cela n'affecte que le journal ; les étiquettes de Flow contiennent toujours l'utilisateur réel. Le journal est conservé en mémoire et effacé au redémarrage de l'application, sauf si vous activez « Conserver le journal après un redémarrage de l'application » dans l'onglet Journal en direct."
     },
     "clock": {
       "label": "Afficher les heures sur une horloge de 24 heures",
@@ -109,6 +128,21 @@
       "saved": "Paramètres BioStar 2 enregistrés.",
       "savedAdvanced": "Paramètres avancés enregistrés. Reconnexion avec la nouvelle configuration.",
       "loadFailed": "Impossible de charger les paramètres enregistrés."
+    },
+    "time": {
+      "ago": "il y a __duration__"
     }
+  },
+  "flow": {
+    "anyReader": "N'importe quel lecteur",
+    "deviceFallback": "Appareil __id__",
+    "doorFallback": "Porte __id__"
+  },
+  "test": {
+    "users": "Utilisateurs",
+    "doors": "Portes",
+    "checkOk": "__label__ : OK",
+    "checkUnavailable": "__label__ : indisponible",
+    "connected": "Connecté à BioStar 2 (session ...__session__). __checks__"
   }
 }

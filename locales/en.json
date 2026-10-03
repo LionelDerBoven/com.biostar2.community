@@ -1,7 +1,25 @@
 {
   "errors": {
     "noDoorSelected": "No door selected.",
-    "incompleteCredentials": "Host URL, username and password must all be provided."
+    "incompleteCredentials": "Host URL, username and password must all be provided.",
+    "passwordRequired": "Enter the password to test a host or user other than the saved one. The stored password is only sent to the saved host.",
+    "invalidHost": "The BioStar 2 Host URL must start with http:// or https://. The app does not connect until this is fixed.",
+    "client": {
+      "loginRequestFailed": "Login request failed: __reason__",
+      "loginHttp": "Login failed with HTTP __status__",
+      "loginHttpDetail": "Login failed with HTTP __status__: __detail__",
+      "noSessionHeader": "BioStar 2 did not return a bs-session-id header.",
+      "requestTimeout": "Request timed out after __ms__ ms",
+      "responseTooLarge": "The BioStar 2 response was too large.",
+      "responseIncomplete": "The connection closed before the BioStar 2 response was complete.",
+      "devicesDenied": "Permission denied reading devices. Grant this account the Device read permission in BioStar 2.",
+      "devicesHttp": "Could not read devices (HTTP __status__).",
+      "doorsDenied": "Permission denied reading doors. Grant this account the Door read permission in BioStar 2.",
+      "doorsHttp": "Could not read doors (HTTP __status__).",
+      "openDoorDenied": "Permission denied opening the door. This account can read doors but not control them. In BioStar 2, open the operator permission set assigned to this account and enable Monitoring at Edit/Read level.",
+      "openDoorHttp": "Open door failed (HTTP __status__).",
+      "openDoorHttpDetail": "Open door failed (HTTP __status__): __detail__"
+    }
   },
   "notifications": {
     "connectionLost": "BioStar 2: connection lost. Access events are not reaching Homey."
@@ -17,7 +35,8 @@
       "UNKNOWN": "UNKNOWN",
       "CONNECTED": "CONNECTED",
       "DISCONNECTED": "DISCONNECTED",
-      "CONNECTING": "CONNECTING"
+      "CONNECTING": "CONNECTING",
+      "CONFIG_ERROR": "CONFIGURATION ERROR"
     },
     "stats": {
       "forwarded": "Events forwarded",
@@ -69,7 +88,7 @@
     },
     "logUserNames": {
       "label": "Show user names in the activity log",
-      "hint": "On by default, because names are what make the log useful when a Flow misbehaves. Turn it off to keep identifiable access data out of the log view — entries then read \"User: <hidden>\". This only affects the log; Flow tags always carry the real user, and the log is in-memory only and cleared when the app restarts."
+      "hint": "On by default, because names are what make the log useful when a Flow misbehaves. Turn it off to keep identifiable access data out of the log view — entries then read \"User: <hidden>\". This only affects the log; Flow tags always carry the real user. The log is kept in memory and cleared when the app restarts, unless you turn on \"Keep the log across app restarts\" on the Live Logs tab."
     },
     "clock": {
       "label": "Show times on a 24-hour clock",
@@ -109,6 +128,21 @@
       "saved": "BioStar 2 settings saved successfully.",
       "savedAdvanced": "Advanced settings saved. Reconnecting with the new configuration.",
       "loadFailed": "Could not load the stored settings."
+    },
+    "time": {
+      "ago": "__duration__ ago"
     }
+  },
+  "flow": {
+    "anyReader": "Any reader",
+    "deviceFallback": "Device __id__",
+    "doorFallback": "Door __id__"
+  },
+  "test": {
+    "users": "Users",
+    "doors": "Doors",
+    "checkOk": "__label__: OK",
+    "checkUnavailable": "__label__: unavailable",
+    "connected": "Connected to BioStar 2 (session ...__session__). __checks__"
   }
 }

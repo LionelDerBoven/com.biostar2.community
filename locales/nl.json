@@ -1,7 +1,25 @@
 {
   "errors": {
     "noDoorSelected": "Geen deur geselecteerd.",
-    "incompleteCredentials": "Host-URL, gebruikersnaam en wachtwoord moeten alle drie ingevuld zijn."
+    "incompleteCredentials": "Host-URL, gebruikersnaam en wachtwoord moeten alle drie ingevuld zijn.",
+    "passwordRequired": "Vul het wachtwoord in om een andere host of gebruiker dan de opgeslagen te testen. Het opgeslagen wachtwoord wordt alleen naar de opgeslagen host gestuurd.",
+    "invalidHost": "De BioStar 2-host-URL moet beginnen met http:// of https://. De app maakt geen verbinding tot dit is opgelost.",
+    "client": {
+      "loginRequestFailed": "Aanmeldverzoek mislukt: __reason__",
+      "loginHttp": "Aanmelden mislukt met HTTP __status__",
+      "loginHttpDetail": "Aanmelden mislukt met HTTP __status__: __detail__",
+      "noSessionHeader": "BioStar 2 gaf geen bs-session-id-header terug.",
+      "requestTimeout": "Verzoek verlopen na __ms__ ms",
+      "responseTooLarge": "Het antwoord van BioStar 2 was te groot.",
+      "responseIncomplete": "De verbinding werd gesloten voordat het antwoord van BioStar 2 volledig was.",
+      "devicesDenied": "Geen toestemming om apparaten te lezen. Geef dit account in BioStar 2 leesrechten op Apparaten.",
+      "devicesHttp": "Kon apparaten niet lezen (HTTP __status__).",
+      "doorsDenied": "Geen toestemming om deuren te lezen. Geef dit account in BioStar 2 leesrechten op Deuren.",
+      "doorsHttp": "Kon deuren niet lezen (HTTP __status__).",
+      "openDoorDenied": "Geen toestemming om de deur te openen. Dit account kan deuren lezen maar niet bedienen. Open in BioStar 2 de operatorrechtenset van dit account en zet Monitoring op niveau Bewerken/Lezen.",
+      "openDoorHttp": "Deur openen mislukt (HTTP __status__).",
+      "openDoorHttpDetail": "Deur openen mislukt (HTTP __status__): __detail__"
+    }
   },
   "notifications": {
     "connectionLost": "BioStar 2: verbinding verbroken. Toegangsgebeurtenissen bereiken Homey niet."
@@ -17,7 +35,8 @@
       "UNKNOWN": "ONBEKEND",
       "CONNECTED": "VERBONDEN",
       "DISCONNECTED": "VERBROKEN",
-      "CONNECTING": "VERBINDEN"
+      "CONNECTING": "VERBINDEN",
+      "CONFIG_ERROR": "CONFIGURATIEFOUT"
     },
     "stats": {
       "forwarded": "Doorgestuurde gebeurtenissen",
@@ -69,7 +88,7 @@
     },
     "logUserNames": {
       "label": "Gebruikersnamen tonen in het activiteitenlogboek",
-      "hint": "Standaard aan, omdat namen het logboek bruikbaar maken wanneer een Flow zich vreemd gedraagt. Zet dit uit om identificeerbare toegangsgegevens uit het logboek te houden — regels tonen dan \"User: <hidden>\". Dit heeft alleen effect op het logboek; Flow-tags bevatten altijd de echte gebruiker, en het logboek staat alleen in het geheugen en wordt gewist wanneer de app herstart."
+      "hint": "Standaard aan, omdat namen het logboek bruikbaar maken wanneer een Flow zich vreemd gedraagt. Zet dit uit om identificeerbare toegangsgegevens uit het logboek te houden — regels tonen dan \"User: <hidden>\". Dit heeft alleen effect op het logboek; Flow-tags bevatten altijd de echte gebruiker. Het logboek staat in het geheugen en wordt gewist wanneer de app herstart, tenzij je \"Logboek bewaren na een herstart van de app\" aanzet op het tabblad Live logboek."
     },
     "clock": {
       "label": "Tijden tonen op een 24-uursklok",
@@ -109,6 +128,21 @@
       "saved": "BioStar 2-instellingen opgeslagen.",
       "savedAdvanced": "Geavanceerde instellingen opgeslagen. Er wordt opnieuw verbonden met de nieuwe configuratie.",
       "loadFailed": "De opgeslagen instellingen konden niet worden geladen."
+    },
+    "time": {
+      "ago": "__duration__ geleden"
     }
+  },
+  "flow": {
+    "anyReader": "Elke lezer",
+    "deviceFallback": "Apparaat __id__",
+    "doorFallback": "Deur __id__"
+  },
+  "test": {
+    "users": "Gebruikers",
+    "doors": "Deuren",
+    "checkOk": "__label__: OK",
+    "checkUnavailable": "__label__: niet beschikbaar",
+    "connected": "Verbonden met BioStar 2 (sessie ...__session__). __checks__"
   }
 }

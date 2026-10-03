@@ -67,6 +67,7 @@ function onHomeyReady(Homey) {
     persistLogs: $('biostar_persist_logs'),
     status: $('connection-status'),
     permWarning: $('perm-warning'),
+    configWarning: $('config-warning'),
     testResult: $('test-result'),
     log: $('log'),
     logCount: $('log-count'),
@@ -79,6 +80,10 @@ function onHomeyReady(Homey) {
   let hour12 = false;
   let clockWriting = false;
   let passwordTouched = false;
+  // Host and user as saved, so Test Connection knows when the stored password
+  // no longer applies (the app only uses it for the saved host and user).
+  let savedHost = '';
+  let savedUser = '';
   let ignoreSet = new Set(); // exact-match ignores, driven by the table
 
   // ---------------------------------------------------------------------------
@@ -102,10 +107,29 @@ function onHomeyReady(Homey) {
 
   function formatAgo(timestamp) {
     if (!timestamp) return '–';
-    return `${formatDuration(Date.now() - timestamp)} ago`;
+    return t('settings.time.ago', '__duration__ ago')
+      .replace('__duration__', formatDuration(Date.now() - timestamp));
   }
 
-  const STATUS_CLASS = { CONNECTED: 'ok', DISCONNECTED: 'bad' };
+  /**
+   * Same normalisation as the app: trimmed, no trailing slash, and the scheme
+   * and host name compared case-insensitively.
+   */
+  function normaliseHost(value) {
+    return String(value || '').trim().replace(/\/+$/, '');
+  }
+
+  function hostKey(value) {
+    const host = normaliseHost(value);
+    try {
+      const url = new URL(host);
+      return `${url.origin}${url.pathname.replace(/\/+$/, '')}`;
+    } catch (_) {
+      return host.toLowerCase();
+    }
+  }
+
+  const STATUS_CLASS = { CONNECTED: 'ok', DISCONNECTED: 'bad', CONFIG_ERROR: 'bad' };
 
   function renderStatus(status) {
     const key = status || 'UNKNOWN';
@@ -123,6 +147,9 @@ function onHomeyReady(Homey) {
     $('stat-uptime').textContent = formatDuration(stats.connectedForMs);
     $('stat-last').textContent = formatAgo(stats.lastEventAt);
     els.permWarning.style.display = stats.profileLookupDisabled ? 'block' : 'none';
+    // Already translated by the app.
+    els.configWarning.textContent = stats.configError || '';
+    els.configWarning.style.display = stats.configError ? 'block' : 'none';
   }
 
   function renderEventTypes(rows) {
@@ -331,7 +358,10 @@ function onHomeyReady(Homey) {
     els.host.value = await getSetting('biostar_host');
     els.ws.value = await getSetting('biostar_ws_uri');
     els.user.value = await getSetting('biostar_user');
-    els.ssl.checked = (await getSetting('biostar_reject_unauthorized', false)) === true;
+    savedHost = els.host.value;
+    savedUser = els.user.value.trim();
+    // Verification is on unless it was explicitly turned off.
+    els.ssl.checked = (await getSetting('biostar_reject_unauthorized', true)) !== false;
 
     // Ask the app whether a password exists rather than reading the setting:
     // the page only needs the boolean, and the secret never leaves Homey.
@@ -443,17 +473,27 @@ function onHomeyReady(Homey) {
   }
 
   $('test-button').addEventListener('click', () => {
-    els.testResult.textContent = t('settings.messages.testing', 'Testing connection to BioStar 2...');
-    els.testResult.style.color = '#555';
-
     const payload = {
-      biostarHost: els.host.value.trim(),
+      biostarHost: normaliseHost(els.host.value),
       wsUri: els.ws.value.trim(),
       loginUser: els.user.value.trim(),
       rejectUnauthorized: els.ssl.checked,
     };
     const pw = currentPassword();
-    if (pw !== undefined) payload.password = pw;
+    if (pw) payload.password = pw;
+
+    // The stored password is only valid for the saved host and user. Ask for it
+    // here rather than send a request the app is going to refuse.
+    const targetChanged = hostKey(payload.biostarHost) !== hostKey(savedHost) || payload.loginUser !== savedUser;
+    if (!pw && targetChanged) {
+      els.testResult.textContent = `✖ ${t('errors.passwordRequired',
+        'Enter the password to test a host or user other than the saved one. The stored password is only sent to the saved host.')}`;
+      els.testResult.style.color = '#d9534f';
+      return;
+    }
+
+    els.testResult.textContent = t('settings.messages.testing', 'Testing connection to BioStar 2...');
+    els.testResult.style.color = '#555';
 
     Homey.api('POST', '/test', payload, (err, res) => {
       if (err) {
@@ -485,9 +525,12 @@ function onHomeyReady(Homey) {
   });
 
   $('save-button').addEventListener('click', () => {
-    Homey.set('biostar_host', els.host.value.trim());
+    els.host.value = normaliseHost(els.host.value);
+    Homey.set('biostar_host', els.host.value);
     Homey.set('biostar_ws_uri', els.ws.value.trim());
     Homey.set('biostar_user', els.user.value.trim());
+    savedHost = els.host.value;
+    savedUser = els.user.value.trim();
     Homey.set('biostar_reject_unauthorized', els.ssl.checked);
 
     const pw = currentPassword();

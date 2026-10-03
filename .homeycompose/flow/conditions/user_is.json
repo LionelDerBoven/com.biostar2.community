@@ -11,9 +11,9 @@
     "fr": "L'utilisateur est [[user]]"
   },
   "hint": {
-    "en": "Checks the name of the person in the BioStar 2 event that started this Flow. Matching ignores upper and lower case and accepts a part of the name, so 'john' also matches 'John Doe'. Only works in Flows started by a BioStar 2 trigger card; elsewhere it is always false.",
-    "nl": "Controleert de naam van de persoon in de BioStar 2-gebeurtenis die deze Flow startte. Bij het vergelijken worden hoofd- en kleine letters genegeerd en volstaat een deel van de naam, dus 'jan' komt ook overeen met 'Jan Jansen'. Werkt alleen in Flows die door een BioStar 2-triggerkaart zijn gestart; elders is dit altijd onwaar.",
-    "fr": "Vérifie le nom de la personne dans l'événement BioStar 2 qui a démarré ce Flow. La comparaison ignore la casse et accepte une partie du nom : « jean » correspond donc aussi à « Jean Dupont ». Ne fonctionne que dans les Flows démarrés par une carte de déclenchement BioStar 2 ; ailleurs, le résultat est toujours faux."
+    "en": "Checks the name of the person in the BioStar 2 event that started this Flow. Matching ignores upper and lower case and surrounding spaces, but the full name must match: 'john doe' matches 'John Doe', 'john' does not. Only works in Flows started by a BioStar 2 trigger card; elsewhere it is always false.",
+    "nl": "Controleert de naam van de persoon in de BioStar 2-gebeurtenis die deze Flow startte. Bij het vergelijken worden hoofd- en kleine letters en spaties aan het begin en einde genegeerd, maar de volledige naam moet overeenkomen: 'jan jansen' komt overeen met 'Jan Jansen', 'jan' niet. Werkt alleen in Flows die door een BioStar 2-triggerkaart zijn gestart; elders is dit altijd onwaar.",
+    "fr": "Vérifie le nom de la personne dans l'événement BioStar 2 qui a démarré ce Flow. La comparaison ignore la casse et les espaces en début et en fin, mais le nom complet doit correspondre : « jean dupont » correspond à « Jean Dupont », « jean » non. Ne fonctionne que dans les Flows démarrés par une carte de déclenchement BioStar 2 ; ailleurs, le résultat est toujours faux."
   },
   "args": [
     {

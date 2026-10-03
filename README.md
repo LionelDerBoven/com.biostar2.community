@@ -41,10 +41,11 @@ Everything is configured in the app's Settings screen in the Homey app.
 | **WebSocket URI** | Leave empty to derive it from the host URL |
 | **API Username** | The BioStar 2 login id the app uses |
 | **API Password** | Stored by Homey; leave the field untouched to keep the current one |
-| **Verify SSL/TLS Certificate** | Uncheck if BioStar 2 uses a self-signed certificate |
+| **Verify SSL/TLS Certificate** | On by default; uncheck if BioStar 2 uses a self-signed certificate |
 
 **Test Connection** checks the credentials and reports what the account is
-allowed to do. **Force Reconnect** tears the session down and builds a new one.
+allowed to do. The stored password is only used for the saved host and user;
+to test another host or user, enter the password again. **Force Reconnect** tears the session down and builds a new one.
 
 ### Advanced
 
@@ -56,11 +57,13 @@ allowed to do. **Force Reconnect** tears the session down and builds a new one.
 - **Show user names in the activity log** — on by default. Turn it off to keep
   identifiable access data out of the log view; entries then read
   `User: <hidden>`. This affects the log only — Flow tags always carry the real
-  user. The log is in-memory and cleared when the app restarts.
+  user. The log is kept in memory and cleared when the app restarts, unless
+  **Keep the log across app restarts** is turned on (see *Privacy*).
 - **Heartbeat interval** — how often the app pings BioStar 2. The connection is
   treated as dead after twice this long without a reply.
 - **Reconnect delay, first attempt / maximum** — the delay grows by 50% after
-  each failed attempt, up to the ceiling.
+  each failed attempt, up to the ceiling, and only drops back once a connection
+  has held for a minute.
 
 ## Flow cards
 
@@ -96,6 +99,9 @@ events reach Flows in the order the server produced them.
 | **User belongs to department …** | The event's department matches |
 | **Device is …** | The event came from that reader |
 
+The text conditions compare the whole name, ignoring upper and lower case and
+surrounding spaces: *User is* `john doe` matches `John Doe`, `john` does not.
+
 ### Actions
 
 | Card | Does |
@@ -114,7 +120,9 @@ events reach Flows in the order the server produced them.
   time sync) before any lookup happens, then classifies what remains into the
   trigger categories above.
 - **`app.js`** — owns the Flow cards, a bounded user cache so repeated events
-  don't re-query the server, and the in-memory activity log shown in Settings.
+  don't re-query the server, and the activity log shown in Settings.
+- **`lib/LogStore.js`** — optionally keeps that activity log on Homey's storage
+  across restarts, capped in size and written in batches.
 
 Filtering happens before lookups, so ignored events cost almost nothing and the
 app stays idle when nothing relevant is going on.
@@ -140,7 +148,10 @@ your network:
 - The app requests no Homey permissions.
 - Your BioStar 2 password is stored by Homey and never sent to the settings
   page; the page is told only whether a password exists.
-- The activity log lives in memory only and is cleared when the app restarts.
+- The activity log lives in memory by default and is cleared when the app
+  restarts. **Keep the log across app restarts** (Live Logs tab, off by default)
+  writes it to Homey's internal storage instead, capped at about 256 KB with the
+  oldest entries dropped first; turning the option off deletes the stored file.
 - **Show user names in the activity log** can be turned off in the Advanced tab.
   Log lines then read `User: <hidden>`. Flow tags are unaffected, so your Flows
   keep working while the on-screen log stops naming people.
@@ -172,7 +183,7 @@ homey app run                     # or run it live, with the log in your termina
 ```
 
 - `lib/BiostarClient.js`, `lib/EventMapper.js`, `app.js` — see *How it works* above.
-- `lib/LogStore.js` — the activity log shown in Settings.
+- `lib/LogStore.js` — the optional on-disk copy of the activity log.
 - `settings/` — the settings page; `locales/` — its strings and the runtime messages.
 - `README.txt` / `README.nl.txt` / `README.fr.txt` — the App Store text.
 

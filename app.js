@@ -12,6 +12,8 @@ const RESTART_DEBOUNCE_MS = 500;
 const DISCONNECT_ALERT_MS = 120000;
 const LIST_CACHE_TTL_MS = 60000;
 
+const { BiostarError } = BiostarClient;
+
 // Languages that write the time on a 12-hour clock. Everything else — Dutch and
 // French included — gets 24 hours, which is what those locales actually use.
 const HOUR12_LANGUAGES = new Set(['en']);
@@ -37,6 +39,11 @@ class BioStarApp extends Homey.App {
     this.logs = [];
     this.restartDebounceTimer = null;
     this.disconnectAlertTimer = null;
+    // Set while the app itself stops a client (restart or unload), so the
+    // DISCONNECTED that stop() always emits is not taken for an outage.
+    this.stoppingOnPurpose = false;
+    this.unloading = false;
+    this.configError = null;
     this.connectionStatus = 'UNKNOWN';
     this.listCache = {};
     this.logUserNames = this.homey.settings.get('biostar_log_usernames') !== false;
@@ -63,8 +70,8 @@ class BioStarApp extends Homey.App {
         return;
       }
 
-      if (this.restartDebounceTimer) clearTimeout(this.restartDebounceTimer);
-      this.restartDebounceTimer = setTimeout(() => {
+      if (this.restartDebounceTimer) this.homey.clearTimeout(this.restartDebounceTimer);
+      this.restartDebounceTimer = this.homey.setTimeout(() => {
         this.restartDebounceTimer = null;
         this.log('BioStar configuration updated in settings. Restarting client...');
         this.addLog('Configuration updated in settings. Restarting client...', 'INFO');
@@ -109,7 +116,7 @@ class BioStarApp extends Homey.App {
 
     for (const [cardId, [argName, stateKey]] of Object.entries(textConditions)) {
       this.homey.flow.getConditionCard(cardId)
-        .registerRunListener(async (args, state) => BioStarApp.looseMatch(args[argName], state?.[stateKey]));
+        .registerRunListener(async (args, state) => BioStarApp.exactMatch(args[argName], state?.[stateKey]));
     }
 
     // Actions (THEN cards).
@@ -127,7 +134,12 @@ class BioStarApp extends Homey.App {
       const doorName = args.door?.name || doorId;
       if (!doorId) throw new Error(this.homey.__('errors.noDoorSelected'));
       this.addLog(`Opening door '${doorName}' via Flow action...`, 'ACTION');
-      await this.client.openDoor(doorId);
+      try {
+        await this.client.openDoor(doorId);
+      } catch (err) {
+        this.addLog(`Opening door '${doorName}' failed: ${err.message}`, 'ERROR');
+        throw new Error(this.describeError(err)); // shown in the Flow editor
+      }
       this.addLog(`Door '${doorName}' opened.`, 'ACTION');
       return true;
     });
@@ -135,24 +147,26 @@ class BioStarApp extends Homey.App {
   }
 
   /**
-   * Case-insensitive, partial, bidirectional match used by the text condition cards.
+   * Case-insensitive, trimmed, exact match used by the text condition cards.
+   * Not a substring match: "John" must not pass for "Johnny" on an access card.
    */
-  static looseMatch(argValue, stateValue) {
-    const target = (argValue || '').toLowerCase().trim();
-    const actual = (stateValue || '').toLowerCase().trim();
+  static exactMatch(argValue, stateValue) {
+    const target = String(argValue || '').toLowerCase().trim();
+    const actual = String(stateValue || '').toLowerCase().trim();
     if (!target || !actual) return false;
-    return actual.includes(target) || target.includes(actual);
+    return actual === target;
   }
 
   /**
    * Trigger run listener: passes when no specific reader was chosen, or when the
-   * event came from the chosen reader. Matches on id, falling back to name.
+   * event came from the chosen reader. Matches on id; the name is only used when
+   * the event carries no reader id at all.
    */
   matchesDeviceArg(args, state) {
     const selected = args?.device;
     if (!selected || !selected.id || selected.id === '*') return true;
-    if (state?.deviceId && String(state.deviceId) === String(selected.id)) return true;
-    return BioStarApp.looseMatch(selected.name, state?.device);
+    if (state?.deviceId) return String(state.deviceId) === String(selected.id);
+    return BioStarApp.exactMatch(selected.name, state?.device);
   }
 
   /**
@@ -188,24 +202,48 @@ class BioStarApp extends Homey.App {
     return items.filter((d) => d.name.toLowerCase().includes(q));
   }
 
+  /**
+   * The client leaves unnamed rows blank; the fallback name is translated here.
+   */
+  withFallbackNames(rows, key) {
+    return rows.map((r) => (r.name ? r : { ...r, name: this.homey.__(key, { id: r.id }) }));
+  }
+
   async autocompleteDevices(query) {
     let devices = [];
     try {
-      devices = await this.cachedList('devices', () => this.client.listDevices());
+      devices = await this.cachedList('devices',
+        async () => this.withFallbackNames(await this.client.listDevices(), 'flow.deviceFallback'));
     } catch (err) {
       this.addLog(`Could not load reader list: ${err.message}`, 'WARN');
     }
-    return BioStarApp.filterByName([{ id: '*', name: 'Any reader' }, ...devices], query);
+    return BioStarApp.filterByName([{ id: '*', name: this.homey.__('flow.anyReader') }, ...devices], query);
   }
 
   async autocompleteDoors(query) {
     try {
-      const doors = await this.cachedList('doors', () => this.client.listDoors());
+      const doors = await this.cachedList('doors',
+        async () => this.withFallbackNames(await this.client.listDoors(), 'flow.doorFallback'));
       return BioStarApp.filterByName(doors, query);
     } catch (err) {
       this.addLog(`Could not load door list: ${err.message}`, 'WARN');
-      throw err; // surfaced in the Flow editor so the cause is visible
+      // Surfaced in the Flow editor so the cause is visible.
+      throw new Error(this.describeError(err));
     }
+  }
+
+  /**
+   * User-facing text for an error. Client errors carry a code that maps to a
+   * locale key; anything else (a network error from Node itself) has no
+   * translation and keeps its own message. A wrapped cause is translated too.
+   */
+  describeError(err) {
+    if (!(err instanceof BiostarError)) return (err && err.message) || String(err);
+    const params = { ...err.params };
+    if (err.cause) params.reason = this.describeError(err.cause);
+    const key = `errors.client.${err.code}`;
+    const text = this.homey.__(key, params);
+    return text && text !== key ? text : err.message;
   }
 
   // ---------------------------------------------------------------------------
@@ -219,7 +257,6 @@ class BioStarApp extends Homey.App {
     const wasHour12 = this.hour12;
     this.logUserNames = this.homey.settings.get('biostar_log_usernames') !== false;
     this.hour12 = this.resolveHour12();
-    if (this.client) this.client.options.logUserNames = this.logUserNames;
 
     this.addLog(`Activity log user names ${this.logUserNames ? 'shown' : 'hidden'}.`, 'INFO');
     if (this.hour12 !== wasHour12) {
@@ -276,11 +313,8 @@ class BioStarApp extends Homey.App {
   /**
    * Single place where a BiostarClient is built and wired up.
    */
-  createClient() {
+  createClient(carried = null) {
     this.listCache = {}; // reader/door lists belong to the previous connection
-    // The discovered-event registry outlives the client, otherwise saving a
-    // setting (which rebuilds the client) would wipe the list you just used.
-    const carried = this.client ? this.client.eventTypes : null;
     const client = new BiostarClient({
       ...this.getBiostarConfig(),
       log: (...args) => {
@@ -303,10 +337,20 @@ class BioStarApp extends Homey.App {
   }
 
   async startClient() {
-    const config = this.getBiostarConfig();
-    if (!config.password || !config.biostarHost || !config.loginUser) {
+    const problem = this.configProblem();
+    this.configError = null;
+    if (problem === 'incomplete') {
+      this.clearDisconnectAlert();
       this.log('BioStar 2 credentials/host not fully configured yet. Please configure in App Settings.');
       this.addLog('Credentials/host not fully configured yet. Please configure in App Settings.', 'WARN');
+      return;
+    }
+    if (problem === 'invalidHost') {
+      // No reconnect loop against a URL that can never work; the settings page
+      // shows the reason instead.
+      this.configError = this.homey.__('errors.invalidHost');
+      this.addLog('Host URL must start with http:// or https://. Not connecting.', 'WARN');
+      this.handleStatusChange('CONFIG_ERROR');
       return;
     }
     try {
@@ -321,37 +365,86 @@ class BioStarApp extends Homey.App {
    * Rebuilds the client against current settings, fully releasing the previous one.
    */
   async restartClient() {
+    // The discovered-event registry outlives the client, otherwise saving a
+    // setting (which rebuilds the client) would wipe the list you just used.
+    // Taken before destroy(), which clears the map in place.
+    let carried = null;
+    this.configError = null; // re-evaluated by startClient() below
     if (this.client) {
-      await this.client.stop().catch(() => {});
+      carried = new Map(this.client.eventTypes);
+      await this.stopClient(this.client);
       this.client.destroy();
     }
-    this.client = this.createClient();
+    this.client = this.createClient(carried);
     await this.startClient();
   }
 
+  /**
+   * Stops a client on purpose. stop() always reports DISCONNECTED; the flag
+   * keeps that from arming the "connection lost" alert. A real failure of the
+   * client started next still arms it.
+   */
+  async stopClient(client) {
+    this.stoppingOnPurpose = true;
+    try {
+      await client.stop();
+    } catch (_) {
+      /* already stopped */
+    } finally {
+      this.stoppingOnPurpose = false;
+    }
+  }
+
+  /**
+   * 'incomplete' when host, user or password is missing, 'invalidHost' when the
+   * host has no http(s) scheme, otherwise null.
+   */
+  configProblem() {
+    const host = BioStarApp.normaliseHost(this.homey.settings.get('biostar_host'));
+    if (!host || !this.homey.settings.get('biostar_user') || !this.homey.settings.get('biostar_password')) {
+      return 'incomplete';
+    }
+    if (!/^https?:\/\//i.test(host)) return 'invalidHost';
+    return null;
+  }
+
+  clearDisconnectAlert() {
+    if (this.disconnectAlertTimer) {
+      this.homey.clearTimeout(this.disconnectAlertTimer);
+      this.disconnectAlertTimer = null;
+    }
+  }
+
   handleStatusChange(status) {
-    if (status === this.connectionStatus) return;
-    this.connectionStatus = status;
-    this.log(`BioStar 2 Connection status changed to: ${status}`);
-    this.addLog(`Connection status changed to: ${status}`, 'STATUS');
+    if (status !== this.connectionStatus) {
+      this.connectionStatus = status;
+      this.log(`BioStar 2 Connection status changed to: ${status}`);
+      this.addLog(`Connection status changed to: ${status}`, 'STATUS');
 
-    // Pushed to the settings page instead of persisted, so a flapping link
-    // does not repeatedly write to Homey's settings store.
-    this.homey.api.realtime('status', { status, stats: this.getStats() });
-
-    if (status === 'CONNECTED') {
-      if (this.disconnectAlertTimer) {
-        clearTimeout(this.disconnectAlertTimer);
-        this.disconnectAlertTimer = null;
+      // Pushed to the settings page instead of persisted, so a flapping link
+      // does not repeatedly write to Homey's settings store.
+      const pushed = this.homey.api.realtime('status', { status, stats: this.getStats() });
+      if (pushed && typeof pushed.catch === 'function') {
+        pushed.catch((err) => this.error(`Realtime push failed: ${err.message}`));
       }
+    }
+
+    // An incomplete or invalid configuration is not an outage to warn about.
+    if (status === 'CONNECTED' || this.configProblem()) {
+      this.clearDisconnectAlert();
       return;
     }
 
+    // Evaluated on every failure, not only on a status change: after a
+    // deliberate stop the status already reads DISCONNECTED, and a failing
+    // reconnect must still be able to arm the alert.
+    if (this.unloading || this.stoppingOnPurpose) return;
+
     // Only warn once the outage has lasted long enough to matter.
     if (!this.disconnectAlertTimer) {
-      this.disconnectAlertTimer = setTimeout(() => {
+      this.disconnectAlertTimer = this.homey.setTimeout(() => {
         this.disconnectAlertTimer = null;
-        if (this.connectionStatus === 'CONNECTED') return;
+        if (this.unloading || this.connectionStatus === 'CONNECTED' || this.configProblem()) return;
         this.homey.notifications.createNotification({
           excerpt: this.homey.__('notifications.connectionLost'),
         }).catch((err) => this.logError(`Notification failed: ${err.message}`));
@@ -371,20 +464,40 @@ class BioStarApp extends Homey.App {
     const substringRaw = this.homey.settings.get('biostar_ignore_substrings');
 
     return {
-      biostarHost: this.homey.settings.get('biostar_host') || '',
+      biostarHost: BioStarApp.normaliseHost(this.homey.settings.get('biostar_host')),
       wsUri: this.homey.settings.get('biostar_ws_uri') || '',
       loginUser: this.homey.settings.get('biostar_user') || '',
       password: this.homey.settings.get('biostar_password') || '',
-      rejectUnauthorized: this.homey.settings.get('biostar_reject_unauthorized') === true,
+      // Verify unless the user explicitly turned it off; never stored means on.
+      rejectUnauthorized: this.homey.settings.get('biostar_reject_unauthorized') !== false,
       ignoreEvents: BioStarApp.toList(ignoreRaw, EventMapper.DEFAULT_IGNORE_EVENTS),
       ignoreEventSubstrings: BioStarApp.toList(substringRaw, []),
       heartbeatMs: BioStarApp.toMs(this.homey.settings.get('biostar_heartbeat_s'), 30, 5, 300),
       reconnectMinMs: BioStarApp.toMs(this.homey.settings.get('biostar_reconnect_min_s'), 2, 1, 60),
       reconnectMaxMs: BioStarApp.toMs(this.homey.settings.get('biostar_reconnect_max_s'), 60, 5, 900),
-      logUserNames: this.homey.settings.get('biostar_log_usernames') !== false,
       userCacheMax: 200,
       userCacheTtlMs: 3600000,
     };
+  }
+
+  /**
+   * Trimmed, without trailing slashes, so paths can be appended to it.
+   */
+  static normaliseHost(value) {
+    return String(value || '').trim().replace(/\/+$/, '');
+  }
+
+  /**
+   * Comparable form of a host URL: scheme and host name are case-insensitive.
+   */
+  static hostKey(value) {
+    const host = BioStarApp.normaliseHost(value);
+    try {
+      const url = new URL(host);
+      return `${url.origin}${url.pathname.replace(/\/+$/, '')}`;
+    } catch (_) {
+      return host.toLowerCase();
+    }
   }
 
   /**
@@ -444,6 +557,8 @@ class BioStarApp extends Homey.App {
       // The effective clock, so the checkbox can show what is actually in force
       // rather than only whether a preference has been stored.
       clock24h: !this.hour12,
+      // Translated reason the client is not connecting at all, or null.
+      configError: this.configError,
     };
   }
 
@@ -513,14 +628,29 @@ class BioStarApp extends Homey.App {
   /**
    * Tests BioStar 2 REST API authentication with provided credentials.
    */
-  async testConnection(config = {}) {
-    const host = config.biostarHost || this.homey.settings.get('biostar_host');
-    const user = config.loginUser || this.homey.settings.get('biostar_user');
-    const password = config.password || this.homey.settings.get('biostar_password');
-    const rejectUnauthorized = config.rejectUnauthorized === true;
+  async testConnection(config) {
+    const body = config || {};
+    const storedHost = BioStarApp.normaliseHost(this.homey.settings.get('biostar_host'));
+    const storedUser = String(this.homey.settings.get('biostar_user') || '').trim();
+    const host = BioStarApp.normaliseHost(body.biostarHost) || storedHost;
+    const user = String(body.loginUser || '').trim() || storedUser;
+    const rejectUnauthorized = body.rejectUnauthorized !== false;
+
+    // The stored password may only go to the stored host as the stored user.
+    // Otherwise any caller of this endpoint could have it sent to a host of
+    // their choosing.
+    let password = typeof body.password === 'string' ? body.password : '';
+    if (!password && host && user) {
+      const sameTarget = BioStarApp.hostKey(host) === BioStarApp.hostKey(storedHost) && user === storedUser;
+      if (!sameTarget) throw new Error(this.homey.__('errors.passwordRequired'));
+      password = this.homey.settings.get('biostar_password') || '';
+    }
 
     if (!host || !user || !password) {
       throw new Error(this.homey.__('errors.incompleteCredentials'));
+    }
+    if (!/^https?:\/\//i.test(host)) {
+      throw new Error(this.homey.__('errors.invalidHost'));
     }
 
     this.addLog(`Testing connection to ${host} as user '${user}'...`, 'TEST');
@@ -539,23 +669,31 @@ class BioStarApp extends Homey.App {
 
       // Report which optional permissions this account actually has, so a
       // missing grant surfaces here instead of silently degrading later.
+      // The log stays English; the page gets the translated text.
+      const logChecks = [];
       const checks = [];
-      for (const [label, fn] of [['Users', () => testClient.probeUsers()],
-        ['Doors', () => testClient.listDoors()]]) {
+      for (const [label, key, fn] of [['Users', 'test.users', () => testClient.probeUsers()],
+        ['Doors', 'test.doors', () => testClient.listDoors()]]) {
+        const name = this.homey.__(key);
         try {
           await fn();
-          checks.push(`${label}: OK`);
+          logChecks.push(`${label}: OK`);
+          checks.push(this.homey.__('test.checkOk', { label: name }));
         } catch (err) {
-          checks.push(`${label}: unavailable`);
+          logChecks.push(`${label}: unavailable`);
+          checks.push(this.homey.__('test.checkUnavailable', { label: name }));
         }
       }
 
-      const successMsg = `Connected to BioStar 2 (session ...${String(sessionId).slice(-4)}). ${checks.join(' | ')}`;
-      this.addLog(successMsg, 'TEST_SUCCESS');
-      return { success: true, message: successMsg };
+      const session = String(sessionId).slice(-4);
+      this.addLog(`Connected to BioStar 2 (session ...${session}). ${logChecks.join(' | ')}`, 'TEST_SUCCESS');
+      return {
+        success: true,
+        message: this.homey.__('test.connected', { session, checks: checks.join(' | ') }),
+      };
     } catch (err) {
       this.addLog(`Test connection failed: ${err.message}`, 'TEST_ERROR');
-      return { success: false, message: err.message };
+      return { success: false, message: this.describeError(err) };
     } finally {
       // Without this the throwaway client keeps pooled keep-alive sockets open.
       testClient.destroy();
@@ -629,10 +767,13 @@ class BioStarApp extends Homey.App {
    * Clean up on uninitialization.
    */
   async onUninit() {
-    if (this.restartDebounceTimer) clearTimeout(this.restartDebounceTimer);
-    if (this.disconnectAlertTimer) clearTimeout(this.disconnectAlertTimer);
+    // Set first: stopping the client below reports DISCONNECTED, which must
+    // not arm a "connection lost" alert for an app that is going away.
+    this.unloading = true;
+    if (this.restartDebounceTimer) this.homey.clearTimeout(this.restartDebounceTimer);
+    this.clearDisconnectAlert();
     if (this.client) {
-      await this.client.stop().catch(() => {});
+      await this.stopClient(this.client);
       this.client.destroy();
     }
     // Last, so anything the shutdown itself logged still reaches flash.

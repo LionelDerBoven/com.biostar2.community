@@ -2,7 +2,7 @@
 
 module.exports = {
   async testConnection({ homey, body }) {
-    return homey.app.testConnection(body);
+    return homey.app.testConnection(body || {});
   },
   async getLogs({ homey, query }) {
     return homey.app.getLogs(query?.since);

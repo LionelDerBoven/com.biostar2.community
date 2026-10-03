@@ -365,6 +365,8 @@
       </div>
     </div>
 
+    <div id="config-warning" class="warn-banner"></div>
+
     <div id="perm-warning" class="warn-banner">
       <b data-t="settings.permWarning.title">Limited permissions.</b>
       <span data-t="settings.permWarning.body">This account cannot read user profiles in BioStar 2, so the
@@ -454,7 +456,8 @@
       <div class="hint" data-t="settings.logUserNames.hint">On by default, because names are what make the log useful when a Flow
         misbehaves. Turn it off to keep identifiable access data out of the log view — entries then
         read "User: &lt;hidden&gt;". This only affects the log; Flow tags always carry the
-        real user, and the log is in-memory only and cleared when the app restarts.</div>
+        real user. The log is kept in memory and cleared when the app restarts, unless you turn on
+        "Keep the log across app restarts" on the Live Logs tab.</div>
     </div>
 
     <div class="field">
@@ -492,14 +495,18 @@
           <input type="checkbox" id="biostar_persist_logs" />
           <span data-t="settings.persistLogs.label">Keep the log across app restarts</span>
         </label>
-        <div class="hint" data-t="settings.persistLogs.hint">Off by default.</div>
+        <div class="hint" data-t="settings.persistLogs.hint">Writes the log to Homey's internal storage, at most
+          256 KB, oldest entries dropped first. Writes are batched to spare the flash memory. Turning it
+          off deletes the stored file. Note that this puts access history on disk.</div>
       </div>
       <div>
         <label class="checkbox-label">
           <input type="checkbox" id="biostar_clock_24h" />
           <span data-t="settings.clock.label">Show times on a 24-hour clock</span>
         </label>
-        <div class="hint" data-t="settings.clock.hint">Off by default.</div>
+        <div class="hint" data-t="settings.clock.hint">Ticked shows 20:50:20, unticked shows 8:50:20 PM.
+          Until you choose, it follows Homey's language — 24 hours for Dutch and French, 12 hours for
+          English. Applies to the whole log, including entries already on screen.</div>
       </div>
     </div>
 

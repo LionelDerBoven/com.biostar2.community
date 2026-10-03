@@ -11,9 +11,9 @@
     "fr": "L'utilisateur appartient au groupe [[user_group]]"
   },
   "hint": {
-    "en": "Checks the BioStar 2 user group of the person in the event that started this Flow. Matching ignores upper and lower case and accepts a part of the group name. Only works in Flows started by a BioStar 2 trigger card that carries user information; elsewhere it is always false.",
-    "nl": "Controleert de BioStar 2-gebruikersgroep van de persoon in de gebeurtenis die deze Flow startte. Bij het vergelijken worden hoofd- en kleine letters genegeerd en volstaat een deel van de groepsnaam. Werkt alleen in Flows die zijn gestart door een BioStar 2-triggerkaart met gebruikersinformatie; elders is dit altijd onwaar.",
-    "fr": "Vérifie le groupe d'utilisateurs BioStar 2 de la personne dans l'événement qui a démarré ce Flow. La comparaison ignore la casse et accepte une partie du nom du groupe. Ne fonctionne que dans les Flows démarrés par une carte de déclenchement BioStar 2 portant des informations utilisateur ; ailleurs, le résultat est toujours faux."
+    "en": "Checks the BioStar 2 user group of the person in the event that started this Flow. Matching ignores upper and lower case and surrounding spaces, but the full group name must match. Only works in Flows started by a BioStar 2 trigger card that carries user information; elsewhere it is always false.",
+    "nl": "Controleert de BioStar 2-gebruikersgroep van de persoon in de gebeurtenis die deze Flow startte. Bij het vergelijken worden hoofd- en kleine letters en spaties aan het begin en einde genegeerd, maar de volledige groepsnaam moet overeenkomen. Werkt alleen in Flows die zijn gestart door een BioStar 2-triggerkaart met gebruikersinformatie; elders is dit altijd onwaar.",
+    "fr": "Vérifie le groupe d'utilisateurs BioStar 2 de la personne dans l'événement qui a démarré ce Flow. La comparaison ignore la casse et les espaces en début et en fin, mais le nom complet du groupe doit correspondre. Ne fonctionne que dans les Flows démarrés par une carte de déclenchement BioStar 2 portant des informations utilisateur ; ailleurs, le résultat est toujours faux."
   },
   "args": [
     {
