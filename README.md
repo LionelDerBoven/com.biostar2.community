@@ -1,4 +1,4 @@
-# BioStar 2 Community
+# BioStar 2 for Homey Pro
 
 A [Homey Pro](https://homey.app) app that connects a **Suprema BioStar 2** access
 control server to Homey over your local network, and exposes its events as native

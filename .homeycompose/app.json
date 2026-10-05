@@ -1,6 +1,6 @@
 {
   "id": "com.biostar2.community",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "compatibility": ">=12.4.0",
   "sdk": 3,
   "runtime": "nodejs",
@@ -8,9 +8,9 @@
     "local"
   ],
   "name": {
-    "en": "BioStar 2 Community",
-    "nl": "BioStar 2 Community",
-    "fr": "BioStar 2 Community"
+    "en": "BioStar 2",
+    "nl": "BioStar 2",
+    "fr": "BioStar 2"
   },
   "description": {
     "en": "Let every badge and fingerprint at your door start a Flow",

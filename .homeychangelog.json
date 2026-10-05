@@ -49,5 +49,10 @@
     "en": "A new App Store photo. No changes to how the app works.",
     "nl": "Een nieuwe foto in de App Store. Aan de werking van de app verandert niets.",
     "fr": "Une nouvelle photo dans l'App Store. Le fonctionnement de l'application ne change pas."
+  },
+  "1.5.2": {
+    "en": "The app is now simply called BioStar 2. No changes to how the app works.",
+    "nl": "De app heet nu gewoon BioStar 2. Aan de werking van de app verandert niets.",
+    "fr": "L'application s'appelle désormais simplement BioStar 2. Son fonctionnement ne change pas."
   }
 }

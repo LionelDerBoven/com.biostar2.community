@@ -28,7 +28,7 @@ const COSMETIC_SETTINGS = new Set([
 ]);
 
 /**
- * BioStar 2 Community Homey App
+ * BioStar 2 Homey app
  */
 class BioStarApp extends Homey.App {
 
@@ -53,7 +53,7 @@ class BioStarApp extends Homey.App {
     this.logStore = new LogStore({ errorLog: (msg) => this.logError(msg) });
     await this.initPersistentLog();
 
-    this.addLog('Initializing BioStar 2 Community Homey App...', 'INFO');
+    this.addLog('Initializing BioStar 2 Homey app...', 'INFO');
 
     this.registerFlowCards();
 
@@ -81,7 +81,7 @@ class BioStarApp extends Homey.App {
 
     await this.startClient();
 
-    this.log('BioStar 2 Community Homey App initialized successfully.');
+    this.log('BioStar 2 Homey app initialized successfully.');
     this.addLog('App initialized successfully.', 'INFO');
   }
 
