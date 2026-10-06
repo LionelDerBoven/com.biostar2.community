@@ -54,6 +54,7 @@
     },
     "connection": {
       "host": "BioStar 2 Host URL",
+      "plainHttp": "This address uses http://, so the password and all events travel unencrypted over your network. Use https:// where you can.",
       "ws": "WebSocket URI",
       "wsHint": "Leave empty to derive it automatically from the host URL.",
       "user": "API Username",

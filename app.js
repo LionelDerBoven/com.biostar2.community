@@ -367,6 +367,9 @@ class BioStarApp extends Homey.App {
       this.handleStatusChange('CONFIG_ERROR');
       return;
     }
+    if (/^http:/.test(BioStarApp.normaliseHost(this.homey.settings.get('biostar_host')))) {
+      this.addLog('Host URL uses http://: the password and all events travel unencrypted. Use https:// where you can.', 'WARN');
+    }
     try {
       await this.client.start();
     } catch (err) {
@@ -502,10 +505,11 @@ class BioStarApp extends Homey.App {
   }
 
   /**
-   * Trimmed, without trailing slashes, so paths can be appended to it.
+   * Trimmed, scheme lower-cased, without trailing slashes, so paths can be
+   * appended to it.
    */
   static normaliseHost(value) {
-    return String(value || '').trim().replace(/\/+$/, '');
+    return BiostarClient.lowerScheme(value).replace(/\/+$/, '');
   }
 
   /**

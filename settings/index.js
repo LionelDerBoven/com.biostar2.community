@@ -113,11 +113,18 @@ function onHomeyReady(Homey) {
   }
 
   /**
-   * Same normalisation as the app: trimmed, no trailing slash, and the scheme
-   * and host name compared case-insensitively.
+   * Same normalisation as the app: trimmed, scheme lower-cased, no trailing
+   * slash, and the scheme and host name compared case-insensitively.
    */
   function normaliseHost(value) {
-    return String(value || '').trim().replace(/\/+$/, '');
+    return String(value || '').trim()
+      .replace(/^[a-z][a-z0-9+.-]*:/i, (scheme) => scheme.toLowerCase())
+      .replace(/\/+$/, '');
+  }
+
+  /** Shows the unencrypted-connection warning while the host is http://. */
+  function updatePlainHttpWarning() {
+    $('host-plain-http').style.display = /^http:/.test(normaliseHost(els.host.value)) ? '' : 'none';
   }
 
   function hostKey(value) {
@@ -359,6 +366,7 @@ function onHomeyReady(Homey) {
   els.password.addEventListener('input', () => {
     passwordTouched = true;
   });
+  els.host.addEventListener('input', updatePlainHttpWarning);
 
   $('manual-ignore-add').addEventListener('click', () => {
     const name = $('manual-ignore-input').value.trim();
@@ -374,6 +382,7 @@ function onHomeyReady(Homey) {
     els.user.value = await getSetting('biostar_user');
     savedHost = els.host.value;
     savedUser = els.user.value.trim();
+    updatePlainHttpWarning();
     // Verification is on unless it was explicitly turned off.
     els.ssl.checked = (await getSetting('biostar_reject_unauthorized', true)) !== false;
 
@@ -564,6 +573,7 @@ function onHomeyReady(Homey) {
 
   $('save-button').addEventListener('click', () => {
     els.host.value = normaliseHost(els.host.value);
+    updatePlainHttpWarning();
     const host = els.host.value;
     const user = els.user.value.trim();
     const entries = [

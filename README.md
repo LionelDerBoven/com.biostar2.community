@@ -38,7 +38,7 @@ Everything is configured in the app's Settings screen in the Homey app.
 
 | Setting | Notes |
 | --- | --- |
-| **BioStar 2 Host URL** | e.g. `https://biostar.example.com` |
+| **BioStar 2 Host URL** | e.g. `https://biostar.example.com`. An `http://` address works, but then the password and all events travel unencrypted; the settings page warns about it |
 | **WebSocket URI** | Leave empty to derive it from the host URL |
 | **API Username** | The BioStar 2 login id the app uses |
 | **API Password** | Stored by Homey; leave the field untouched to keep the current one |

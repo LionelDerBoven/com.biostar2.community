@@ -107,6 +107,9 @@
       margin-top: 4px;
       line-height: 1.45;
     }
+    .hint-warn {
+      color: #c77700;
+    }
     .checkbox-label {
       font-weight: normal;
       display: flex;
@@ -378,6 +381,7 @@
       <div class="field">
         <label for="biostar_host" data-t="settings.connection.host">BioStar 2 Host URL</label>
         <input type="text" id="biostar_host" placeholder="https://biostar.example.com" />
+        <div class="hint hint-warn" id="host-plain-http" style="display: none;" data-t="settings.connection.plainHttp">This address uses http://, so the password and all events travel unencrypted over your network. Use https:// where you can.</div>
       </div>
 
       <div class="field">

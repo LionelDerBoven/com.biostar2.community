@@ -54,6 +54,7 @@
     },
     "connection": {
       "host": "URL de l'hôte BioStar 2",
+      "plainHttp": "Cette adresse utilise http:// : le mot de passe et tous les événements circulent sans chiffrement sur votre réseau. Utilisez https:// si possible.",
       "ws": "URI WebSocket",
       "wsHint": "Laissez vide pour la déduire automatiquement de l'URL de l'hôte.",
       "user": "Nom d'utilisateur de l'API",
