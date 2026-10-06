@@ -1,9 +1,9 @@
 {
   "id": "is_connected",
   "title": {
-    "en": "BioStar 2 connection is online",
-    "nl": "BioStar 2-verbinding is online",
-    "fr": "La connexion BioStar 2 est en ligne"
+    "en": "BioStar 2 connection !{{is|isn't}} online",
+    "nl": "BioStar 2-verbinding !{{is|is niet}} online",
+    "fr": "La connexion BioStar 2 !{{est|n'est pas}} en ligne"
   },
   "hint": {
     "en": "Checks whether the app currently has a live connection to the BioStar 2 server and is receiving events. Use it to guard Flows that depend on live access events. It is only checked when the Flow runs, so it cannot notice a dropped connection by itself; the app sends a Homey notification for that when the connection stays down for two minutes.",

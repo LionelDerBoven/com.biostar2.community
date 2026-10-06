@@ -1,9 +1,13 @@
 {
   "1.0.0": {
-    "en": "First version!"
+    "en": "First version!",
+    "nl": "Eerste versie!",
+    "fr": "Première version !"
   },
   "1.1.0": {
-    "en": "Lower memory use and less work per event: bounded user cache, no leaked sockets or timers on reconnect, and background events are now filtered before any lookup. Events carry BioStar 2's own timestamp and always reach Flows in order. New: open a door from a Flow, filter triggers by reader, force reconnect and tune the ignore lists from Settings, live counters, and a warning when the BioStar 2 account lacks permissions. Adds an option to hide user names from the activity log. The Advanced tab now lists every event type BioStar 2 has sent, with counts, so you tick the ones to ignore instead of typing exact names. The reader picker now lists only devices that can actually authenticate, hiding slave I/O modules."
+    "en": "Lower memory use and less work per event: bounded user cache, no leaked sockets or timers on reconnect, and background events are now filtered before any lookup. Events carry BioStar 2's own timestamp and always reach Flows in order. New: open a door from a Flow, filter triggers by reader, force reconnect and tune the ignore lists from Settings, live counters, and a warning when the BioStar 2 account lacks permissions. Adds an option to hide user names from the activity log. The Advanced tab now lists every event type BioStar 2 has sent, with counts, so you tick the ones to ignore instead of typing exact names. The reader picker now lists only devices that can actually authenticate, hiding slave I/O modules.",
+    "nl": "Minder geheugengebruik en minder werk per gebeurtenis: een begrensde gebruikerscache, geen achtergebleven verbindingen of timers bij opnieuw verbinden, en achtergrondgebeurtenissen worden nu gefilterd vóór elke opzoeking. Gebeurtenissen dragen het eigen tijdstip van BioStar 2 en bereiken Flows altijd in volgorde. Nieuw: een deur openen vanuit een Flow, triggers filteren op lezer, opnieuw verbinden forceren en de negeerlijsten instellen in de instellingen, live tellers, en een waarschuwing wanneer het BioStar 2-account rechten mist. Een optie om gebruikersnamen te verbergen in het activiteitenlogboek. Het tabblad Geavanceerd toont nu elk gebeurtenistype dat BioStar 2 heeft verstuurd, met aantallen, zodat je aanvinkt wat je wilt negeren in plaats van exacte namen te typen. De lezerkeuze toont nu alleen apparaten die echt kunnen authenticeren, zonder slave-I/O-modules.",
+    "fr": "Moins de mémoire et moins de travail par événement : un cache utilisateurs limité, plus de connexions ni de minuteurs oubliés lors d'une reconnexion, et les événements d'arrière-plan sont désormais filtrés avant toute recherche. Les événements portent l'horodatage de BioStar 2 et arrivent toujours dans l'ordre dans les Flows. Nouveau : ouvrir une porte depuis un Flow, filtrer les déclencheurs par lecteur, forcer la reconnexion et régler les listes d'exclusion dans les paramètres, des compteurs en direct, et un avertissement lorsque le compte BioStar 2 n'a pas les autorisations nécessaires. Une option permet de masquer les noms d'utilisateur dans le journal d'activité. L'onglet Avancé liste désormais chaque type d'événement envoyé par BioStar 2, avec son nombre, pour cocher ceux à ignorer au lieu de saisir les noms exacts. Le choix du lecteur ne propose plus que les appareils capables d'authentifier, sans les modules d'E/S esclaves."
   },
   "1.2.0": {
     "en": "The app now speaks Dutch and French as well as English: Flow cards, their hints and tags, the settings screen and the notifications all follow Homey's language setting. Privacy fix: the settings page no longer receives your stored BioStar 2 password, only whether one is set. The contributing guidelines and code of conduct now point at this project instead of Athom.",
@@ -54,5 +58,10 @@
     "en": "The app is now simply called BioStar 2. No changes to how the app works.",
     "nl": "De app heet nu gewoon BioStar 2. Aan de werking van de app verandert niets.",
     "fr": "L'application s'appelle désormais simplement BioStar 2. Son fonctionnement ne change pas."
+  },
+  "1.5.3": {
+    "en": "Condition cards now read correctly when inverted (\"User isn't …\"). The settings page only confirms a save once Homey has stored it, and reports an error otherwise. Small activity log fixes.",
+    "nl": "Voorwaardekaarten lezen nu correct als je ze omkeert (\"Gebruiker is niet …\"). De instellingenpagina bevestigt het opslaan pas wanneer Homey alles bewaard heeft, en meldt anders een fout. Kleine verbeteringen aan het activiteitenlogboek.",
+    "fr": "Les cartes de condition se lisent désormais correctement une fois inversées (« L'utilisateur n'est pas … »). La page des paramètres ne confirme l'enregistrement qu'une fois que Homey a tout sauvegardé, et signale une erreur sinon. Petites corrections du journal d'activité."
   }
 }

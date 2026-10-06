@@ -1,14 +1,14 @@
 {
   "id": "user_is",
   "title": {
-    "en": "User is !{{[user]}}",
-    "nl": "Gebruiker is !{{[user]}}",
-    "fr": "L'utilisateur est !{{[user]}}"
+    "en": "User !{{is|isn't}}",
+    "nl": "Gebruiker !{{is|is niet}}",
+    "fr": "L'utilisateur !{{est|n'est pas}}"
   },
   "titleFormatted": {
-    "en": "User is [[user]]",
-    "nl": "Gebruiker is [[user]]",
-    "fr": "L'utilisateur est [[user]]"
+    "en": "User !{{is|isn't}} [[user]]",
+    "nl": "Gebruiker !{{is|is niet}} [[user]]",
+    "fr": "L'utilisateur !{{est|n'est pas}} [[user]]"
   },
   "hint": {
     "en": "Checks the name of the person in the BioStar 2 event that started this Flow. Matching ignores upper and lower case and surrounding spaces, but the full name must match: 'john doe' matches 'John Doe', 'john' does not. Only works in Flows started by a BioStar 2 trigger card; elsewhere it is always false.",

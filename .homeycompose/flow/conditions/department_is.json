@@ -1,14 +1,14 @@
 {
   "id": "department_is",
   "title": {
-    "en": "User belongs to department !{{[department]}}",
-    "nl": "Gebruiker behoort tot afdeling !{{[department]}}",
-    "fr": "L'utilisateur appartient au département !{{[department]}}"
+    "en": "User !{{belongs|doesn't belong}} to department",
+    "nl": "Gebruiker !{{behoort|behoort niet}} tot afdeling",
+    "fr": "L'utilisateur !{{appartient|n'appartient pas}} au département"
   },
   "titleFormatted": {
-    "en": "User belongs to department [[department]]",
-    "nl": "Gebruiker behoort tot afdeling [[department]]",
-    "fr": "L'utilisateur appartient au département [[department]]"
+    "en": "User !{{belongs|doesn't belong}} to department [[department]]",
+    "nl": "Gebruiker !{{behoort|behoort niet}} tot afdeling [[department]]",
+    "fr": "L'utilisateur !{{appartient|n'appartient pas}} au département [[department]]"
   },
   "hint": {
     "en": "Checks the department of the person in the event that started this Flow, as set on their BioStar 2 user profile. Matching ignores upper and lower case and surrounding spaces, but the full department name must match. Only works in Flows started by a BioStar 2 trigger card that carries user information; elsewhere it is always false.",

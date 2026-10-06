@@ -1,6 +1,6 @@
 {
   "name": "com.biostar2.community",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "license": "GPL-3.0-or-later",
   "main": "app.js",
   "engines": {

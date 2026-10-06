@@ -127,7 +127,8 @@
       "reconnectRequested": "Opnieuw verbinden aangevraagd.",
       "saved": "BioStar 2-instellingen opgeslagen.",
       "savedAdvanced": "Geavanceerde instellingen opgeslagen. Er wordt opnieuw verbonden met de nieuwe configuratie.",
-      "loadFailed": "De opgeslagen instellingen konden niet worden geladen."
+      "loadFailed": "De opgeslagen instellingen konden niet worden geladen.",
+      "saveFailed": "Opslaan mislukt:"
     },
     "time": {
       "ago": "__duration__ geleden"

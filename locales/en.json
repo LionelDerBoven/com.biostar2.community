@@ -127,7 +127,8 @@
       "reconnectRequested": "Reconnect requested.",
       "saved": "BioStar 2 settings saved successfully.",
       "savedAdvanced": "Advanced settings saved. Reconnecting with the new configuration.",
-      "loadFailed": "Could not load the stored settings."
+      "loadFailed": "Could not load the stored settings.",
+      "saveFailed": "Saving failed:"
     },
     "time": {
       "ago": "__duration__ ago"

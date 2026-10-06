@@ -1,7 +1,7 @@
 {
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "com.biostar2.community",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "compatibility": ">=12.4.0",
   "sdk": 3,
   "runtime": "nodejs",
@@ -584,14 +584,14 @@
       {
         "id": "department_is",
         "title": {
-          "en": "User belongs to department !{{[department]}}",
-          "nl": "Gebruiker behoort tot afdeling !{{[department]}}",
-          "fr": "L'utilisateur appartient au département !{{[department]}}"
+          "en": "User !{{belongs|doesn't belong}} to department",
+          "nl": "Gebruiker !{{behoort|behoort niet}} tot afdeling",
+          "fr": "L'utilisateur !{{appartient|n'appartient pas}} au département"
         },
         "titleFormatted": {
-          "en": "User belongs to department [[department]]",
-          "nl": "Gebruiker behoort tot afdeling [[department]]",
-          "fr": "L'utilisateur appartient au département [[department]]"
+          "en": "User !{{belongs|doesn't belong}} to department [[department]]",
+          "nl": "Gebruiker !{{behoort|behoort niet}} tot afdeling [[department]]",
+          "fr": "L'utilisateur !{{appartient|n'appartient pas}} au département [[department]]"
         },
         "hint": {
           "en": "Checks the department of the person in the event that started this Flow, as set on their BioStar 2 user profile. Matching ignores upper and lower case and surrounding spaces, but the full department name must match. Only works in Flows started by a BioStar 2 trigger card that carries user information; elsewhere it is always false.",
@@ -618,14 +618,14 @@
       {
         "id": "device_is",
         "title": {
-          "en": "Device is !{{[device]}}",
-          "nl": "Apparaat is !{{[device]}}",
-          "fr": "L'appareil est !{{[device]}}"
+          "en": "Device !{{is|isn't}}",
+          "nl": "Apparaat !{{is|is niet}}",
+          "fr": "L'appareil !{{est|n'est pas}}"
         },
         "titleFormatted": {
-          "en": "Device is [[device]]",
-          "nl": "Apparaat is [[device]]",
-          "fr": "L'appareil est [[device]]"
+          "en": "Device !{{is|isn't}} [[device]]",
+          "nl": "Apparaat !{{is|is niet}} [[device]]",
+          "fr": "L'appareil !{{est|n'est pas}} [[device]]"
         },
         "hint": {
           "en": "Checks which reader or door the event that started this Flow came from. Matching ignores upper and lower case and surrounding spaces, but the full name must match: 'main entrance' matches 'Main Entrance', 'entrance' does not. Only works in Flows started by a BioStar 2 trigger card; elsewhere it is always false.",
@@ -652,9 +652,9 @@
       {
         "id": "is_connected",
         "title": {
-          "en": "BioStar 2 connection is online",
-          "nl": "BioStar 2-verbinding is online",
-          "fr": "La connexion BioStar 2 est en ligne"
+          "en": "BioStar 2 connection !{{is|isn't}} online",
+          "nl": "BioStar 2-verbinding !{{is|is niet}} online",
+          "fr": "La connexion BioStar 2 !{{est|n'est pas}} en ligne"
         },
         "hint": {
           "en": "Checks whether the app currently has a live connection to the BioStar 2 server and is receiving events. Use it to guard Flows that depend on live access events. It is only checked when the Flow runs, so it cannot notice a dropped connection by itself; the app sends a Homey notification for that when the connection stays down for two minutes.",
@@ -665,14 +665,14 @@
       {
         "id": "user_group_is",
         "title": {
-          "en": "User belongs to group !{{[user_group]}}",
-          "nl": "Gebruiker behoort tot groep !{{[user_group]}}",
-          "fr": "L'utilisateur appartient au groupe !{{[user_group]}}"
+          "en": "User !{{belongs|doesn't belong}} to group",
+          "nl": "Gebruiker !{{behoort|behoort niet}} tot groep",
+          "fr": "L'utilisateur !{{appartient|n'appartient pas}} au groupe"
         },
         "titleFormatted": {
-          "en": "User belongs to group [[user_group]]",
-          "nl": "Gebruiker behoort tot groep [[user_group]]",
-          "fr": "L'utilisateur appartient au groupe [[user_group]]"
+          "en": "User !{{belongs|doesn't belong}} to group [[user_group]]",
+          "nl": "Gebruiker !{{behoort|behoort niet}} tot groep [[user_group]]",
+          "fr": "L'utilisateur !{{appartient|n'appartient pas}} au groupe [[user_group]]"
         },
         "hint": {
           "en": "Checks the BioStar 2 user group of the person in the event that started this Flow. Matching ignores upper and lower case and surrounding spaces, but the full group name must match. Only works in Flows started by a BioStar 2 trigger card that carries user information; elsewhere it is always false.",
@@ -699,14 +699,14 @@
       {
         "id": "user_is",
         "title": {
-          "en": "User is !{{[user]}}",
-          "nl": "Gebruiker is !{{[user]}}",
-          "fr": "L'utilisateur est !{{[user]}}"
+          "en": "User !{{is|isn't}}",
+          "nl": "Gebruiker !{{is|is niet}}",
+          "fr": "L'utilisateur !{{est|n'est pas}}"
         },
         "titleFormatted": {
-          "en": "User is [[user]]",
-          "nl": "Gebruiker is [[user]]",
-          "fr": "L'utilisateur est [[user]]"
+          "en": "User !{{is|isn't}} [[user]]",
+          "nl": "Gebruiker !{{is|is niet}} [[user]]",
+          "fr": "L'utilisateur !{{est|n'est pas}} [[user]]"
         },
         "hint": {
           "en": "Checks the name of the person in the BioStar 2 event that started this Flow. Matching ignores upper and lower case and surrounding spaces, but the full name must match: 'john doe' matches 'John Doe', 'john' does not. Only works in Flows started by a BioStar 2 trigger card; elsewhere it is always false.",

@@ -1,14 +1,14 @@
 {
   "id": "user_group_is",
   "title": {
-    "en": "User belongs to group !{{[user_group]}}",
-    "nl": "Gebruiker behoort tot groep !{{[user_group]}}",
-    "fr": "L'utilisateur appartient au groupe !{{[user_group]}}"
+    "en": "User !{{belongs|doesn't belong}} to group",
+    "nl": "Gebruiker !{{behoort|behoort niet}} tot groep",
+    "fr": "L'utilisateur !{{appartient|n'appartient pas}} au groupe"
   },
   "titleFormatted": {
-    "en": "User belongs to group [[user_group]]",
-    "nl": "Gebruiker behoort tot groep [[user_group]]",
-    "fr": "L'utilisateur appartient au groupe [[user_group]]"
+    "en": "User !{{belongs|doesn't belong}} to group [[user_group]]",
+    "nl": "Gebruiker !{{behoort|behoort niet}} tot groep [[user_group]]",
+    "fr": "L'utilisateur !{{appartient|n'appartient pas}} au groupe [[user_group]]"
   },
   "hint": {
     "en": "Checks the BioStar 2 user group of the person in the event that started this Flow. Matching ignores upper and lower case and surrounding spaces, but the full group name must match. Only works in Flows started by a BioStar 2 trigger card that carries user information; elsewhere it is always false.",

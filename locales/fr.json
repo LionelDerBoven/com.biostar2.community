@@ -127,7 +127,8 @@
       "reconnectRequested": "Reconnexion demandée.",
       "saved": "Paramètres BioStar 2 enregistrés.",
       "savedAdvanced": "Paramètres avancés enregistrés. Reconnexion avec la nouvelle configuration.",
-      "loadFailed": "Impossible de charger les paramètres enregistrés."
+      "loadFailed": "Impossible de charger les paramètres enregistrés.",
+      "saveFailed": "Échec de l'enregistrement :"
     },
     "time": {
       "ago": "il y a __duration__"

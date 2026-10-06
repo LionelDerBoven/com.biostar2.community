@@ -524,24 +524,38 @@ function onHomeyReady(Homey) {
     });
   });
 
+  // Resolves once Homey has stored every value, so the page never reports a save
+  // that did not happen.
+  const saveAll = (entries) => Promise.all(entries.map(([key, value]) => new Promise((resolve, reject) => {
+    Homey.set(key, value, (err) => (err ? reject(err) : resolve()));
+  })));
+  const saveFailed = (err) => Homey.alert(
+    `${t('settings.messages.saveFailed', 'Saving failed:')} ${(err && err.message) || err}`,
+  );
+
   $('save-button').addEventListener('click', () => {
     els.host.value = normaliseHost(els.host.value);
-    Homey.set('biostar_host', els.host.value);
-    Homey.set('biostar_ws_uri', els.ws.value.trim());
-    Homey.set('biostar_user', els.user.value.trim());
-    savedHost = els.host.value;
-    savedUser = els.user.value.trim();
-    Homey.set('biostar_reject_unauthorized', els.ssl.checked);
-
+    const host = els.host.value;
+    const user = els.user.value.trim();
+    const entries = [
+      ['biostar_host', host],
+      ['biostar_ws_uri', els.ws.value.trim()],
+      ['biostar_user', user],
+      ['biostar_reject_unauthorized', els.ssl.checked],
+    ];
     const pw = currentPassword();
-    if (pw !== undefined) {
-      Homey.set('biostar_password', pw);
-      passwordTouched = false;
-      els.password.value = pw ? PASSWORD_MASK : '';
-    }
+    if (pw !== undefined) entries.push(['biostar_password', pw]);
 
-    Homey.alert(t('settings.messages.saved', 'BioStar 2 settings saved successfully.'));
-    setTimeout(refreshStatus, 1500);
+    saveAll(entries).then(() => {
+      savedHost = host;
+      savedUser = user;
+      if (pw !== undefined) {
+        passwordTouched = false;
+        els.password.value = pw ? PASSWORD_MASK : '';
+      }
+      Homey.alert(t('settings.messages.saved', 'BioStar 2 settings saved successfully.'));
+      setTimeout(refreshStatus, 1500);
+    }).catch(saveFailed);
   });
 
   $('save-advanced-button').addEventListener('click', () => {
@@ -551,18 +565,20 @@ function onHomeyReady(Homey) {
       return Number.isFinite(n) && n > 0 ? n : '';
     };
 
-    Homey.set('biostar_ignore_events', [...ignoreSet]);
-    Homey.set('biostar_ignore_substrings', toList(els.ignoreSubstrings.value));
-    Homey.set('biostar_heartbeat_s', toNumber(els.heartbeat));
-    Homey.set('biostar_reconnect_min_s', toNumber(els.reconnectMin));
-    Homey.set('biostar_reconnect_max_s', toNumber(els.reconnectMax));
-    Homey.set('biostar_log_usernames', els.logUserNames.checked);
     // The clock and persistence options live on the Live Logs tab and save
     // themselves when toggled, so they are deliberately not written here.
-
-    Homey.alert(t('settings.messages.savedAdvanced',
-      'Advanced settings saved. Reconnecting with the new configuration.'));
-    setTimeout(refreshStatus, 2000);
+    saveAll([
+      ['biostar_ignore_events', [...ignoreSet]],
+      ['biostar_ignore_substrings', toList(els.ignoreSubstrings.value)],
+      ['biostar_heartbeat_s', toNumber(els.heartbeat)],
+      ['biostar_reconnect_min_s', toNumber(els.reconnectMin)],
+      ['biostar_reconnect_max_s', toNumber(els.reconnectMax)],
+      ['biostar_log_usernames', els.logUserNames.checked],
+    ]).then(() => {
+      Homey.alert(t('settings.messages.savedAdvanced',
+        'Advanced settings saved. Reconnecting with the new configuration.'));
+      setTimeout(refreshStatus, 2000);
+    }).catch(saveFailed);
   });
 
   // ---------------------------------------------------------------------------

@@ -255,10 +255,13 @@ class BioStarApp extends Homey.App {
    */
   applyCosmeticSettings() {
     const wasHour12 = this.hour12;
+    const wasLogUserNames = this.logUserNames;
     this.logUserNames = this.homey.settings.get('biostar_log_usernames') !== false;
     this.hour12 = this.resolveHour12();
 
-    this.addLog(`Activity log user names ${this.logUserNames ? 'shown' : 'hidden'}.`, 'INFO');
+    if (this.logUserNames !== wasLogUserNames) {
+      this.addLog(`Activity log user names ${this.logUserNames ? 'shown' : 'hidden'}.`, 'INFO');
+    }
     if (this.hour12 !== wasHour12) {
       this.addLog(`Activity log clock switched to ${this.hour12 ? '12' : '24'}-hour format.`, 'INFO');
     }
@@ -718,7 +721,7 @@ class BioStarApp extends Homey.App {
     const who = this.logUserNames ? (evt.user || 'N/A') : '<hidden>';
     // AUTH, not INFO: an authentication is the one thing in this log a person
     // actually comes looking for, so it has to be filterable on its own.
-    this.addLog(`${evt.type} | ${who} | Device: '${evt.device}' | ${evt.rawName}`, 'AUTH');
+    this.addLog(`${evt.type} | User: ${who} | Device: '${evt.device}' | ${evt.rawName}`, 'AUTH');
 
     const state = {
       user: evt.user,
