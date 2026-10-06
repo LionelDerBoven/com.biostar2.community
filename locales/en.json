@@ -17,7 +17,7 @@
       "devicesHttp": "Could not read devices (HTTP __status__).",
       "doorsDenied": "Permission denied reading doors. Grant this account the Door read permission in BioStar 2.",
       "doorsHttp": "Could not read doors (HTTP __status__).",
-      "openDoorDenied": "Permission denied opening the door. This account can read doors but not control them. In BioStar 2, open the operator permission set assigned to this account and enable Monitoring at Edit/Read level.",
+      "openDoorDenied": "Permission denied opening the door. This account can read doors but not control them. In BioStar 2, open the operator permission set assigned to this account and enable Monitoring at Edit level.",
       "openDoorHttp": "Open door failed (HTTP __status__).",
       "openDoorHttpDetail": "Open door failed (HTTP __status__): __detail__",
       "certificateChanged": "The BioStar 2 server now presents a different certificate than the one this app trusts (__fingerprint__). If you renewed or reinstalled BioStar 2, press \"Forget trusted certificate\" in the settings. If not, do not connect: someone may be intercepting the connection."

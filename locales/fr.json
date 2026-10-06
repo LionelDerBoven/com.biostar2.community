@@ -17,7 +17,7 @@
       "devicesHttp": "Impossible de lire les appareils (HTTP __status__).",
       "doorsDenied": "Lecture des portes refusée. Accordez à ce compte l'autorisation de lecture des portes dans BioStar 2.",
       "doorsHttp": "Impossible de lire les portes (HTTP __status__).",
-      "openDoorDenied": "Ouverture de la porte refusée. Ce compte peut lire les portes mais pas les commander. Dans BioStar 2, ouvrez le jeu d'autorisations d'opérateur attribué à ce compte et activez Monitoring au niveau Modification/Lecture.",
+      "openDoorDenied": "Ouverture de la porte refusée. Ce compte peut lire les portes mais pas les commander. Dans BioStar 2, ouvrez le jeu d'autorisations d'opérateur attribué à ce compte et activez Monitoring au niveau Modification.",
       "openDoorHttp": "Échec de l'ouverture de la porte (HTTP __status__).",
       "openDoorHttpDetail": "Échec de l'ouverture de la porte (HTTP __status__) : __detail__",
       "certificateChanged": "Le serveur BioStar 2 présente désormais un certificat différent de celui auquel cette application fait confiance (__fingerprint__). Si vous avez renouvelé ou réinstallé BioStar 2, cliquez sur « Oublier le certificat de confiance » dans les paramètres. Sinon, ne vous connectez pas : quelqu'un intercepte peut-être la connexion."

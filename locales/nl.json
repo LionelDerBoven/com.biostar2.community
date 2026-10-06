@@ -17,7 +17,7 @@
       "devicesHttp": "Kon apparaten niet lezen (HTTP __status__).",
       "doorsDenied": "Geen toestemming om deuren te lezen. Geef dit account in BioStar 2 leesrechten op Deuren.",
       "doorsHttp": "Kon deuren niet lezen (HTTP __status__).",
-      "openDoorDenied": "Geen toestemming om de deur te openen. Dit account kan deuren lezen maar niet bedienen. Open in BioStar 2 de operatorrechtenset van dit account en zet Monitoring op niveau Bewerken/Lezen.",
+      "openDoorDenied": "Geen toestemming om de deur te openen. Dit account kan deuren lezen maar niet bedienen. Open in BioStar 2 de operatorrechtenset van dit account en zet Monitoring op niveau Bewerken.",
       "openDoorHttp": "Deur openen mislukt (HTTP __status__).",
       "openDoorHttpDetail": "Deur openen mislukt (HTTP __status__): __detail__",
       "certificateChanged": "De BioStar 2-server toont nu een ander certificaat dan het certificaat dat deze app vertrouwt (__fingerprint__). Heb je BioStar 2 vernieuwd of opnieuw geïnstalleerd, klik dan in de instellingen op \"Vertrouwd certificaat vergeten\". Zo niet, maak dan geen verbinding: iemand onderschept mogelijk de verbinding."
