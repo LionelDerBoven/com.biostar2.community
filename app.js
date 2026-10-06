@@ -419,6 +419,8 @@ class BioStarApp extends Homey.App {
   }
 
   clearDisconnectAlert() {
+    // Connected again (or nothing to warn about): the next outage warns anew.
+    this.disconnectAlerted = false;
     if (this.disconnectAlertTimer) {
       this.homey.clearTimeout(this.disconnectAlertTimer);
       this.disconnectAlertTimer = null;
@@ -450,11 +452,13 @@ class BioStarApp extends Homey.App {
     // reconnect must still be able to arm the alert.
     if (this.unloading || this.stoppingOnPurpose) return;
 
-    // Only warn once the outage has lasted long enough to matter.
-    if (!this.disconnectAlertTimer) {
+    // Only warn once the outage has lasted long enough to matter, and only once
+    // per outage: every failed reconnect lands here again.
+    if (!this.disconnectAlertTimer && !this.disconnectAlerted) {
       this.disconnectAlertTimer = this.homey.setTimeout(() => {
         this.disconnectAlertTimer = null;
         if (this.unloading || this.connectionStatus === 'CONNECTED' || this.configProblem()) return;
+        this.disconnectAlerted = true;
         this.homey.notifications.createNotification({
           excerpt: this.homey.__('notifications.connectionLost'),
         }).catch((err) => this.logError(`Notification failed: ${err.message}`));
