@@ -65,7 +65,7 @@ class BioStarApp extends Homey.App {
     this.client = this.createClient();
 
     // Watch for App Settings changes from the Homey Mobile / Web App UI (debounced).
-    this.homey.settings.on('set', (key) => {
+    this.onSettingsSet = (key) => {
       if (!key.startsWith('biostar_')) return;
 
       // Display-only settings are applied in place. Reconnecting for them would
@@ -82,7 +82,8 @@ class BioStarApp extends Homey.App {
         this.addLog('Configuration updated in settings. Restarting client...', 'INFO');
         this.restartClient().catch((err) => this.logError(`Restart failed: ${err.message}`));
       }, RESTART_DEBOUNCE_MS);
-    });
+    };
+    this.homey.settings.on('set', this.onSettingsSet);
 
     await this.startClient();
 
@@ -800,6 +801,7 @@ class BioStarApp extends Homey.App {
     // Set first: stopping the client below reports DISCONNECTED, which must
     // not arm a "connection lost" alert for an app that is going away.
     this.unloading = true;
+    if (this.onSettingsSet) this.homey.settings.removeListener('set', this.onSettingsSet);
     if (this.restartDebounceTimer) this.homey.clearTimeout(this.restartDebounceTimer);
     this.clearDisconnectAlert();
     if (this.client) {
