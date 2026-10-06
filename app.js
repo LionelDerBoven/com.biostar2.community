@@ -4,6 +4,7 @@ const Homey = require('homey');
 const BiostarClient = require('./lib/BiostarClient');
 const EventMapper = require('./lib/EventMapper');
 const LogStore = require('./lib/LogStore');
+const LogText = require('./lib/LogText');
 
 const LOG_LIMIT = 100;
 // A runaway error message must not be able to grow the buffer without limit.
@@ -55,10 +56,10 @@ class BioStarApp extends Homey.App {
     this.hour12 = this.resolveHour12();
     this.startedAt = Date.now();
 
-    this.logStore = new LogStore({ errorLog: (msg) => this.logError(msg) });
+    this.logStore = new LogStore({ errorLog: (err) => this.logError('log.persistentLogError', { error: LogText.error(err) }) });
     await this.initPersistentLog();
 
-    this.addLog('Initializing BioStar 2 Homey app...', 'INFO');
+    this.logLine('INFO', 'log.initializing');
 
     this.registerFlowCards();
 
@@ -79,8 +80,8 @@ class BioStarApp extends Homey.App {
       this.restartDebounceTimer = this.homey.setTimeout(() => {
         this.restartDebounceTimer = null;
         this.log('BioStar configuration updated in settings. Restarting client...');
-        this.addLog('Configuration updated in settings. Restarting client...', 'INFO');
-        this.restartClient().catch((err) => this.logError(`Restart failed: ${err.message}`));
+        this.logLine('INFO', 'log.configUpdated');
+        this.restartClient().catch((err) => this.logError('log.restartFailed', { error: LogText.error(err) }));
       }, RESTART_DEBOUNCE_MS);
     };
     this.homey.settings.on('set', this.onSettingsSet);
@@ -88,7 +89,7 @@ class BioStarApp extends Homey.App {
     await this.startClient();
 
     this.log('BioStar 2 Homey app initialized successfully.');
-    this.addLog('App initialized successfully.', 'INFO');
+    this.logLine('INFO', 'log.initialized');
   }
 
   // ---------------------------------------------------------------------------
@@ -134,7 +135,7 @@ class BioStarApp extends Homey.App {
     this.homey.flow.getActionCard('reconnect')
       .registerRunListener(async () => {
         this.log('[Flow Action] Manual BioStar 2 reconnect triggered by Flow Action Card.');
-        this.addLog('Manual BioStar 2 reconnect triggered by Flow Action Card.', 'ACTION');
+        this.logLine('ACTION', 'log.flowReconnect');
         await this.restartClient();
         return true;
       });
@@ -144,14 +145,14 @@ class BioStarApp extends Homey.App {
       const doorId = args.door?.id;
       const doorName = args.door?.name || doorId;
       if (!doorId) throw new Error(this.homey.__('errors.noDoorSelected'));
-      this.addLog(`Opening door '${doorName}' via Flow action...`, 'ACTION');
+      this.logLine('ACTION', 'log.openingDoor', { door: doorName });
       try {
         await this.client.openDoor(doorId);
       } catch (err) {
-        this.addLog(`Opening door '${doorName}' failed: ${err.message}`, 'ERROR');
+        this.logLine('ERROR', 'log.openDoorFailed', { door: doorName, error: LogText.error(err) });
         throw new Error(this.describeError(err)); // shown in the Flow editor
       }
-      this.addLog(`Door '${doorName}' opened.`, 'ACTION');
+      this.logLine('ACTION', 'log.doorOpened', { door: doorName });
       return true;
     });
     openDoorCard.registerArgumentAutocompleteListener('door', async (query) => this.autocompleteDoors(query));
@@ -239,7 +240,7 @@ class BioStarApp extends Homey.App {
       devices = await this.cachedList('devices',
         async () => this.withFallbackNames(await this.client.listDevices(), 'flow.deviceFallback'));
     } catch (err) {
-      this.addLog(`Could not load reader list: ${err.message}`, 'WARN');
+      this.logLine('WARN', 'log.readerListFailed', { error: LogText.error(err) });
     }
     const any = withAny ? [{ id: '*', name: this.homey.__('flow.anyReader') }] : [];
     return BioStarApp.filterByName([...any, ...devices], query);
@@ -251,7 +252,7 @@ class BioStarApp extends Homey.App {
         async () => this.withFallbackNames(await this.client.listDoors(), 'flow.doorFallback'));
       return BioStarApp.filterByName(doors, query);
     } catch (err) {
-      this.addLog(`Could not load door list: ${err.message}`, 'WARN');
+      this.logLine('WARN', 'log.doorListFailed', { error: LogText.error(err) });
       // Surfaced in the Flow editor so the cause is visible.
       throw new Error(this.describeError(err));
     }
@@ -285,12 +286,12 @@ class BioStarApp extends Homey.App {
     this.hour12 = this.resolveHour12();
 
     if (this.logUserNames !== wasLogUserNames) {
-      this.addLog(`Activity log user names ${this.logUserNames ? 'shown' : 'hidden'}.`, 'INFO');
+      this.logLine('INFO', this.logUserNames ? 'log.userNamesShown' : 'log.userNamesHidden');
     }
     if (this.hour12 !== wasHour12) {
-      this.addLog(`Activity log clock switched to ${this.hour12 ? '12' : '24'}-hour format.`, 'INFO');
+      this.logLine('INFO', this.hour12 ? 'log.clock12' : 'log.clock24');
     }
-    this.initPersistentLog().catch((err) => this.logError(`Persistent log: ${err.message}`));
+    this.initPersistentLog().catch((err) => this.logError('log.persistentLogError', { error: LogText.error(err) }));
   }
 
   /**
@@ -326,7 +327,7 @@ class BioStarApp extends Homey.App {
 
     await this.logStore.setEnabled(wanted);
     if (!wanted) {
-      this.addLog('Persistent log turned off; the stored file has been deleted.', 'INFO');
+      this.logLine('INFO', 'log.persistentLogOff');
       return;
     }
 
@@ -336,7 +337,7 @@ class BioStarApp extends Homey.App {
       this.logs = stored.concat(this.logs || []).slice(-LOG_LIMIT);
       this.renumberLogs();
     }
-    this.addLog(`Persistent log turned on; ${stored.length} stored line(s) restored.`, 'INFO');
+    this.logLine('INFO', 'log.persistentLogOn', { count: stored.length });
   }
 
   /**
@@ -346,22 +347,16 @@ class BioStarApp extends Homey.App {
     this.listCache = {}; // reader/door lists belong to the previous connection
     const client = new BiostarClient({
       ...this.getBiostarConfig(),
-      log: (...args) => {
-        const msg = args.join(' ');
-        this.log(msg);
-        this.addLog(msg, 'INFO');
-      },
-      errorLog: (...args) => {
-        const msg = args.join(' ');
-        this.error(msg);
-        this.addLog(msg, 'ERROR');
-      },
+      // Homey's console only; lines for the activity log arrive as 'activity'.
+      log: (...args) => this.log(...args),
+      errorLog: (...args) => this.error(...args),
     });
 
     if (carried && carried.size) client.eventTypes = carried;
 
     client.on('event', (evt) => this.handleBioStarEvent(evt));
     client.on('status', (status) => this.handleStatusChange(status));
+    client.on('activity', ({ type, key, params }) => this.logLine(type, key, params));
     client.on('certificateSeen', (pin) => this.trustCertificate(client, pin));
     client.on('tlsProblem', (err) => {
       this.configError = this.describeError(err); // shown on the settings page until it connects again
@@ -375,25 +370,25 @@ class BioStarApp extends Homey.App {
     if (problem === 'incomplete') {
       this.clearDisconnectAlert();
       this.log('BioStar 2 credentials/host not fully configured yet. Please configure in App Settings.');
-      this.addLog('Credentials/host not fully configured yet. Please configure in App Settings.', 'WARN');
+      this.logLine('WARN', 'log.notConfigured');
       return;
     }
     if (problem === 'invalidHost') {
       // No reconnect loop against a URL that can never work; the settings page
       // shows the reason instead.
       this.configError = this.homey.__('errors.invalidHost');
-      this.addLog('Host URL must start with http:// or https://. Not connecting.', 'WARN');
+      this.logLine('WARN', 'log.hostInvalid');
       this.handleStatusChange('CONFIG_ERROR');
       return;
     }
     if (/^http:/.test(BioStarApp.normaliseHost(this.homey.settings.get('biostar_host')))) {
-      this.addLog('Host URL uses http://: the password and all events travel unencrypted. Use https:// where you can.', 'WARN');
+      this.logLine('WARN', 'log.hostPlainHttp');
     }
     try {
       await this.client.start();
     } catch (err) {
       this.error(`Failed to start BioStar client on startup: ${err.message}`);
-      this.addLog(`Failed to start BioStar client: ${err.message}`, 'ERROR');
+      this.logLine('ERROR', 'log.startFailed', { error: LogText.error(err) });
     }
   }
 
@@ -458,7 +453,7 @@ class BioStarApp extends Homey.App {
     if (status !== this.connectionStatus) {
       this.connectionStatus = status;
       this.log(`BioStar 2 Connection status changed to: ${status}`);
-      this.addLog(`Connection status changed to: ${status}`, 'STATUS');
+      this.logLine('STATUS', 'log.statusChanged', { status: LogText.status(status) });
 
       // Pushed to the settings page instead of persisted, so a flapping link
       // does not repeatedly write to Homey's settings store.
@@ -488,7 +483,7 @@ class BioStarApp extends Homey.App {
         this.disconnectAlerted = true;
         this.homey.notifications.createNotification({
           excerpt: this.homey.__('notifications.connectionLost'),
-        }).catch((err) => this.logError(`Notification failed: ${err.message}`));
+        }).catch((err) => this.logError('log.notificationFailed', { error: LogText.error(err) }));
       }, DISCONNECT_ALERT_MS);
     }
   }
@@ -609,9 +604,20 @@ class BioStarApp extends Homey.App {
   }
 
   /**
-   * Adds an entry to the in-memory log buffer.
+   * Adds a translatable line to the activity log: a key under `log.` in the
+   * locales plus its parameters (see lib/LogText.js). The settings page shows
+   * it in the viewer's language; the English text is stored alongside.
    */
-  addLog(msg, type = 'INFO') {
+  logLine(type, key, params = {}) {
+    const clean = LogText.clean(params);
+    this.addLog(LogText.english(key, clean), type, key, clean);
+  }
+
+  /**
+   * Adds an entry to the in-memory log buffer. Low level: prefer logLine(),
+   * which makes the line translatable.
+   */
+  addLog(msg, type = 'INFO', key = null, params = null) {
     if (!this.logs) this.logs = [];
     const text = typeof msg === 'string' ? msg.replace(/\[BioStarClient\]\s*/, '') : JSON.stringify(msg);
 
@@ -623,6 +629,10 @@ class BioStarApp extends Homey.App {
       type,
       message: text.length > MAX_MESSAGE_LENGTH ? `${text.slice(0, MAX_MESSAGE_LENGTH)}…` : text,
     };
+    if (key) {
+      entry.key = key;
+      entry.params = params || {};
+    }
 
     this.logSeq += 1;
     entry.seq = this.logSeq;
@@ -648,13 +658,13 @@ class BioStarApp extends Homey.App {
   }
 
   /**
-   * Reports a failure to Homey's own log and to the activity log. Several error
-   * paths used to call this.error() alone, which meant the log a person actually
-   * reads never mentioned them.
+   * Reports a failure to Homey's own log (in English) and to the activity log
+   * (translatable). Several error paths used to call this.error() alone, which
+   * meant the log a person actually reads never mentioned them.
    */
-  logError(msg) {
-    this.error(msg);
-    this.addLog(msg, 'ERROR');
+  logError(key, params = {}) {
+    this.error(LogText.english(key, params));
+    this.logLine('ERROR', key, params);
   }
 
   /**
@@ -688,7 +698,7 @@ class BioStarApp extends Homey.App {
     // everything the user just asked to be rid of. The store stays enabled and
     // simply starts a new file.
     if (this.logStore) await this.logStore.clear();
-    this.addLog('Log buffer cleared by user.', 'INFO');
+    this.logLine('INFO', 'log.logCleared');
     return { success: true };
   }
 
@@ -720,7 +730,7 @@ class BioStarApp extends Homey.App {
       throw new Error(this.homey.__('errors.invalidHost'));
     }
 
-    this.addLog(`Testing connection to ${host} as user '${user}'...`, 'TEST');
+    this.logLine('TEST', 'log.testing', { host, user });
 
     const testClient = new BiostarClient({
       biostarHost: host,
@@ -743,30 +753,30 @@ class BioStarApp extends Homey.App {
 
       // Report which optional permissions this account actually has, so a
       // missing grant surfaces here instead of silently degrading later.
-      // The log stays English; the page gets the translated text.
-      const logChecks = [];
+      const logChecks = {};
       const checks = [];
-      for (const [label, key, fn] of [['Users', 'test.users', () => testClient.probeUsers()],
-        ['Doors', 'test.doors', () => testClient.listDoors()]]) {
+      for (const [slot, key, fn] of [['users', 'test.users', () => testClient.probeUsers()],
+        ['doors', 'test.doors', () => testClient.listDoors()]]) {
         const name = this.homey.__(key);
+        const label = { key, text: name };
         try {
           await fn();
-          logChecks.push(`${label}: OK`);
+          logChecks[slot] = { key: 'log.checkOk', params: { label }, text: `${name}: OK` };
           checks.push(this.homey.__('test.checkOk', { label: name }));
         } catch (err) {
-          logChecks.push(`${label}: unavailable`);
+          logChecks[slot] = { key: 'log.checkUnavailable', params: { label }, text: `${name}: unavailable` };
           checks.push(this.homey.__('test.checkUnavailable', { label: name }));
         }
       }
 
       const session = String(sessionId).slice(-4);
-      this.addLog(`Connected to BioStar 2 (session ...${session}). ${logChecks.join(' | ')}`, 'TEST_SUCCESS');
+      this.logLine('TEST_SUCCESS', 'log.testConnected', { session, users: logChecks.users, doors: logChecks.doors });
       return {
         success: true,
         message: this.homey.__('test.connected', { session, checks: checks.join(' | ') }),
       };
     } catch (err) {
-      this.addLog(`Test connection failed: ${err.message}`, 'TEST_ERROR');
+      this.logLine('TEST_ERROR', 'log.testFailed', { error: LogText.error(err) });
       return { success: false, message: this.describeError(err) };
     } finally {
       // Without this the throwaway client keeps pooled keep-alive sockets open.
@@ -783,7 +793,7 @@ class BioStarApp extends Homey.App {
     const pins = { ...(this.homey.settings.get('tls_pins') || {}), [pin.host]: pin.fingerprint256 };
     this.homey.settings.set('tls_pins', pins);
     if (client) client.setPins(pins);
-    this.addLog(`Trusting the certificate of ${pin.host} from now on (SHA-256 ${pin.fingerprint256}).`, 'INFO');
+    this.logLine('INFO', 'log.certTrusted', { host: pin.host, fingerprint: pin.fingerprint256 });
   }
 
   /**
@@ -792,13 +802,13 @@ class BioStarApp extends Homey.App {
    */
   async forgetCertificate() {
     this.homey.settings.unset('tls_pins');
-    this.addLog('Trusted certificate forgotten by user. Reconnecting.', 'ACTION');
+    this.logLine('ACTION', 'log.certForgotten');
     await this.restartClient();
     return { success: true };
   }
 
   async forceReconnect() {
-    this.addLog('Manual reconnect requested from settings.', 'ACTION');
+    this.logLine('ACTION', 'log.reconnectRequested');
     await this.restartClient();
     return { success: true };
   }
@@ -812,10 +822,18 @@ class BioStarApp extends Homey.App {
    */
   handleBioStarEvent(evt) {
     // Flow tokens always carry the real identity; only the on-screen log is masked.
-    const who = this.logUserNames ? (evt.user || 'N/A') : '<hidden>';
+    let who = evt.user;
+    if (!this.logUserNames) who = { key: 'log.userHidden', text: '<hidden>' };
+    else if (!who) who = { key: 'log.userUnknown', text: 'N/A' };
     // AUTH, not INFO: an authentication is the one thing in this log a person
     // actually comes looking for, so it has to be filterable on its own.
-    this.addLog(`${evt.type} | User: ${who} | Device: '${evt.device}' | ${evt.rawName}`, 'AUTH');
+    // The event name is BioStar 2's own and stays as it is.
+    this.logLine('AUTH', 'log.event', {
+      type: { key: `log.eventType.${evt.type}`, text: evt.type },
+      user: who,
+      device: evt.device,
+      event: evt.rawName,
+    });
 
     const state = {
       user: evt.user,
@@ -842,21 +860,21 @@ class BioStarApp extends Homey.App {
       event_type: evt.type,
       event_name: evt.rawName,
       timestamp: evt.timestamp,
-    }, state).catch((err) => this.logError(`Flow trigger 'event_received' failed: ${err.message}`));
+    }, state).catch((err) => this.logError('log.flowTriggerFailed', { trigger: 'event_received', error: LogText.error(err) }));
 
     if (evt.type === 'success') {
       this.triggerAuthSucceeded.trigger({
         ...userTokens, event_name: evt.rawName, timestamp: evt.timestamp,
-      }, state).catch((err) => this.logError(`Flow trigger 'auth_succeeded' failed: ${err.message}`));
+      }, state).catch((err) => this.logError('log.flowTriggerFailed', { trigger: 'auth_succeeded', error: LogText.error(err) }));
     } else if (evt.type === 'access_denied') {
       this.triggerAccessDenied.trigger({
         ...userTokens, event_name: evt.rawName, timestamp: evt.timestamp,
-      }, state).catch((err) => this.logError(`Flow trigger 'access_denied' failed: ${err.message}`));
+      }, state).catch((err) => this.logError('log.flowTriggerFailed', { trigger: 'access_denied', error: LogText.error(err) }));
     } else if (evt.type === 'identification_fail') {
       this.triggerIdentificationFailed.trigger({
         device: evt.device, event_name: evt.rawName, timestamp: evt.timestamp,
       }, { device: evt.device, deviceId: evt.deviceId })
-        .catch((err) => this.logError(`Flow trigger 'identification_failed' failed: ${err.message}`));
+        .catch((err) => this.logError('log.flowTriggerFailed', { trigger: 'identification_failed', error: LogText.error(err) }));
     }
   }
 

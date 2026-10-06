@@ -34,6 +34,30 @@ function onHomeyReady(Homey) {
   }
 
   /**
+   * Renders a log line stored as a locale key plus parameters, in this page's
+   * language. Same rules as lib/LogText.js render(): `__name__` placeholders, a
+   * nested { key, params, text } parameter rendered in turn with `text` as its
+   * fallback. Null when the key has no translation.
+   */
+  function renderLogText(key, params, depth = 0) {
+    const template = typeof key === 'string' ? t(key, null) : null;
+    if (typeof template !== 'string') return null;
+    return template.replace(/__(\w+)__/g, (_, name) => {
+      const value = params ? params[name] : undefined;
+      if (value === undefined || value === null) return '';
+      if (typeof value !== 'object') return String(value);
+      const nested = depth < 3 ? renderLogText(value.key, value.params, depth + 1) : null;
+      return nested !== null ? nested : String(value.text || '');
+    });
+  }
+
+  /** A log entry's text: translated when it has a key, else as stored. */
+  function logMessage(entry) {
+    const text = entry.key ? renderLogText(entry.key, entry.params) : null;
+    return text !== null ? text : entry.message;
+  }
+
+  /**
    * Translates the page in place. The English text stays in index.html so the
    * markup is readable on its own and survives a missing locale file.
    */
@@ -296,7 +320,7 @@ function onHomeyReady(Homey) {
 
       const msg = document.createElement('span');
       msg.className = 'log-msg';
-      msg.textContent = entry.message; // textContent, never innerHTML
+      msg.textContent = logMessage(entry); // textContent, never innerHTML
       li.appendChild(msg);
 
       els.log.appendChild(li);
