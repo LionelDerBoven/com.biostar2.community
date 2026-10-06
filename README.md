@@ -97,7 +97,7 @@ events reach Flows in the order the server produced them.
 | **User is …** | The event's user matches |
 | **User belongs to group …** | The event's user group matches |
 | **User belongs to department …** | The event's department matches |
-| **Device is …** | The event came from that reader |
+| **Reader is …** | The event came from that reader |
 
 The text conditions compare the whole name, ignoring upper and lower case and
 surrounding spaces: *User is* `john doe` matches `John Doe`, `john` does not.

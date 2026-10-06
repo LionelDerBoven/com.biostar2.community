@@ -60,8 +60,8 @@
     "fr": "L'application s'appelle désormais simplement BioStar 2. Son fonctionnement ne change pas."
   },
   "1.5.3": {
-    "en": "Condition cards now read correctly when inverted (\"User isn't …\"). The settings page only confirms a save once Homey has stored it, and reports an error otherwise. Small activity log fixes.",
-    "nl": "Voorwaardekaarten lezen nu correct als je ze omkeert (\"Gebruiker is niet …\"). De instellingenpagina bevestigt het opslaan pas wanneer Homey alles bewaard heeft, en meldt anders een fout. Kleine verbeteringen aan het activiteitenlogboek.",
-    "fr": "Les cartes de condition se lisent désormais correctement une fois inversées (« L'utilisateur n'est pas … »). La page des paramètres ne confirme l'enregistrement qu'une fois que Homey a tout sauvegardé, et signale une erreur sinon. Petites corrections du journal d'activité."
+    "en": "Condition cards now read correctly when inverted (\"User isn't …\"). The settings page only confirms a save once Homey has stored it, and reports an error otherwise. Small activity log fixes. Reconnecting after a dropped connection is more robust, and the reader condition is now called \"Reader is\".",
+    "nl": "Voorwaardekaarten lezen nu correct als je ze omkeert (\"Gebruiker is niet …\"). De instellingenpagina bevestigt het opslaan pas wanneer Homey alles bewaard heeft, en meldt anders een fout. Kleine verbeteringen aan het activiteitenlogboek. Opnieuw verbinden na een verbroken verbinding is robuuster, en de lezervoorwaarde heet nu \"Lezer is\".",
+    "fr": "Les cartes de condition se lisent désormais correctement une fois inversées (« L'utilisateur n'est pas … »). La page des paramètres ne confirme l'enregistrement qu'une fois que Homey a tout sauvegardé, et signale une erreur sinon. Petites corrections du journal d'activité. La reconnexion après une coupure est plus fiable, et la condition du lecteur s'appelle désormais « Le lecteur est »."
   }
 }

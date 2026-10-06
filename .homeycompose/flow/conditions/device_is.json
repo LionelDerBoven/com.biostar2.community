@@ -1,14 +1,14 @@
 {
   "id": "device_is",
   "title": {
-    "en": "Device !{{is|isn't}}",
-    "nl": "Apparaat !{{is|is niet}}",
-    "fr": "L'appareil !{{est|n'est pas}}"
+    "en": "Reader !{{is|isn't}}",
+    "nl": "Lezer !{{is|is niet}}",
+    "fr": "Le lecteur !{{est|n'est pas}}"
   },
   "titleFormatted": {
-    "en": "Device !{{is|isn't}} [[device]]",
-    "nl": "Apparaat !{{is|is niet}} [[device]]",
-    "fr": "L'appareil !{{est|n'est pas}} [[device]]"
+    "en": "Reader !{{is|isn't}} [[device]]",
+    "nl": "Lezer !{{is|is niet}} [[device]]",
+    "fr": "Le lecteur !{{est|n'est pas}} [[device]]"
   },
   "hint": {
     "en": "Checks which reader or door the event that started this Flow came from. Matching ignores upper and lower case and surrounding spaces, but the full name must match: 'main entrance' matches 'Main Entrance', 'entrance' does not. Only works in Flows started by a BioStar 2 trigger card; elsewhere it is always false.",
