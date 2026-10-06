@@ -6,6 +6,7 @@
     "invalidHost": "The BioStar 2 Host URL must start with http:// or https://. The app does not connect until this is fixed.",
     "client": {
       "loginRequestFailed": "Login request failed: __reason__",
+      "tlsCertificate": "BioStar 2 uses a certificate Homey cannot verify (__reason__). This is usually a self-signed certificate. If this is your own server on your network, untick \"Verify SSL/TLS certificate\" and test again.",
       "loginHttp": "Login failed with HTTP __status__",
       "loginHttpDetail": "Login failed with HTTP __status__: __detail__",
       "noSessionHeader": "BioStar 2 did not return a bs-session-id header.",

@@ -6,6 +6,7 @@
     "invalidHost": "De BioStar 2-host-URL moet beginnen met http:// of https://. De app maakt geen verbinding tot dit is opgelost.",
     "client": {
       "loginRequestFailed": "Aanmeldverzoek mislukt: __reason__",
+      "tlsCertificate": "BioStar 2 gebruikt een certificaat dat Homey niet kan controleren (__reason__). Meestal is dat een zelfondertekend certificaat. Is dit je eigen server op je netwerk, vink dan \"SSL/TLS-certificaat verifiëren\" uit en test opnieuw.",
       "loginHttp": "Aanmelden mislukt met HTTP __status__",
       "loginHttpDetail": "Aanmelden mislukt met HTTP __status__: __detail__",
       "noSessionHeader": "BioStar 2 gaf geen bs-session-id-header terug.",

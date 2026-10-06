@@ -6,6 +6,7 @@
     "invalidHost": "L'URL de l'hôte BioStar 2 doit commencer par http:// ou https://. L'application ne se connecte pas tant que ce n'est pas corrigé.",
     "client": {
       "loginRequestFailed": "Échec de la requête de connexion : __reason__",
+      "tlsCertificate": "BioStar 2 utilise un certificat que Homey ne peut pas vérifier (__reason__). Il s'agit généralement d'un certificat auto-signé. S'il s'agit de votre propre serveur sur votre réseau, décochez « Vérifier le certificat SSL/TLS » et testez à nouveau.",
       "loginHttp": "Échec de la connexion avec HTTP __status__",
       "loginHttpDetail": "Échec de la connexion avec HTTP __status__ : __detail__",
       "noSessionHeader": "BioStar 2 n'a pas renvoyé d'en-tête bs-session-id.",
