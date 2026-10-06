@@ -23,7 +23,8 @@ bridge machine in between.
 - A BioStar 2 account for the app to log in with
 
 The account needs **Monitoring** permission to receive events. If you want to use
-the *Open door* action it also needs **Door control**. The app warns you in
+the *Open door* action it needs **Monitoring at Edit level**; BioStar 2 grants
+door control through that permission. The app warns you in
 Settings when the account it is using lacks the permissions it needs.
 
 Give the app its own BioStar 2 account rather than reusing an administrator

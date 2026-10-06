@@ -15,7 +15,7 @@ on this repository.
 - Have you checked whether BioStar 2 itself reports the same problem in its own
   event log? If the event never reaches BioStar 2, it cannot reach Homey.
 - Have you confirmed the BioStar 2 account has the permissions the app needs
-  (Monitoring, and Door control for the *Open door* card)? **Test Connection**
+  (Monitoring, at Edit level for the *Open door* card)? **Test Connection**
   reports what the account can actually do.
 
 ## A great bug report contains

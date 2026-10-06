@@ -28,7 +28,8 @@
         "en": "Any reader",
         "nl": "Elke lezer",
         "fr": "N'importe quel lecteur"
-      }
+      },
+      "required": false
     }
   ],
   "tokens": [
