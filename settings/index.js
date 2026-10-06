@@ -202,11 +202,21 @@ function onHomeyReady(Homey) {
     });
   }
 
-  function loadEventTypes() {
+  // keepSelection: the page's own ticks and names added by hand win over the
+  // saved list, so a refresh before Save does not throw them away.
+  function loadEventTypes(keepSelection = false) {
     Homey.api('GET', '/event-types', (err, rows) => {
       if (err) return;
-      ignoreSet = new Set((rows || []).filter((r) => r.ignored).map((r) => r.name));
-      renderEventTypes(rows);
+      const list = rows || [];
+      if (keepSelection) {
+        const listed = new Set(list.map((r) => r.name));
+        for (const name of ignoreSet) {
+          if (!listed.has(name)) list.push({ name, count: 0, lastAt: null });
+        }
+      } else {
+        ignoreSet = new Set(list.filter((r) => r.ignored).map((r) => r.name));
+      }
+      renderEventTypes(list);
     });
   }
 
@@ -353,7 +363,7 @@ function onHomeyReady(Homey) {
     if (!name) return;
     ignoreSet.add(name);
     $('manual-ignore-input').value = '';
-    loadEventTypes();
+    loadEventTypes(true);
   });
 
   async function loadSettings() {
@@ -409,7 +419,7 @@ function onHomeyReady(Homey) {
         if (targetPaneId === 'pane-logs') startLogPolling();
         else stopLogPolling();
 
-        if (targetPaneId === 'pane-advanced') loadEventTypes();
+        if (targetPaneId === 'pane-advanced') loadEventTypes(true);
       });
     });
 
