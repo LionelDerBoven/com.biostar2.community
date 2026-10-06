@@ -636,9 +636,9 @@
           "fr": "Le lecteur !{{est|n'est pas}} [[device]]"
         },
         "hint": {
-          "en": "Checks which reader or door the event that started this Flow came from. Matching ignores upper and lower case and surrounding spaces, but the full name must match: 'main entrance' matches 'Main Entrance', 'entrance' does not. Only works in Flows started by a BioStar 2 trigger card; elsewhere it is always false.",
-          "nl": "Controleert van welke lezer of deur de gebeurtenis kwam die deze Flow startte. Bij het vergelijken worden hoofd- en kleine letters en spaties aan het begin en einde genegeerd, maar de volledige naam moet overeenkomen: 'hoofdingang' komt overeen met 'Hoofdingang', 'ingang' niet. Werkt alleen in Flows die door een BioStar 2-triggerkaart zijn gestart; elders is dit altijd onwaar.",
-          "fr": "Vérifie de quel lecteur ou de quelle porte provient l'événement qui a démarré ce Flow. La comparaison ignore la casse et les espaces en début et en fin, mais le nom complet doit correspondre : « entrée principale » correspond à « Entrée principale », « entrée » non. Ne fonctionne que dans les Flows démarrés par une carte de déclenchement BioStar 2 ; ailleurs, le résultat est toujours faux."
+          "en": "Checks whether the event that started this Flow came from the chosen reader, also after the reader is renamed in BioStar 2. Only works in Flows started by a BioStar 2 trigger card; elsewhere it is always false.",
+          "nl": "Controleert of de gebeurtenis die deze Flow startte van de gekozen lezer kwam, ook nadat de lezer in BioStar 2 hernoemd is. Werkt alleen in Flows die door een BioStar 2-triggerkaart zijn gestart; elders is dit altijd onwaar.",
+          "fr": "Vérifie si l'événement qui a démarré ce Flow provient du lecteur choisi, même après qu'il a été renommé dans BioStar 2. Ne fonctionne que dans les Flows démarrés par une carte de déclenchement BioStar 2 ; ailleurs, le résultat est toujours faux."
         },
         "args": [
           {
@@ -648,11 +648,11 @@
               "nl": "Lezer",
               "fr": "Lecteur"
             },
-            "type": "text",
+            "type": "autocomplete",
             "placeholder": {
-              "en": "Main Entrance, Side Door...",
-              "nl": "Hoofdingang, Zijdeur...",
-              "fr": "Entrée principale, Porte latérale..."
+              "en": "Choose a reader",
+              "nl": "Kies een lezer",
+              "fr": "Choisissez un lecteur"
             }
           }
         ]

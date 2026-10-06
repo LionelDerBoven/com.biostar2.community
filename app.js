@@ -117,13 +117,18 @@ class BioStarApp extends Homey.App {
       department_is: ['department', 'department'],
       user_is: ['user', 'user'],
       user_group_is: ['user_group', 'user_group'],
-      device_is: ['device', 'device'],
     };
 
     for (const [cardId, [argName, stateKey]] of Object.entries(textConditions)) {
       this.homey.flow.getConditionCard(cardId)
         .registerRunListener(async (args, state) => BioStarApp.exactMatch(args[argName], state?.[stateKey]));
     }
+
+    // The reader is picked from a list, like on the triggers, and compared by id,
+    // so a typo cannot slip in and a reader renamed in BioStar 2 still matches.
+    this.homey.flow.getConditionCard('device_is')
+      .registerRunListener(async (args, state) => BioStarApp.readerIs(args.device, state))
+      .registerArgumentAutocompleteListener('device', async (query) => this.autocompleteDevices(query, false));
 
     // Actions (THEN cards).
     this.homey.flow.getActionCard('reconnect')
@@ -161,6 +166,18 @@ class BioStarApp extends Homey.App {
     const actual = String(stateValue || '').toLowerCase().trim();
     if (!target || !actual) return false;
     return actual === target;
+  }
+
+  /**
+   * "Reader is" condition: true when the event came from the chosen reader.
+   * Compares ids; the name only when the event carries no reader id. A plain
+   * string is a value typed into the card before it offered a list.
+   */
+  static readerIs(selected, state) {
+    if (typeof selected === 'string') return BioStarApp.exactMatch(selected, state?.device);
+    if (!selected || !selected.id || selected.id === '*') return false;
+    if (state?.deviceId) return String(state.deviceId) === String(selected.id);
+    return BioStarApp.exactMatch(selected.name, state?.device);
   }
 
   /**
@@ -215,7 +232,8 @@ class BioStarApp extends Homey.App {
     return rows.map((r) => (r.name ? r : { ...r, name: this.homey.__(key, { id: r.id }) }));
   }
 
-  async autocompleteDevices(query) {
+  /** Readers for an autocomplete; the triggers also offer "Any reader". */
+  async autocompleteDevices(query, withAny = true) {
     let devices = [];
     try {
       devices = await this.cachedList('devices',
@@ -223,7 +241,8 @@ class BioStarApp extends Homey.App {
     } catch (err) {
       this.addLog(`Could not load reader list: ${err.message}`, 'WARN');
     }
-    return BioStarApp.filterByName([{ id: '*', name: this.homey.__('flow.anyReader') }, ...devices], query);
+    const any = withAny ? [{ id: '*', name: this.homey.__('flow.anyReader') }] : [];
+    return BioStarApp.filterByName([...any, ...devices], query);
   }
 
   async autocompleteDoors(query) {
