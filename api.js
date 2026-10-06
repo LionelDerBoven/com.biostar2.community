@@ -5,7 +5,7 @@ module.exports = {
     return homey.app.testConnection(body || {});
   },
   async getLogs({ homey, query }) {
-    return homey.app.getLogs(query?.since);
+    return homey.app.getLogs(query?.since, query?.epoch);
   },
   async clearLogs({ homey }) {
     return homey.app.clearLogs();

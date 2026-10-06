@@ -76,6 +76,7 @@ function onHomeyReady(Homey) {
 
   let logPollTimer = null;
   let logsSeen = 0;
+  let logsEpoch = '';
   let logEntries = [];
   let hour12 = false;
   let clockWriting = false;
@@ -292,15 +293,15 @@ function onHomeyReady(Homey) {
 
   function fetchLogs(reset = false) {
     if (reset) {
-      logsSeen = 0; logEntries = [];
+      logsSeen = 0; logEntries = []; logsEpoch = '';
     }
-    Homey.api('GET', `/logs?since=${logsSeen}`, (err, res) => {
+    Homey.api('GET', `/logs?since=${logsSeen}&epoch=${encodeURIComponent(logsEpoch)}`, (err, res) => {
       if (err || !res) return;
 
-      // The buffer was cleared or rotated behind us — start over.
-      if (res.total < logsSeen) {
-        logsSeen = 0; logEntries = [];
-      }
+      // The app cleared or rebuilt its buffer (or restarted): what this page
+      // holds is gone, and res.entries is the whole buffer again.
+      if (res.reset) logEntries = [];
+      logsEpoch = String(res.epoch);
 
       // The app owns the clock, so the page never has to know Homey's language.
       // The checkbox is set from the effective value, not from whether a
@@ -318,7 +319,8 @@ function onHomeyReady(Homey) {
         logEntries = logEntries.concat(res.entries).slice(-200);
         logsSeen = res.total;
         renderLogs();
-      } else if (clockChanged || !logEntries.length) {
+      } else if (res.reset || clockChanged || !logEntries.length) {
+        logsSeen = res.total;
         renderLogs();
       }
 

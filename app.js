@@ -37,6 +37,11 @@ class BioStarApp extends Homey.App {
    */
   async onInit() {
     this.logs = [];
+    // The settings page asks for "everything after sequence n of epoch e". A
+    // position in this.logs cannot serve, because the buffer stops growing once
+    // it is full; the epoch changes whenever the buffer is cleared or rebuilt.
+    this.logSeq = 0;
+    this.logEpoch = Date.now();
     this.restartDebounceTimer = null;
     this.disconnectAlertTimer = null;
     // Set while the app itself stops a client (restart or unload), so the
@@ -309,6 +314,7 @@ class BioStarApp extends Homey.App {
     if (stored.length) {
       // Restored lines go in front of anything logged during this startup.
       this.logs = stored.concat(this.logs || []).slice(-LOG_LIMIT);
+      this.renumberLogs();
     }
     this.addLog(`Persistent log turned on; ${stored.length} stored line(s) restored.`, 'INFO');
   }
@@ -581,11 +587,27 @@ class BioStarApp extends Homey.App {
       message: text.length > MAX_MESSAGE_LENGTH ? `${text.slice(0, MAX_MESSAGE_LENGTH)}…` : text,
     };
 
+    this.logSeq += 1;
+    entry.seq = this.logSeq;
     this.logs.push(entry);
     if (this.logs.length > LOG_LIMIT) this.logs.splice(0, this.logs.length - LOG_LIMIT);
 
     // The buffer above is capped at LOG_LIMIT; the file keeps the older entries.
     if (this.logStore) this.logStore.append(entry);
+  }
+
+  /**
+   * Numbers the buffer afresh in a new epoch, after it was cleared or rebuilt
+   * from flash, so the settings page reloads it instead of appending.
+   */
+  renumberLogs() {
+    this.logSeq = 0;
+    for (const entry of this.logs) {
+      this.logSeq += 1;
+      entry.seq = this.logSeq;
+    }
+    // Strictly increasing, also for two rebuilds within one millisecond.
+    this.logEpoch = Math.max(Date.now(), this.logEpoch + 1);
   }
 
   /**
@@ -602,12 +624,16 @@ class BioStarApp extends Homey.App {
    * Returns log entries for the settings UI. `since` lets the page fetch only
    * what it has not seen yet instead of the whole buffer every poll.
    */
-  getLogs(since = 0) {
+  getLogs(since = 0, epoch = null) {
     const logs = this.logs || [];
-    const start = Number.isFinite(Number(since)) ? Math.max(0, Number(since)) : 0;
+    // Another epoch means the page holds lines that no longer exist: send all.
+    const reset = String(epoch) !== String(this.logEpoch);
+    const start = !reset && Number.isFinite(Number(since)) ? Math.max(0, Number(since)) : 0;
     return {
-      total: logs.length,
-      entries: start >= logs.length ? [] : logs.slice(start),
+      epoch: this.logEpoch,
+      reset,
+      total: this.logSeq,
+      entries: logs.filter((e) => e.seq > start),
       status: this.connectionStatus,
       // The page renders the timestamps, so it needs to know which clock to use.
       hour12: this.hour12,
@@ -620,6 +646,7 @@ class BioStarApp extends Homey.App {
    */
   async clearLogs() {
     this.logs = [];
+    this.renumberLogs();
     // Clearing has to reach flash too, or the next restart would replay
     // everything the user just asked to be rid of. The store stays enabled and
     // simply starts a new file.
