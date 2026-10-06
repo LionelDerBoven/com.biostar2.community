@@ -146,9 +146,10 @@ your network:
   app contains no third-party endpoints — the only host it contacts is the one
   you configure.
 - The app requests no Homey permissions.
-- With **Verify SSL/TLS Certificate** off, the app pins the server's self-signed
+- With **Verify SSL/TLS Certificate** off, the app pins the server's
   certificate at the first successful connection (trust on first use) and
-  refuses any other certificate afterwards, before sending the password. The
+  refuses any other certificate afterwards, before sending the password. Only
+  the fingerprint counts, so a pinned certificate keeps working after it expires. The
   fingerprint is shown in Settings; after renewing or reinstalling BioStar 2,
   press **Forget trusted certificate** so the new one is trusted.
 - Your BioStar 2 password is stored by Homey and never sent to the settings
