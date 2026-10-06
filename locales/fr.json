@@ -19,7 +19,8 @@
       "doorsHttp": "Impossible de lire les portes (HTTP __status__).",
       "openDoorDenied": "Ouverture de la porte refusée. Ce compte peut lire les portes mais pas les commander. Dans BioStar 2, ouvrez le jeu d'autorisations d'opérateur attribué à ce compte et activez Monitoring au niveau Modification/Lecture.",
       "openDoorHttp": "Échec de l'ouverture de la porte (HTTP __status__).",
-      "openDoorHttpDetail": "Échec de l'ouverture de la porte (HTTP __status__) : __detail__"
+      "openDoorHttpDetail": "Échec de l'ouverture de la porte (HTTP __status__) : __detail__",
+      "certificateChanged": "Le serveur BioStar 2 présente désormais un certificat différent de celui auquel cette application fait confiance (__fingerprint__). Si vous avez renouvelé ou réinstallé BioStar 2, cliquez sur « Oublier le certificat de confiance » dans les paramètres. Sinon, ne vous connectez pas : quelqu'un intercepte peut-être la connexion."
     }
   },
   "notifications": {
@@ -61,7 +62,9 @@
       "passwordPlaceholder": "Saisissez le mot de passe de l'API",
       "passwordStored": "Un mot de passe est enregistré. Laissez le champ inchangé pour le conserver.",
       "passwordEmpty": "Aucun mot de passe enregistré pour l'instant.",
-      "ssl": "Vérifier le certificat SSL/TLS (décochez pour un certificat auto-signé)"
+      "ssl": "Vérifier le certificat SSL/TLS (décochez pour un certificat auto-signé)",
+      "pinned": "Certificat de confiance (SHA-256)",
+      "pinnedHint": "Avec la vérification désactivée, l'application ne fait confiance qu'au certificat vu lors de la première connexion réussie et refuse tout autre. Après un renouvellement ou une réinstallation de BioStar 2, oubliez-le pour que le nouveau soit approuvé."
     },
     "buttons": {
       "save": "Enregistrer les paramètres",
@@ -70,7 +73,8 @@
       "saveAdvanced": "Enregistrer les paramètres avancés",
       "add": "Ajouter",
       "refreshLogs": "Actualiser le journal",
-      "clearLogs": "Effacer le journal"
+      "clearLogs": "Effacer le journal",
+      "forgetCertificate": "Oublier le certificat de confiance"
     },
     "eventTypes": {
       "label": "Types d'événements observés",
@@ -129,7 +133,9 @@
       "saved": "Paramètres BioStar 2 enregistrés.",
       "savedAdvanced": "Paramètres avancés enregistrés. Reconnexion avec la nouvelle configuration.",
       "loadFailed": "Impossible de charger les paramètres enregistrés.",
-      "saveFailed": "Échec de l'enregistrement :"
+      "saveFailed": "Échec de l'enregistrement :",
+      "forgetConfirm": "Oublier le certificat de confiance ? La prochaine connexion réussie fera confiance au certificat que le serveur présentera alors.",
+      "certificateForgotten": "Certificat de confiance oublié. Reconnexion en cours."
     },
     "time": {
       "ago": "il y a __duration__"

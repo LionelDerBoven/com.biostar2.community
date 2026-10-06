@@ -16,6 +16,9 @@ module.exports = {
   async getStatus({ homey }) {
     return homey.app.getStats();
   },
+  async forgetCertificate({ homey }) {
+    return homey.app.forgetCertificate();
+  },
   async reconnect({ homey }) {
     return homey.app.forceReconnect();
   },

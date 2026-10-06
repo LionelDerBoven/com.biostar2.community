@@ -343,6 +343,10 @@ class BioStarApp extends Homey.App {
 
     client.on('event', (evt) => this.handleBioStarEvent(evt));
     client.on('status', (status) => this.handleStatusChange(status));
+    client.on('certificateSeen', (pin) => this.trustCertificate(client, pin));
+    client.on('tlsProblem', (err) => {
+      this.configError = this.describeError(err); // shown on the settings page until it connects again
+    });
     return client;
   }
 
@@ -428,6 +432,7 @@ class BioStarApp extends Homey.App {
   }
 
   handleStatusChange(status) {
+    if (status === 'CONNECTED' && this.configError) this.configError = null;
     if (status !== this.connectionStatus) {
       this.connectionStatus = status;
       this.log(`BioStar 2 Connection status changed to: ${status}`);
@@ -484,6 +489,8 @@ class BioStarApp extends Homey.App {
       password: this.homey.settings.get('biostar_password') || '',
       // Verify unless the user explicitly turned it off; never stored means on.
       rejectUnauthorized: this.homey.settings.get('biostar_reject_unauthorized') !== false,
+      // Not a biostar_* key: storing it must not restart the client.
+      tlsPin: this.homey.settings.get('tls_pin') || null,
       ignoreEvents: BioStarApp.toList(ignoreRaw, EventMapper.DEFAULT_IGNORE_EVENTS),
       ignoreEventSubstrings: BioStarApp.toList(substringRaw, []),
       heartbeatMs: BioStarApp.toMs(this.homey.settings.get('biostar_heartbeat_s'), 30, 5, 300),
@@ -573,6 +580,8 @@ class BioStarApp extends Homey.App {
       clock24h: !this.hour12,
       // Translated reason the client is not connecting at all, or null.
       configError: this.configError,
+      // Fingerprint of the certificate trusted on first use, when it applies.
+      trustedCertificate: this.client && this.client.activePin() ? this.client.activePin().fingerprint256 : null,
     };
   }
 
@@ -695,8 +704,16 @@ class BioStarApp extends Homey.App {
       loginUser: user,
       password,
       rejectUnauthorized,
+      tlsPin: this.homey.settings.get('tls_pin') || null,
       log: (...args) => this.log('[TestClient]', ...args),
       errorLog: (...args) => this.error('[TestClient]', ...args),
+    });
+    // A first successful test of the saved server pins its certificate, like
+    // the running client's first login would; a test of another host does not.
+    testClient.on('certificateSeen', (pin) => {
+      if (BioStarApp.hostKey(host) !== BioStarApp.hostKey(storedHost)) return;
+      if (this.client) this.trustCertificate(this.client, pin);
+      else this.homey.settings.set('tls_pin', pin);
     });
 
     try {
@@ -733,6 +750,28 @@ class BioStarApp extends Homey.App {
       // Without this the throwaway client keeps pooled keep-alive sockets open.
       testClient.destroy();
     }
+  }
+
+  /**
+   * Trust on first use: with verification off, the self-signed certificate of
+   * the first successful login is stored and from then on the only one
+   * accepted for that host.
+   */
+  trustCertificate(client, pin) {
+    this.homey.settings.set('tls_pin', pin);
+    client.setPin(pin);
+    this.addLog(`Trusting this server's self-signed certificate from now on (SHA-256 ${pin.fingerprint256}).`, 'INFO');
+  }
+
+  /**
+   * Drops the trusted certificate, after BioStar 2 renewed or reinstalled its
+   * own; the next successful login trusts the new one.
+   */
+  async forgetCertificate() {
+    this.homey.settings.unset('tls_pin');
+    this.addLog('Trusted certificate forgotten by user. Reconnecting.', 'ACTION');
+    await this.restartClient();
+    return { success: true };
   }
 
   async forceReconnect() {

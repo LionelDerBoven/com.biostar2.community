@@ -151,6 +151,8 @@ function onHomeyReady(Homey) {
     // Already translated by the app.
     els.configWarning.textContent = stats.configError || '';
     els.configWarning.style.display = stats.configError ? 'block' : 'none';
+    $('pin-fingerprint').textContent = stats.trustedCertificate || '';
+    $('pin-field').style.display = stats.trustedCertificate ? 'block' : 'none';
   }
 
   function renderEventTypes(rows) {
@@ -521,6 +523,21 @@ function onHomeyReady(Homey) {
         els.testResult.style.color = '#d9534f';
       }
       refreshStatus();
+    });
+  });
+
+  $('forget-cert-button').addEventListener('click', () => {
+    Homey.confirm(t('settings.messages.forgetConfirm',
+      'Forget the trusted certificate? The next successful connection trusts whatever certificate the server then presents.'),
+    'warning', (confirmErr, yes) => {
+      if (confirmErr || !yes) return;
+      Homey.api('POST', '/forget-certificate', {}, (err) => {
+        els.testResult.textContent = err
+          ? `✖ ${err.message || err}`
+          : `✓ ${t('settings.messages.certificateForgotten', 'Trusted certificate forgotten. Reconnecting.')}`;
+        els.testResult.style.color = err ? '#d9534f' : '#5cb85c';
+        setTimeout(refreshStatus, 2000);
+      });
     });
   });
 

@@ -41,7 +41,7 @@ Everything is configured in the app's Settings screen in the Homey app.
 | **WebSocket URI** | Leave empty to derive it from the host URL |
 | **API Username** | The BioStar 2 login id the app uses |
 | **API Password** | Stored by Homey; leave the field untouched to keep the current one |
-| **Verify SSL/TLS Certificate** | On by default; uncheck if BioStar 2 uses a self-signed certificate |
+| **Verify SSL/TLS Certificate** | On by default; uncheck if BioStar 2 uses a self-signed certificate (its default). The app then trusts only the certificate it sees at the first successful connection (see *Privacy*) |
 
 **Test Connection** checks the credentials and reports what the account is
 allowed to do. The stored password is only used for the saved host and user;
@@ -146,6 +146,11 @@ your network:
   app contains no third-party endpoints — the only host it contacts is the one
   you configure.
 - The app requests no Homey permissions.
+- With **Verify SSL/TLS Certificate** off, the app pins the server's self-signed
+  certificate at the first successful connection (trust on first use) and
+  refuses any other certificate afterwards, before sending the password. The
+  fingerprint is shown in Settings; after renewing or reinstalling BioStar 2,
+  press **Forget trusted certificate** so the new one is trusted.
 - Your BioStar 2 password is stored by Homey and never sent to the settings
   page; the page is told only whether a password exists.
 - The activity log lives in memory by default and is cleared when the app

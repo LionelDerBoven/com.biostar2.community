@@ -19,7 +19,8 @@
       "doorsHttp": "Kon deuren niet lezen (HTTP __status__).",
       "openDoorDenied": "Geen toestemming om de deur te openen. Dit account kan deuren lezen maar niet bedienen. Open in BioStar 2 de operatorrechtenset van dit account en zet Monitoring op niveau Bewerken/Lezen.",
       "openDoorHttp": "Deur openen mislukt (HTTP __status__).",
-      "openDoorHttpDetail": "Deur openen mislukt (HTTP __status__): __detail__"
+      "openDoorHttpDetail": "Deur openen mislukt (HTTP __status__): __detail__",
+      "certificateChanged": "De BioStar 2-server toont nu een ander certificaat dan het certificaat dat deze app vertrouwt (__fingerprint__). Heb je BioStar 2 vernieuwd of opnieuw geïnstalleerd, klik dan in de instellingen op \"Vertrouwd certificaat vergeten\". Zo niet, maak dan geen verbinding: iemand onderschept mogelijk de verbinding."
     }
   },
   "notifications": {
@@ -61,7 +62,9 @@
       "passwordPlaceholder": "Voer het API-wachtwoord in",
       "passwordStored": "Er is een wachtwoord opgeslagen. Laat het veld ongewijzigd om het te behouden.",
       "passwordEmpty": "Nog geen wachtwoord opgeslagen.",
-      "ssl": "SSL/TLS-certificaat verifiëren (uitvinken bij een zelfondertekend certificaat)"
+      "ssl": "SSL/TLS-certificaat verifiëren (uitvinken bij een zelfondertekend certificaat)",
+      "pinned": "Vertrouwd certificaat (SHA-256)",
+      "pinnedHint": "Met verificatie uit vertrouwt de app alleen het certificaat dat ze bij de eerste geslaagde verbinding zag, en weigert ze elk ander. Vergeet het na een vernieuwing of herinstallatie van BioStar 2, zodat het nieuwe vertrouwd wordt."
     },
     "buttons": {
       "save": "Instellingen opslaan",
@@ -70,7 +73,8 @@
       "saveAdvanced": "Geavanceerde instellingen opslaan",
       "add": "Toevoegen",
       "refreshLogs": "Logboek vernieuwen",
-      "clearLogs": "Logboek wissen"
+      "clearLogs": "Logboek wissen",
+      "forgetCertificate": "Vertrouwd certificaat vergeten"
     },
     "eventTypes": {
       "label": "Waargenomen gebeurtenistypes",
@@ -129,7 +133,9 @@
       "saved": "BioStar 2-instellingen opgeslagen.",
       "savedAdvanced": "Geavanceerde instellingen opgeslagen. Er wordt opnieuw verbonden met de nieuwe configuratie.",
       "loadFailed": "De opgeslagen instellingen konden niet worden geladen.",
-      "saveFailed": "Opslaan mislukt:"
+      "saveFailed": "Opslaan mislukt:",
+      "forgetConfirm": "Het vertrouwde certificaat vergeten? De volgende geslaagde verbinding vertrouwt het certificaat dat de server dan toont.",
+      "certificateForgotten": "Vertrouwd certificaat vergeten. Er wordt opnieuw verbonden."
     },
     "time": {
       "ago": "__duration__ geleden"

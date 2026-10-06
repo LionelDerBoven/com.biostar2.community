@@ -19,7 +19,8 @@
       "doorsHttp": "Could not read doors (HTTP __status__).",
       "openDoorDenied": "Permission denied opening the door. This account can read doors but not control them. In BioStar 2, open the operator permission set assigned to this account and enable Monitoring at Edit/Read level.",
       "openDoorHttp": "Open door failed (HTTP __status__).",
-      "openDoorHttpDetail": "Open door failed (HTTP __status__): __detail__"
+      "openDoorHttpDetail": "Open door failed (HTTP __status__): __detail__",
+      "certificateChanged": "The BioStar 2 server now presents a different certificate than the one this app trusts (__fingerprint__). If you renewed or reinstalled BioStar 2, press \"Forget trusted certificate\" in the settings. If not, do not connect: someone may be intercepting the connection."
     }
   },
   "notifications": {
@@ -61,7 +62,9 @@
       "passwordPlaceholder": "Enter API password",
       "passwordStored": "A password is stored. Leave unchanged to keep it.",
       "passwordEmpty": "No password stored yet.",
-      "ssl": "Verify SSL/TLS certificate (uncheck for self-signed certificates)"
+      "ssl": "Verify SSL/TLS certificate (uncheck for self-signed certificates)",
+      "pinned": "Trusted certificate (SHA-256)",
+      "pinnedHint": "With verification off, the app trusts only the certificate it saw at the first successful connection and refuses any other. After renewing or reinstalling BioStar 2, forget it so the new one is trusted."
     },
     "buttons": {
       "save": "Save Settings",
@@ -70,7 +73,8 @@
       "saveAdvanced": "Save Advanced Settings",
       "add": "Add",
       "refreshLogs": "Refresh Logs",
-      "clearLogs": "Clear Logs"
+      "clearLogs": "Clear Logs",
+      "forgetCertificate": "Forget trusted certificate"
     },
     "eventTypes": {
       "label": "Event types seen",
@@ -129,7 +133,9 @@
       "saved": "BioStar 2 settings saved successfully.",
       "savedAdvanced": "Advanced settings saved. Reconnecting with the new configuration.",
       "loadFailed": "Could not load the stored settings.",
-      "saveFailed": "Saving failed:"
+      "saveFailed": "Saving failed:",
+      "forgetConfirm": "Forget the trusted certificate? The next successful connection trusts whatever certificate the server then presents.",
+      "certificateForgotten": "Trusted certificate forgotten. Reconnecting."
     },
     "time": {
       "ago": "__duration__ ago"

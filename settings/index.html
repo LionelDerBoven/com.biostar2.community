@@ -404,6 +404,13 @@
         </label>
       </div>
 
+      <div class="field" id="pin-field" style="display: none;">
+        <div class="hint"><span data-t="settings.connection.pinned">Trusted certificate (SHA-256)</span>:
+          <code id="pin-fingerprint" style="word-break: break-all;"></code></div>
+        <div class="hint" data-t="settings.connection.pinnedHint">With verification off, the app trusts only the certificate it saw at the first successful connection and refuses any other. After renewing or reinstalling BioStar 2, forget it so the new one is trusted.</div>
+        <button type="button" id="forget-cert-button" class="btn-test" data-t="settings.buttons.forgetCertificate">Forget trusted certificate</button>
+      </div>
+
       <div class="button-group">
         <button type="button" id="save-button" class="btn-save" data-t="settings.buttons.save">Save Settings</button>
         <button type="button" id="test-button" class="btn-test" data-t="settings.buttons.test">Test Connection</button>

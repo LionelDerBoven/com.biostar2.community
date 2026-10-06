@@ -1,6 +1,6 @@
 {
   "id": "com.biostar2.community",
-  "version": "1.5.3",
+  "version": "1.6.0",
   "compatibility": ">=12.4.0",
   "sdk": 3,
   "runtime": "nodejs",
@@ -60,6 +60,10 @@
     "getEventTypes": {
       "method": "get",
       "path": "/event-types"
+    },
+    "forgetCertificate": {
+      "method": "post",
+      "path": "/forget-certificate"
     }
   }
 }
