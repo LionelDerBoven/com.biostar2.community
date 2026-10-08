@@ -15,6 +15,7 @@
      *   - never paint a container background with a fixed colour; use an rgba()
      *     tint, which reads correctly over a light or a dark surface;
      *   - give form controls `background: transparent; color: inherit`;
+     *   - never set the body or main text colour; inherit it from the theme;
      *   - keep only mid-greys (#777/#888) for secondary text, legible on both.
      *
      * An earlier version declared `color-scheme` and a full light/dark palette of
@@ -26,7 +27,6 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       padding: 10px;
       margin: 0;
-      color: #222;
     }
 
     h2 {
