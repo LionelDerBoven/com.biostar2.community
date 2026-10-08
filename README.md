@@ -4,6 +4,8 @@ A [Homey Pro](https://homey.app) app that connects a **Suprema BioStar 2** acces
 control server to Homey over your local network, and exposes its events as native
 Homey Flow cards.
 
+**Install it from the [Homey App Store](https://homey.app/a/com.biostar2.community).**
+
 Homey Pro talks to BioStar 2 directly over TLS — REST for login and lookups, a
 WebSocket for the live event stream. There is no cloud service, no polling and no
 bridge machine in between.
